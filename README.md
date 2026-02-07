@@ -21,7 +21,7 @@ Run the server directly with npx:
 ```bash
 AUTHENTIK_URL="https://auth.example.com" \
 AUTHENTIK_TOKEN="your-api-token" \
-npx @samik081/mcp-authentik
+npx -y @samik081/mcp-authentik
 ```
 
 The server validates your Authentik connection on startup and fails immediately with a clear error if credentials are missing or invalid.
@@ -34,7 +34,7 @@ The server validates your Authentik connection on startup and fails immediately 
 claude mcp add --transport stdio authentik \
   --env AUTHENTIK_URL=https://auth.example.com \
   --env AUTHENTIK_TOKEN=your-api-token \
-  -- npx @samik081/mcp-authentik
+  -- npx -y @samik081/mcp-authentik
 ```
 
 **JSON config** (works with Claude Code `.mcp.json`, Claude Desktop `claude_desktop_config.json`, Cursor `.cursor/mcp.json`):
@@ -44,7 +44,7 @@ claude mcp add --transport stdio authentik \
   "mcpServers": {
     "authentik": {
       "command": "npx",
-      "args": ["@samik081/mcp-authentik"],
+      "args": ["-y", "@samik081/mcp-authentik"],
       "env": {
         "AUTHENTIK_URL": "https://auth.example.com",
         "AUTHENTIK_TOKEN": "your-api-token"
