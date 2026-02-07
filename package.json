@@ -1,0 +1,52 @@
+{
+  "name": "@samik081/mcp-authentik",
+  "version": "0.1.0",
+  "description": "MCP server for Authentik identity management",
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "mcp-authentik": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "node --watch --experimental-strip-types src/index.ts",
+    "inspect": "npm run build && npx @modelcontextprotocol/inspector node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "authentik",
+    "identity",
+    "sso",
+    "iam",
+    "ai",
+    "claude"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samik081/mcp-authentik.git"
+  },
+  "homepage": "https://github.com/samik081/mcp-authentik#readme",
+  "bugs": {
+    "url": "https://github.com/samik081/mcp-authentik/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@goauthentik/api": "2025.6.3-1751754396",
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.9.3"
+  }
+}
