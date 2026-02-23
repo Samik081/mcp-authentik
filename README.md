@@ -52,7 +52,7 @@ docker run -d -p 3000:3000 \
   ghcr.io/samik081/mcp-authentik
 ```
 
-The MCP endpoint is available at `http://localhost:3000/mcp` and a health check at `http://localhost:3000/health`.
+The MCP endpoint is available at `http://localhost:3000` and a health check at `http://localhost:3000/health`.
 
 ## Configuration
 
@@ -70,6 +70,9 @@ claude mcp add --transport stdio authentik \
   --env AUTHENTIK_URL=https://auth.example.com \
   --env AUTHENTIK_TOKEN=your-api-token \
   -- docker run --rm -i ghcr.io/samik081/mcp-authentik
+
+# Using remote HTTP (connect to a running Docker container or HTTP server)
+claude mcp add --transport http authentik http://localhost:3000
 ```
 
 **JSON config** (works with Claude Code `.mcp.json`, Claude Desktop `claude_desktop_config.json`, Cursor `.cursor/mcp.json`):
@@ -113,7 +116,7 @@ claude mcp add --transport stdio authentik \
   "mcpServers": {
     "authentik": {
       "type": "streamable-http",
-      "url": "http://localhost:3000/mcp"
+      "url": "http://localhost:3000"
     }
   }
 }
