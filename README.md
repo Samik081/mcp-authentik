@@ -1,4 +1,5 @@
 [![npm version](https://img.shields.io/npm/v/@samik081/mcp-authentik)](https://www.npmjs.com/package/@samik081/mcp-authentik)
+[![Docker image](https://ghcr-badge.egpl.dev/samik081/mcp-authentik/latest_tag?trim=major&label=docker)](https://ghcr.io/samik081/mcp-authentik)
 [![License: MIT](https://img.shields.io/npm/l/@samik081/mcp-authentik)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/node/v/@samik081/mcp-authentik)](https://nodejs.org)
 
@@ -14,6 +15,8 @@ MCP server for [Authentik](https://goauthentik.io/) identity management. Manage 
 - **Read-only mode** via `AUTHENTIK_ACCESS_TIER=read-only` for safe monitoring
 - **Category filtering** via `AUTHENTIK_CATEGORIES` to expose only the tools you need
 - **Type-safe SDK client** via `@goauthentik/api`
+- **Docker images** for `linux/amd64` and `linux/arm64` on [GHCR](https://ghcr.io/samik081/mcp-authentik)
+- **Remote MCP** via HTTP transport (`MCP_TRANSPORT=http`) using the Streamable HTTP protocol
 - **TypeScript/ESM** with full type safety
 
 ## Quick Start
@@ -28,15 +31,45 @@ npx -y @samik081/mcp-authentik
 
 The server validates your Authentik connection on startup and fails immediately with a clear error if credentials are missing or invalid.
 
+### Docker
+
+Run with Docker (stdio transport, same as npx):
+
+```bash
+docker run --rm -i \
+  -e AUTHENTIK_URL=https://auth.example.com \
+  -e AUTHENTIK_TOKEN=your-api-token \
+  ghcr.io/samik081/mcp-authentik
+```
+
+To run as a remote MCP server with HTTP transport:
+
+```bash
+docker run -d -p 3000:3000 \
+  -e MCP_TRANSPORT=http \
+  -e AUTHENTIK_URL=https://auth.example.com \
+  -e AUTHENTIK_TOKEN=your-api-token \
+  ghcr.io/samik081/mcp-authentik
+```
+
+The MCP endpoint is available at `http://localhost:3000/mcp` and a health check at `http://localhost:3000/health`.
+
 ## Configuration
 
 **Claude Code CLI (recommended):**
 
 ```bash
+# Using npx
 claude mcp add --transport stdio authentik \
   --env AUTHENTIK_URL=https://auth.example.com \
   --env AUTHENTIK_TOKEN=your-api-token \
   -- npx -y @samik081/mcp-authentik
+
+# Using Docker
+claude mcp add --transport stdio authentik \
+  --env AUTHENTIK_URL=https://auth.example.com \
+  --env AUTHENTIK_TOKEN=your-api-token \
+  -- docker run --rm -i ghcr.io/samik081/mcp-authentik
 ```
 
 **JSON config** (works with Claude Code `.mcp.json`, Claude Desktop `claude_desktop_config.json`, Cursor `.cursor/mcp.json`):
@@ -56,6 +89,50 @@ claude mcp add --transport stdio authentik \
 }
 ```
 
+**Docker (stdio):**
+
+```json
+{
+  "mcpServers": {
+    "authentik": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i",
+        "-e", "AUTHENTIK_URL=https://auth.example.com",
+        "-e", "AUTHENTIK_TOKEN=your-api-token",
+        "ghcr.io/samik081/mcp-authentik"
+      ]
+    }
+  }
+}
+```
+
+**Remote MCP** (connect to a running Docker container or HTTP server):
+
+```json
+{
+  "mcpServers": {
+    "authentik": {
+      "type": "streamable-http",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
+```
+
+## Access Tiers
+
+Control which tools are available using the `AUTHENTIK_ACCESS_TIER` environment variable:
+
+| Tier | Tools | Description |
+|------|-------|-------------|
+| `full` (default) | 245 | Read and write -- full control |
+| `read-only` | 121 | Read only -- safe for monitoring, no state changes |
+
+- **full**: All 245 tools. Includes creating, updating, and deleting users, groups, applications, flows, providers, and all other resources.
+- **read-only**: 121 tools. Listing and viewing resources only. No state changes.
+
+Tools that are not available in your tier are not registered with the MCP server. They will not appear in your AI tool's tool list, keeping the context clean.
+
 ## Environment Variables
 
 | Variable | Required | Default | Description |
@@ -64,6 +141,9 @@ claude mcp add --transport stdio authentik \
 | `AUTHENTIK_TOKEN` | Yes | -- | API token with appropriate permissions |
 | `AUTHENTIK_ACCESS_TIER` | No | `full` | `read-only` for read-only tools only, `full` for all tools |
 | `AUTHENTIK_CATEGORIES` | No | *(all)* | Comma-separated category allowlist (e.g., `core,admin,flows`) |
+| `MCP_TRANSPORT` | No | `stdio` | Transport mode: `stdio` (default) or `http` |
+| `MCP_PORT` | No | `3000` | HTTP server port (only used when `MCP_TRANSPORT=http`) |
+| `MCP_HOST` | No | `0.0.0.0` | HTTP server bind address (only used when `MCP_TRANSPORT=http`) |
 
 ### Available Categories
 
@@ -528,6 +608,20 @@ The following enterprise endpoint features are not available in the `@goauthenti
 
 These enterprise endpoint features require SDK support that is not yet available.
 
+## Verify It Works
+
+After configuring your MCP client, ask your AI assistant:
+
+> "What version of Authentik is running?"
+
+If the connection is working, the assistant will call `authentik_admin_version` and return your server version and build hash.
+
+## Usage Examples
+
+- **"List all users in the admin group"** -- calls `authentik_users_list` and `authentik_groups_list` to find and display admin group members.
+- **"What applications are configured?"** -- calls `authentik_apps_list` to show all applications with their providers and groups.
+- **"Create a new user for john.doe@example.com"** -- calls `authentik_users_create` to set up the new user account.
+
 ## Troubleshooting
 
 ### Connection errors
@@ -547,20 +641,6 @@ These enterprise endpoint features require SDK support that is not yet available
 - Use `AUTHENTIK_CATEGORIES` with the actual category values listed above (e.g., `core,admin,flows`), not source file names
 - Users, groups, applications, tokens, and brands are all under the `core` category, not separate categories
 - Use comma-separated values with no spaces (e.g., `core,admin,events`)
-
-## Verify It Works
-
-After configuring your MCP client, ask your AI assistant:
-
-> "What version of Authentik is running?"
-
-If the connection is working, the assistant will call `authentik_admin_version` and return your server version and build hash.
-
-## Usage Examples
-
-- **"List all users in the admin group"** -- calls `authentik_users_list` and `authentik_groups_list` to find and display admin group members.
-- **"What applications are configured?"** -- calls `authentik_apps_list` to show all applications with their providers and groups.
-- **"Create a new user for john.doe@example.com"** -- calls `authentik_users_create` to set up the new user account.
 
 ## Development
 
