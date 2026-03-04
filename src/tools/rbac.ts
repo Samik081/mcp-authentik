@@ -16,6 +16,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_roles_list',
     description: 'List RBAC roles with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       group_name: z.string().optional().describe('Filter by group name'),
@@ -41,6 +42,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_roles_get',
     description: 'Get a single RBAC role by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       uuid: z.string().describe('Role UUID'),
@@ -58,6 +60,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_roles_create',
     description: 'Create a new RBAC role.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'rbac',
     inputSchema: {
       name: z.string().describe('Role name (required)'),
@@ -77,6 +80,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_roles_update',
     description: 'Update an existing RBAC role. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       uuid: z.string().describe('Role UUID (required)'),
@@ -98,8 +102,8 @@ export function registerRbacTools(
     name: 'authentik_rbac_roles_delete',
     description: 'Delete an RBAC role by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'rbac',
-    tags: ['destructive'],
     inputSchema: {
       uuid: z.string().describe('Role UUID to delete'),
     },
@@ -118,6 +122,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_list',
     description: 'List all available permissions, filterable by model and app.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       codename: z.string().optional().describe('Filter by permission codename'),
@@ -153,6 +158,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_by_role_list',
     description: 'List object permissions assigned to a specific model, filterable by role.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       model: z.string().describe('Model identifier (e.g. "authentik_core.application")'),
@@ -180,6 +186,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_by_role_assign',
     description: 'Assign permission(s) to a role. When object_pk is set, permissions are only assigned to the specific object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       uuid: z.string().describe('Role UUID'),
@@ -205,6 +212,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_by_role_unassign',
     description: 'Unassign permission(s) from a role. When object_pk is set, permissions are only unassigned from the specific object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'rbac',
     inputSchema: {
       uuid: z.string().describe('Role UUID'),
@@ -232,6 +240,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_by_user_list',
     description: 'List object permissions assigned to a specific model, filterable by user.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       model: z.string().describe('Model identifier (e.g. "authentik_core.user")'),
@@ -259,6 +268,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_by_user_assign',
     description: 'Assign permission(s) to a user.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
     category: 'rbac',
     inputSchema: {
       id: z.number().describe('User ID'),
@@ -284,6 +294,7 @@ export function registerRbacTools(
     name: 'authentik_rbac_permissions_by_user_unassign',
     description: 'Unassign permission(s) from a user.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'rbac',
     inputSchema: {
       id: z.number().describe('User ID'),

@@ -14,6 +14,7 @@ export function registerBrandTools(
     name: 'authentik_brands_list',
     description: 'List brands with optional filters for UUID, domain, and search.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       brand_uuid: z.string().optional().describe('Filter by brand UUID'),
@@ -41,6 +42,7 @@ export function registerBrandTools(
     name: 'authentik_brands_get',
     description: 'Get a single brand by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       brand_uuid: z.string().describe('Brand UUID'),
@@ -58,6 +60,7 @@ export function registerBrandTools(
     name: 'authentik_brands_create',
     description: 'Create a new brand with domain, branding settings, flow assignments, and optional attributes.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       domain: z.string().describe('Domain that activates this brand (required). Can be a superset, e.g. "a.b" matches "aa.b" and "ba.b".'),
@@ -103,6 +106,7 @@ export function registerBrandTools(
     name: 'authentik_brands_update',
     description: 'Update an existing brand. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       brand_uuid: z.string().describe('Brand UUID (required)'),
@@ -150,8 +154,8 @@ export function registerBrandTools(
     name: 'authentik_brands_delete',
     description: 'Delete a brand by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
-    tags: ['destructive'],
     inputSchema: {
       brand_uuid: z.string().describe('Brand UUID to delete'),
     },
@@ -168,6 +172,7 @@ export function registerBrandTools(
     name: 'authentik_brands_current',
     description: 'Get the brand configuration for the current domain.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     handler: async () => {
       const result = await client.coreApi.coreBrandsCurrentRetrieve();

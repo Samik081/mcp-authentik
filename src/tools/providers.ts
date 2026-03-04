@@ -66,6 +66,7 @@ export function registerProviderTools(
     name: 'authentik_providers_list',
     description: 'List all providers across all types with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       search: z.string().optional().describe('Search across provider fields'),
@@ -93,6 +94,7 @@ export function registerProviderTools(
     name: 'authentik_providers_get',
     description: 'Get a single provider by its numeric ID (cross-type).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       id: z.number().describe('Provider ID'),
@@ -110,8 +112,8 @@ export function registerProviderTools(
     name: 'authentik_providers_delete',
     description: 'Delete a provider by its numeric ID (cross-type). This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'providers',
-    tags: ['destructive'],
     inputSchema: {
       id: z.number().describe('Provider ID to delete'),
     },
@@ -126,6 +128,7 @@ export function registerProviderTools(
     name: 'authentik_providers_types_list',
     description: 'List all available provider types.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     handler: async () => {
       const result = await client.providersApi.providersAllTypesList();
@@ -140,6 +143,7 @@ export function registerProviderTools(
     name: 'authentik_providers_by_type_list',
     description: 'List providers of a specific type with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       provider_type: providerTypeEnum.describe('Provider type to list'),
@@ -169,6 +173,7 @@ export function registerProviderTools(
     name: 'authentik_providers_by_type_get',
     description: 'Get a single provider of a specific type by its numeric ID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       provider_type: providerTypeEnum.describe('Provider type'),
@@ -190,6 +195,7 @@ export function registerProviderTools(
     name: 'authentik_providers_by_type_create',
     description: 'Create a new provider of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'providers',
     inputSchema: {
       provider_type: providerTypeEnum.describe('Provider type to create'),
@@ -219,6 +225,7 @@ export function registerProviderTools(
     name: 'authentik_providers_by_type_update',
     description: 'Update an existing provider of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       provider_type: providerTypeEnum.describe('Provider type'),
@@ -244,8 +251,8 @@ export function registerProviderTools(
     name: 'authentik_providers_by_type_delete',
     description: 'Delete a provider of a specific type by its numeric ID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'providers',
-    tags: ['destructive'],
     inputSchema: {
       provider_type: providerTypeEnum.describe('Provider type'),
       id: z.number().describe('Provider ID to delete'),
@@ -266,6 +273,7 @@ export function registerProviderTools(
     name: 'authentik_providers_oauth2_setup_urls',
     description: 'Get OAuth2 provider setup URLs (authorize, token, userinfo, etc.).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       id: z.number().describe('OAuth2 provider ID'),
@@ -283,6 +291,7 @@ export function registerProviderTools(
     name: 'authentik_providers_saml_metadata',
     description: 'Get SAML provider metadata XML.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'providers',
     inputSchema: {
       id: z.number().describe('SAML provider ID'),

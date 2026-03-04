@@ -14,6 +14,7 @@ export function registerTokenTools(
     name: 'authentik_tokens_list',
     description: 'List tokens with optional filters for identifier, intent, managed status, and search.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       identifier: z.string().optional().describe('Filter by exact token identifier'),
@@ -45,6 +46,7 @@ export function registerTokenTools(
     name: 'authentik_tokens_get',
     description: 'Get a single token by its identifier.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       identifier: z.string().describe('Token identifier'),
@@ -62,6 +64,7 @@ export function registerTokenTools(
     name: 'authentik_tokens_create',
     description: 'Create a new token with an identifier, optional intent, description, and expiration settings.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       identifier: z.string().describe('Unique token identifier (required)'),
@@ -91,6 +94,7 @@ export function registerTokenTools(
     name: 'authentik_tokens_update',
     description: 'Update an existing token. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       identifier: z.string().describe('Token identifier (required)'),
@@ -120,8 +124,8 @@ export function registerTokenTools(
     name: 'authentik_tokens_delete',
     description: 'Delete a token by its identifier. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
-    tags: ['destructive'],
     inputSchema: {
       identifier: z.string().describe('Token identifier to delete'),
     },
@@ -138,6 +142,7 @@ export function registerTokenTools(
     name: 'authentik_tokens_view_key',
     description: 'View the raw key value of a token. This is a privileged operation that is logged.',
     accessTier: 'full',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       identifier: z.string().describe('Token identifier'),
@@ -155,6 +160,7 @@ export function registerTokenTools(
     name: 'authentik_tokens_set_key',
     description: 'Set a custom key value for a token. Requires authentik_core.set_token_key permission.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       identifier: z.string().describe('Token identifier'),

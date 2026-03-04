@@ -16,6 +16,7 @@ export function registerRacTools(
     name: 'authentik_rac_endpoints_list',
     description: 'List RAC (Remote Access Control) endpoints with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rac',
     inputSchema: {
       name: z.string().optional().describe('Filter by endpoint name'),
@@ -43,6 +44,7 @@ export function registerRacTools(
     name: 'authentik_rac_endpoints_get',
     description: 'Get a single RAC endpoint by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rac',
     inputSchema: {
       pbm_uuid: z.string().describe('RAC endpoint UUID'),
@@ -60,6 +62,7 @@ export function registerRacTools(
     name: 'authentik_rac_endpoints_create',
     description: 'Create a new RAC endpoint for remote access.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'rac',
     inputSchema: {
       name: z.string().describe('Endpoint name (required)'),
@@ -93,6 +96,7 @@ export function registerRacTools(
     name: 'authentik_rac_endpoints_update',
     description: 'Update an existing RAC endpoint. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'rac',
     inputSchema: {
       pbm_uuid: z.string().describe('RAC endpoint UUID (required)'),
@@ -128,8 +132,8 @@ export function registerRacTools(
     name: 'authentik_rac_endpoints_delete',
     description: 'Delete a RAC endpoint by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'rac',
-    tags: ['destructive'],
     inputSchema: {
       pbm_uuid: z.string().describe('RAC endpoint UUID to delete'),
     },
@@ -148,6 +152,7 @@ export function registerRacTools(
     name: 'authentik_rac_connection_tokens_list',
     description: 'List RAC connection tokens with optional filters. Tokens are system-managed (no create).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rac',
     inputSchema: {
       endpoint: z.string().optional().describe('Filter by endpoint UUID'),
@@ -175,6 +180,7 @@ export function registerRacTools(
     name: 'authentik_rac_connection_tokens_get',
     description: 'Get a single RAC connection token by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'rac',
     inputSchema: {
       connection_token_uuid: z.string().describe('Connection token UUID'),
@@ -192,8 +198,8 @@ export function registerRacTools(
     name: 'authentik_rac_connection_tokens_delete',
     description: 'Delete a RAC connection token by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'rac',
-    tags: ['destructive'],
     inputSchema: {
       connection_token_uuid: z.string().describe('Connection token UUID to delete'),
     },

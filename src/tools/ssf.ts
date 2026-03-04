@@ -16,6 +16,7 @@ export function registerSsfTools(
     name: 'authentik_ssf_streams_list',
     description: 'List Shared Signals Framework (SSF) event streams with optional filters. Read-only.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'ssf',
     inputSchema: {
       endpoint_url: z.string().optional().describe('Filter by endpoint URL'),
@@ -43,6 +44,7 @@ export function registerSsfTools(
     name: 'authentik_ssf_streams_get',
     description: 'Get a single SSF event stream by its UUID. Read-only.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'ssf',
     inputSchema: {
       uuid: z.string().describe('SSF stream UUID'),

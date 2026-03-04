@@ -115,6 +115,7 @@ export function registerStageTools(
     name: 'authentik_stages_list',
     description: 'List all stages across all types with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact stage name'),
@@ -140,6 +141,7 @@ export function registerStageTools(
     name: 'authentik_stages_get',
     description: 'Get a single stage by its UUID (cross-type).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       stage_uuid: z.string().describe('Stage UUID'),
@@ -157,8 +159,8 @@ export function registerStageTools(
     name: 'authentik_stages_delete',
     description: 'Delete a stage by its UUID (cross-type). This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'stages',
-    tags: ['destructive'],
     inputSchema: {
       stage_uuid: z.string().describe('Stage UUID to delete'),
     },
@@ -173,6 +175,7 @@ export function registerStageTools(
     name: 'authentik_stages_types_list',
     description: 'List all available stage types.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     handler: async () => {
       const result = await client.stagesApi.stagesAllTypesList();
@@ -187,6 +190,7 @@ export function registerStageTools(
     name: 'authentik_stages_by_type_list',
     description: 'List stages of a specific type with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       stage_type: stageTypeEnum.describe('Stage type to list'),
@@ -214,6 +218,7 @@ export function registerStageTools(
     name: 'authentik_stages_by_type_get',
     description: 'Get a single stage of a specific type by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       stage_type: stageTypeEnum.describe('Stage type'),
@@ -235,6 +240,7 @@ export function registerStageTools(
     name: 'authentik_stages_by_type_create',
     description: 'Create a new stage of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'stages',
     inputSchema: {
       stage_type: stageTypeEnum.describe('Stage type to create'),
@@ -259,6 +265,7 @@ export function registerStageTools(
     name: 'authentik_stages_by_type_update',
     description: 'Update an existing stage of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       stage_type: stageTypeEnum.describe('Stage type'),
@@ -284,8 +291,8 @@ export function registerStageTools(
     name: 'authentik_stages_by_type_delete',
     description: 'Delete a stage of a specific type by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'stages',
-    tags: ['destructive'],
     inputSchema: {
       stage_type: stageTypeEnum.describe('Stage type'),
       stage_uuid: z.string().describe('Stage UUID to delete'),
@@ -308,6 +315,7 @@ export function registerStageTools(
     name: 'authentik_invitations_list',
     description: 'List invitations with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       name: z.string().optional().describe('Filter by invitation name'),
@@ -337,6 +345,7 @@ export function registerStageTools(
     name: 'authentik_invitations_get',
     description: 'Get a single invitation by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       invite_uuid: z.string().describe('Invitation UUID'),
@@ -354,6 +363,7 @@ export function registerStageTools(
     name: 'authentik_invitations_create',
     description: 'Create a new invitation.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'stages',
     inputSchema: {
       name: z.string().describe('Invitation name (required)'),
@@ -381,6 +391,7 @@ export function registerStageTools(
     name: 'authentik_invitations_update',
     description: 'Update an existing invitation. Only provided fields are modified.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       invite_uuid: z.string().describe('Invitation UUID (required)'),
@@ -410,8 +421,8 @@ export function registerStageTools(
     name: 'authentik_invitations_delete',
     description: 'Delete an invitation by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'stages',
-    tags: ['destructive'],
     inputSchema: {
       invite_uuid: z.string().describe('Invitation UUID to delete'),
     },
@@ -430,6 +441,7 @@ export function registerStageTools(
     name: 'authentik_prompts_list',
     description: 'List prompt field definitions with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       field_key: z.string().optional().describe('Filter by field key'),
@@ -459,6 +471,7 @@ export function registerStageTools(
     name: 'authentik_prompts_get',
     description: 'Get a single prompt field definition by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       prompt_uuid: z.string().describe('Prompt UUID'),
@@ -476,6 +489,7 @@ export function registerStageTools(
     name: 'authentik_prompts_create',
     description: 'Create a new prompt field definition.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'stages',
     inputSchema: {
       name: z.string().describe('Prompt name (required)'),
@@ -515,6 +529,7 @@ export function registerStageTools(
     name: 'authentik_prompts_update',
     description: 'Update an existing prompt field definition. Only provided fields are modified.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'stages',
     inputSchema: {
       prompt_uuid: z.string().describe('Prompt UUID (required)'),
@@ -556,8 +571,8 @@ export function registerStageTools(
     name: 'authentik_prompts_delete',
     description: 'Delete a prompt field definition by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'stages',
-    tags: ['destructive'],
     inputSchema: {
       prompt_uuid: z.string().describe('Prompt UUID to delete'),
     },

@@ -16,6 +16,7 @@ export function registerFlowTools(
     name: 'authentik_flows_list',
     description: 'List flows with optional filters for search, designation, and ordering.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       search: z.string().optional().describe('Search across flow fields'),
@@ -44,6 +45,7 @@ export function registerFlowTools(
     name: 'authentik_flows_get',
     description: 'Get a single flow by its slug.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       slug: z.string().describe('Flow slug'),
@@ -61,6 +63,7 @@ export function registerFlowTools(
     name: 'authentik_flows_create',
     description: 'Create a new flow with name, slug, title, and designation.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'flows',
     inputSchema: {
       name: z.string().describe('Flow display name (required)'),
@@ -101,6 +104,7 @@ export function registerFlowTools(
     name: 'authentik_flows_update',
     description: 'Update an existing flow. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       slug: z.string().describe('Flow slug (required, used as identifier)'),
@@ -141,8 +145,8 @@ export function registerFlowTools(
     name: 'authentik_flows_delete',
     description: 'Delete a flow by its slug. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'flows',
-    tags: ['destructive'],
     inputSchema: {
       slug: z.string().describe('Flow slug to delete'),
     },
@@ -159,6 +163,7 @@ export function registerFlowTools(
     name: 'authentik_flows_diagram',
     description: 'Get a visual diagram of a flow showing its stages and bindings.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       slug: z.string().describe('Flow slug'),
@@ -176,6 +181,7 @@ export function registerFlowTools(
     name: 'authentik_flows_export',
     description: 'Export a flow as YAML. Returns the YAML content as text.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       slug: z.string().describe('Flow slug to export'),
@@ -194,6 +200,7 @@ export function registerFlowTools(
     name: 'authentik_flows_import',
     description: 'Import a flow from YAML content.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'flows',
     inputSchema: {
       content: z.string().describe('YAML flow definition content'),
@@ -213,6 +220,7 @@ export function registerFlowTools(
     name: 'authentik_flows_cache_info',
     description: 'Get information about cached flows.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     handler: async () => {
       const result = await client.flowsApi.flowsInstancesCacheInfoRetrieve();
@@ -225,6 +233,7 @@ export function registerFlowTools(
     name: 'authentik_flows_cache_clear',
     description: 'Clear the flow cache.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'flows',
     handler: async () => {
       await client.flowsApi.flowsInstancesCacheClearCreate();
@@ -239,6 +248,7 @@ export function registerFlowTools(
     name: 'authentik_flows_bindings_list',
     description: 'List flow stage bindings with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       target: z.string().optional().describe('Filter by target flow slug'),
@@ -266,6 +276,7 @@ export function registerFlowTools(
     name: 'authentik_flows_bindings_get',
     description: 'Get a single flow stage binding by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       fsb_uuid: z.string().describe('Flow stage binding UUID'),
@@ -283,6 +294,7 @@ export function registerFlowTools(
     name: 'authentik_flows_bindings_create',
     description: 'Create a new flow stage binding to attach a stage to a flow.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'flows',
     inputSchema: {
       target: z.string().describe('Target flow UUID (required)'),
@@ -314,6 +326,7 @@ export function registerFlowTools(
     name: 'authentik_flows_bindings_update',
     description: 'Update an existing flow stage binding. Only provided fields are modified.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'flows',
     inputSchema: {
       fsb_uuid: z.string().describe('Flow stage binding UUID (required)'),
@@ -347,8 +360,8 @@ export function registerFlowTools(
     name: 'authentik_flows_bindings_delete',
     description: 'Delete a flow stage binding by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'flows',
-    tags: ['destructive'],
     inputSchema: {
       fsb_uuid: z.string().describe('Flow stage binding UUID to delete'),
     },

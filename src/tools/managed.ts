@@ -14,6 +14,7 @@ export function registerManagedTools(
     name: 'authentik_blueprints_list',
     description: 'List managed blueprint instances with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'managed',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact name'),
@@ -41,6 +42,7 @@ export function registerManagedTools(
     name: 'authentik_blueprints_get',
     description: 'Get a single blueprint instance by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'managed',
     inputSchema: {
       instance_uuid: z.string().describe('Blueprint instance UUID'),
@@ -58,6 +60,7 @@ export function registerManagedTools(
     name: 'authentik_blueprints_create',
     description: 'Create a new managed blueprint instance.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'managed',
     inputSchema: {
       name: z.string().describe('Blueprint name (required)'),
@@ -85,6 +88,7 @@ export function registerManagedTools(
     name: 'authentik_blueprints_update',
     description: 'Update an existing blueprint instance. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'managed',
     inputSchema: {
       instance_uuid: z.string().describe('Blueprint instance UUID (required)'),
@@ -114,8 +118,8 @@ export function registerManagedTools(
     name: 'authentik_blueprints_delete',
     description: 'Delete a blueprint instance by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'managed',
-    tags: ['destructive'],
     inputSchema: {
       instance_uuid: z.string().describe('Blueprint instance UUID to delete'),
     },
@@ -132,6 +136,7 @@ export function registerManagedTools(
     name: 'authentik_blueprints_available',
     description: 'List all available blueprint files that can be used to create blueprint instances.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'managed',
     handler: async () => {
       const result = await client.managedApi.managedBlueprintsAvailableList();
@@ -144,8 +149,8 @@ export function registerManagedTools(
     name: 'authentik_blueprints_apply',
     description: 'Apply a blueprint instance, executing its configuration. This may create, update, or delete objects.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'managed',
-    tags: ['destructive'],
     inputSchema: {
       instance_uuid: z.string().describe('Blueprint instance UUID to apply'),
     },

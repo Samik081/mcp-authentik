@@ -16,6 +16,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_list',
     description: 'List tenants with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'tenants',
     inputSchema: {
       search: z.string().optional().describe('Search across fields'),
@@ -39,6 +40,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_get',
     description: 'Get a single tenant by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'tenants',
     inputSchema: {
       tenant_uuid: z.string().describe('Tenant UUID'),
@@ -56,6 +58,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_create',
     description: 'Create a new tenant.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'tenants',
     inputSchema: {
       schema_name: z.string().describe('Database schema name (required, immutable after creation)'),
@@ -79,6 +82,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_update',
     description: 'Update an existing tenant. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'tenants',
     inputSchema: {
       tenant_uuid: z.string().describe('Tenant UUID (required)'),
@@ -102,8 +106,8 @@ export function registerTenantTools(
     name: 'authentik_tenants_delete',
     description: 'Delete a tenant by its UUID. This action is irreversible and removes all tenant data.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'tenants',
-    tags: ['destructive'],
     inputSchema: {
       tenant_uuid: z.string().describe('Tenant UUID to delete'),
     },
@@ -120,6 +124,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_create_admin_group',
     description: 'Create an admin group for a tenant and add a user to it.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'tenants',
     inputSchema: {
       tenant_uuid: z.string().describe('Tenant UUID (required)'),
@@ -141,6 +146,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_create_recovery_key',
     description: 'Create a recovery key for a user in a tenant.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'tenants',
     inputSchema: {
       tenant_uuid: z.string().describe('Tenant UUID (required)'),
@@ -166,6 +172,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_domains_list',
     description: 'List tenant domains with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'tenants',
     inputSchema: {
       search: z.string().optional().describe('Search across fields'),
@@ -189,6 +196,7 @@ export function registerTenantTools(
     name: 'authentik_tenants_domains_create',
     description: 'Create a new domain for a tenant.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'tenants',
     inputSchema: {
       domain: z.string().describe('Domain name (required)'),
@@ -212,8 +220,8 @@ export function registerTenantTools(
     name: 'authentik_tenants_domains_delete',
     description: 'Delete a tenant domain by its numeric ID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'tenants',
-    tags: ['destructive'],
     inputSchema: {
       id: z.number().describe('Domain ID to delete'),
     },

@@ -14,6 +14,7 @@ export function registerRootTools(
     description:
       'Get root configuration including capabilities, error reporting settings, and UI configuration.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'root',
     handler: async () => {
       const result = await client.rootApi.rootConfigRetrieve();
