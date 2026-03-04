@@ -14,6 +14,7 @@ export function registerGroupTools(
     name: 'authentik_groups_list',
     description: 'List groups with optional filters for name, superuser status, members, and search.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact group name'),
@@ -45,6 +46,7 @@ export function registerGroupTools(
     name: 'authentik_groups_get',
     description: 'Get a single group by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       group_uuid: z.string().describe('Group UUID'),
@@ -62,6 +64,7 @@ export function registerGroupTools(
     name: 'authentik_groups_create',
     description: 'Create a new group with optional parent, superuser status, users, and custom attributes.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       name: z.string().describe('Group name (required)'),
@@ -89,6 +92,7 @@ export function registerGroupTools(
     name: 'authentik_groups_update',
     description: 'Update an existing group. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       group_uuid: z.string().describe('Group UUID (required)'),
@@ -118,8 +122,8 @@ export function registerGroupTools(
     name: 'authentik_groups_delete',
     description: 'Delete a group by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
-    tags: ['destructive'],
     inputSchema: {
       group_uuid: z.string().describe('Group UUID to delete'),
     },
@@ -136,6 +140,7 @@ export function registerGroupTools(
     name: 'authentik_groups_add_user',
     description: 'Add a user to a group by group UUID and user ID.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       group_uuid: z.string().describe('Group UUID'),
@@ -157,6 +162,7 @@ export function registerGroupTools(
     name: 'authentik_groups_remove_user',
     description: 'Remove a user from a group by group UUID and user ID.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
     inputSchema: {
       group_uuid: z.string().describe('Group UUID'),

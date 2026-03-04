@@ -16,6 +16,7 @@ export function registerEventTools(
     name: 'authentik_events_list',
     description: 'List audit events with optional filters for action, username, client IP, and more.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       action: z.string().optional().describe('Filter by exact event action'),
@@ -45,6 +46,7 @@ export function registerEventTools(
     name: 'authentik_events_get',
     description: 'Get a single audit event by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       event_uuid: z.string().describe('Event UUID'),
@@ -62,6 +64,7 @@ export function registerEventTools(
     name: 'authentik_events_create',
     description: 'Create a new audit event.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'events',
     inputSchema: {
       action: z.string().describe('Event action (e.g. "custom_", "login", "model_created")'),
@@ -89,6 +92,7 @@ export function registerEventTools(
     name: 'authentik_events_actions_list',
     description: 'List all available event action types.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {},
     handler: async () => {
@@ -102,6 +106,7 @@ export function registerEventTools(
     name: 'authentik_events_top_per_user',
     description: 'Get the top N events grouped by user count.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       action: z.string().optional().describe('Filter by event action'),
@@ -121,6 +126,7 @@ export function registerEventTools(
     name: 'authentik_events_volume',
     description: 'Get event volume data for specified filters and timeframe.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       action: z.string().optional().describe('Filter by event action'),
@@ -146,6 +152,7 @@ export function registerEventTools(
     name: 'authentik_events_rules_list',
     description: 'List notification rules with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       name: z.string().optional().describe('Filter by rule name'),
@@ -173,6 +180,7 @@ export function registerEventTools(
     name: 'authentik_events_rules_get',
     description: 'Get a single notification rule by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       pbm_uuid: z.string().describe('Notification rule UUID'),
@@ -190,6 +198,7 @@ export function registerEventTools(
     name: 'authentik_events_rules_create',
     description: 'Create a new notification rule.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'events',
     inputSchema: {
       name: z.string().describe('Rule name (required)'),
@@ -217,6 +226,7 @@ export function registerEventTools(
     name: 'authentik_events_rules_update',
     description: 'Update an existing notification rule. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'events',
     inputSchema: {
       pbm_uuid: z.string().describe('Notification rule UUID (required)'),
@@ -246,8 +256,8 @@ export function registerEventTools(
     name: 'authentik_events_rules_delete',
     description: 'Delete a notification rule by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'events',
-    tags: ['destructive'],
     inputSchema: {
       pbm_uuid: z.string().describe('Notification rule UUID to delete'),
     },
@@ -266,6 +276,7 @@ export function registerEventTools(
     name: 'authentik_events_transports_list',
     description: 'List notification transports with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       name: z.string().optional().describe('Filter by transport name'),
@@ -293,6 +304,7 @@ export function registerEventTools(
     name: 'authentik_events_transports_get',
     description: 'Get a single notification transport by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       uuid: z.string().describe('Transport UUID'),
@@ -310,6 +322,7 @@ export function registerEventTools(
     name: 'authentik_events_transports_create',
     description: 'Create a new notification transport.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'events',
     inputSchema: {
       name: z.string().describe('Transport name (required)'),
@@ -339,6 +352,7 @@ export function registerEventTools(
     name: 'authentik_events_transports_update',
     description: 'Update an existing notification transport. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'events',
     inputSchema: {
       uuid: z.string().describe('Transport UUID (required)'),
@@ -370,8 +384,8 @@ export function registerEventTools(
     name: 'authentik_events_transports_delete',
     description: 'Delete a notification transport by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'events',
-    tags: ['destructive'],
     inputSchema: {
       uuid: z.string().describe('Transport UUID to delete'),
     },
@@ -388,6 +402,7 @@ export function registerEventTools(
     name: 'authentik_events_transports_test',
     description: 'Send a test notification using the specified transport.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'events',
     inputSchema: {
       uuid: z.string().describe('Transport UUID to test'),
@@ -407,6 +422,7 @@ export function registerEventTools(
     name: 'authentik_events_notifications_list',
     description: 'List notifications for the current user with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       seen: z.boolean().optional().describe('Filter by seen status'),
@@ -434,6 +450,7 @@ export function registerEventTools(
     name: 'authentik_events_notifications_update',
     description: 'Update a notification, typically to mark it as seen or unseen.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'events',
     inputSchema: {
       uuid: z.string().describe('Notification UUID'),
@@ -455,8 +472,8 @@ export function registerEventTools(
     name: 'authentik_events_notifications_delete',
     description: 'Delete a notification by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'events',
-    tags: ['destructive'],
     inputSchema: {
       uuid: z.string().describe('Notification UUID to delete'),
     },
@@ -473,6 +490,7 @@ export function registerEventTools(
     name: 'authentik_events_notifications_mark_all_seen',
     description: 'Mark all notifications as seen for the current user.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'events',
     inputSchema: {},
     handler: async () => {

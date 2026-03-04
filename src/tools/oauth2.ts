@@ -16,6 +16,7 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_access_tokens_list',
     description: 'List OAuth2 access tokens with optional filters. Tokens are system-managed.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'oauth2',
     inputSchema: {
       user: z.number().optional().describe('Filter by user ID'),
@@ -43,6 +44,7 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_access_tokens_get',
     description: 'Get a single OAuth2 access token by its numeric ID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'oauth2',
     inputSchema: {
       id: z.number().describe('Access token ID'),
@@ -60,8 +62,8 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_access_tokens_delete',
     description: 'Delete (revoke) an OAuth2 access token by its ID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'oauth2',
-    tags: ['destructive'],
     inputSchema: {
       id: z.number().describe('Access token ID to delete'),
     },
@@ -80,6 +82,7 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_auth_codes_list',
     description: 'List OAuth2 authorization codes with optional filters. Codes are system-managed.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'oauth2',
     inputSchema: {
       user: z.number().optional().describe('Filter by user ID'),
@@ -107,6 +110,7 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_auth_codes_get',
     description: 'Get a single OAuth2 authorization code by its numeric ID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'oauth2',
     inputSchema: {
       id: z.number().describe('Authorization code ID'),
@@ -124,8 +128,8 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_auth_codes_delete',
     description: 'Delete an OAuth2 authorization code by its ID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'oauth2',
-    tags: ['destructive'],
     inputSchema: {
       id: z.number().describe('Authorization code ID to delete'),
     },
@@ -144,6 +148,7 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_refresh_tokens_list',
     description: 'List OAuth2 refresh tokens with optional filters. Tokens are system-managed.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'oauth2',
     inputSchema: {
       user: z.number().optional().describe('Filter by user ID'),
@@ -171,6 +176,7 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_refresh_tokens_get',
     description: 'Get a single OAuth2 refresh token by its numeric ID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'oauth2',
     inputSchema: {
       id: z.number().describe('Refresh token ID'),
@@ -188,8 +194,8 @@ export function registerOauth2Tools(
     name: 'authentik_oauth2_refresh_tokens_delete',
     description: 'Delete (revoke) an OAuth2 refresh token by its ID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'oauth2',
-    tags: ['destructive'],
     inputSchema: {
       id: z.number().describe('Refresh token ID to delete'),
     },

@@ -10,7 +10,6 @@ export interface ToolRegistrationOptions {
   accessTier: AccessTier;
   category: string;
   annotations?: ToolAnnotations;
-  tags?: string[];
   inputSchema?: ZodRawShape;
   handler: (args: Record<string, unknown>) => Promise<string>;
 }
@@ -33,7 +32,7 @@ export function registerTool(
   // Build annotations
   const annotations: ToolAnnotations = {
     readOnlyHint: options.accessTier === 'read-only',
-    destructiveHint: options.tags?.includes('destructive') ?? false,
+    destructiveHint: false,
     ...options.annotations,
   };
 

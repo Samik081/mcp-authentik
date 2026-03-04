@@ -63,6 +63,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_list',
     description: 'List all policies across all types with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       search: z.string().optional().describe('Search across policy fields'),
@@ -88,6 +89,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_get',
     description: 'Get a single policy by its UUID (cross-type).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_uuid: z.string().describe('Policy UUID'),
@@ -105,8 +107,8 @@ export function registerPolicyTools(
     name: 'authentik_policies_delete',
     description: 'Delete a policy by its UUID (cross-type). This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'policies',
-    tags: ['destructive'],
     inputSchema: {
       policy_uuid: z.string().describe('Policy UUID to delete'),
     },
@@ -121,6 +123,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_types_list',
     description: 'List all available policy types.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     handler: async () => {
       const result = await client.policiesApi.policiesAllTypesList();
@@ -133,6 +136,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_test',
     description: 'Test a policy against a specific user to see if it passes or fails.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_uuid: z.string().describe('Policy UUID to test'),
@@ -156,6 +160,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_cache_info',
     description: 'Get information about cached policies.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     handler: async () => {
       const result = await client.policiesApi.policiesAllCacheInfoRetrieve();
@@ -168,6 +173,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_cache_clear',
     description: 'Clear the policy cache.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'policies',
     handler: async () => {
       await client.policiesApi.policiesAllCacheClearCreate();
@@ -182,6 +188,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_by_type_list',
     description: 'List policies of a specific type with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_type: policyTypeEnum.describe('Policy type to list'),
@@ -209,6 +216,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_by_type_get',
     description: 'Get a single policy of a specific type by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_type: policyTypeEnum.describe('Policy type'),
@@ -230,6 +238,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_by_type_create',
     description: 'Create a new policy of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'policies',
     inputSchema: {
       policy_type: policyTypeEnum.describe('Policy type to create'),
@@ -254,6 +263,7 @@ export function registerPolicyTools(
     name: 'authentik_policies_by_type_update',
     description: 'Update an existing policy of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_type: policyTypeEnum.describe('Policy type'),
@@ -279,8 +289,8 @@ export function registerPolicyTools(
     name: 'authentik_policies_by_type_delete',
     description: 'Delete a policy of a specific type by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'policies',
-    tags: ['destructive'],
     inputSchema: {
       policy_type: policyTypeEnum.describe('Policy type'),
       policy_uuid: z.string().describe('Policy UUID to delete'),
@@ -303,6 +313,7 @@ export function registerPolicyTools(
     name: 'authentik_policy_bindings_list',
     description: 'List policy bindings with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       target: z.string().optional().describe('Filter by target UUID'),
@@ -332,6 +343,7 @@ export function registerPolicyTools(
     name: 'authentik_policy_bindings_get',
     description: 'Get a single policy binding by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_binding_uuid: z.string().describe('Policy binding UUID'),
@@ -349,6 +361,7 @@ export function registerPolicyTools(
     name: 'authentik_policy_bindings_create',
     description: 'Create a new policy binding to attach a policy to a target (flow, stage, etc.).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'policies',
     inputSchema: {
       target: z.string().describe('Target UUID (flow, stage binding, etc.) (required)'),
@@ -384,6 +397,7 @@ export function registerPolicyTools(
     name: 'authentik_policy_bindings_update',
     description: 'Update an existing policy binding. Only provided fields are modified.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       policy_binding_uuid: z.string().describe('Policy binding UUID (required)'),
@@ -421,8 +435,8 @@ export function registerPolicyTools(
     name: 'authentik_policy_bindings_delete',
     description: 'Delete a policy binding by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'policies',
-    tags: ['destructive'],
     inputSchema: {
       policy_binding_uuid: z.string().describe('Policy binding UUID to delete'),
     },
@@ -441,6 +455,7 @@ export function registerPolicyTools(
     name: 'authentik_reputation_scores_list',
     description: 'List reputation scores with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'policies',
     inputSchema: {
       identifier: z.string().optional().describe('Filter by identifier'),
@@ -470,8 +485,8 @@ export function registerPolicyTools(
     name: 'authentik_reputation_scores_delete',
     description: 'Delete a reputation score by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'policies',
-    tags: ['destructive'],
     inputSchema: {
       reputation_uuid: z.string().describe('Reputation score UUID to delete'),
     },

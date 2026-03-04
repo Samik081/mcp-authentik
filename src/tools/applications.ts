@@ -14,6 +14,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_list',
     description: 'List applications with optional filters for name, slug, group, search, and more.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact application name'),
@@ -47,6 +48,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_get',
     description: 'Get a single application by its slug.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       slug: z.string().describe('Application slug'),
@@ -64,6 +66,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_create',
     description: 'Create a new application with name, slug, and optional provider, group, and metadata.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       name: z.string().describe('Application display name (required)'),
@@ -99,6 +102,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_update',
     description: 'Update an existing application. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       slug: z.string().describe('Application slug (required, used as identifier)'),
@@ -134,6 +138,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_set_icon_url',
     description: 'Set an application icon from a URL. Provide a URL pointing to an image to use as the application icon, or set clear to true to remove the current icon.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       slug: z.string().describe('Application slug (required)'),
@@ -162,8 +167,8 @@ export function registerApplicationTools(
     name: 'authentik_apps_delete',
     description: 'Delete an application by its slug. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
-    tags: ['destructive'],
     inputSchema: {
       slug: z.string().describe('Application slug to delete'),
     },
@@ -178,6 +183,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_check_access',
     description: 'Check whether a specific user has access to an application.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       slug: z.string().describe('Application slug'),
@@ -197,6 +203,7 @@ export function registerApplicationTools(
     name: 'authentik_apps_update_transactional',
     description: 'Create or update an application and its provider in a single atomic transaction. Useful for setting up an application with a new provider.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       app: z.object({
@@ -237,6 +244,7 @@ export function registerApplicationTools(
     name: 'authentik_app_entitlements_list',
     description: 'List application entitlements with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       app: z.string().optional().describe('Filter by application slug'),
@@ -264,6 +272,7 @@ export function registerApplicationTools(
     name: 'authentik_app_entitlements_get',
     description: 'Get a single application entitlement by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       pbm_uuid: z.string().describe('Entitlement UUID'),
@@ -281,6 +290,7 @@ export function registerApplicationTools(
     name: 'authentik_app_entitlements_create',
     description: 'Create a new application entitlement.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       name: z.string().describe('Entitlement name (required)'),
@@ -304,6 +314,7 @@ export function registerApplicationTools(
     name: 'authentik_app_entitlements_update',
     description: 'Update an existing application entitlement. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       pbm_uuid: z.string().describe('Entitlement UUID (required)'),
@@ -329,8 +340,8 @@ export function registerApplicationTools(
     name: 'authentik_app_entitlements_delete',
     description: 'Delete an application entitlement by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
-    tags: ['destructive'],
     inputSchema: {
       pbm_uuid: z.string().describe('Entitlement UUID to delete'),
     },

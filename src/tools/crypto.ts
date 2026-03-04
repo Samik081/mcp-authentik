@@ -14,6 +14,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_list',
     description: 'List certificate keypairs with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'crypto',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact name'),
@@ -41,6 +42,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_get',
     description: 'Get a single certificate keypair by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'crypto',
     inputSchema: {
       kp_uuid: z.string().describe('Certificate keypair UUID'),
@@ -58,6 +60,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_create',
     description: 'Create a new certificate keypair from PEM-encoded certificate and optional private key data.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'crypto',
     inputSchema: {
       name: z.string().describe('Keypair name (required)'),
@@ -81,6 +84,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_update',
     description: 'Update an existing certificate keypair. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'crypto',
     inputSchema: {
       kp_uuid: z.string().describe('Certificate keypair UUID (required)'),
@@ -106,8 +110,8 @@ export function registerCryptoTools(
     name: 'authentik_crypto_delete',
     description: 'Delete a certificate keypair by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'crypto',
-    tags: ['destructive'],
     inputSchema: {
       kp_uuid: z.string().describe('Certificate keypair UUID to delete'),
     },
@@ -124,6 +128,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_generate',
     description: 'Generate a new self-signed certificate keypair.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'crypto',
     inputSchema: {
       common_name: z.string().describe('Certificate common name (CN) (required)'),
@@ -147,6 +152,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_view_certificate',
     description: 'View the PEM-encoded certificate data for a keypair. Access is logged.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'crypto',
     inputSchema: {
       kp_uuid: z.string().describe('Certificate keypair UUID'),
@@ -164,6 +170,7 @@ export function registerCryptoTools(
     name: 'authentik_crypto_view_private_key',
     description: 'View the PEM-encoded private key data for a keypair. Access is logged. Sensitive operation.',
     accessTier: 'full',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'crypto',
     inputSchema: {
       kp_uuid: z.string().describe('Certificate keypair UUID'),

@@ -14,6 +14,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_list',
     description: 'List enterprise licenses with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'enterprise',
     inputSchema: {
       name: z.string().optional().describe('Filter by license name'),
@@ -39,6 +40,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_get',
     description: 'Get a single enterprise license by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'enterprise',
     inputSchema: {
       license_uuid: z.string().describe('License UUID'),
@@ -56,6 +58,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_create',
     description: 'Install a new enterprise license key.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'enterprise',
     inputSchema: {
       key: z.string().describe('License key string (required)'),
@@ -75,6 +78,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_update',
     description: 'Update an existing enterprise license. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'enterprise',
     inputSchema: {
       license_uuid: z.string().describe('License UUID (required)'),
@@ -96,8 +100,8 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_delete',
     description: 'Delete an enterprise license by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'enterprise',
-    tags: ['destructive'],
     inputSchema: {
       license_uuid: z.string().describe('License UUID to delete'),
     },
@@ -114,6 +118,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_summary',
     description: 'Get the total enterprise license status summary.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'enterprise',
     handler: async () => {
       const result = await client.enterpriseApi.enterpriseLicenseSummaryRetrieve();
@@ -126,6 +131,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_license_forecast',
     description: 'Forecast how many users will be required in a year based on current growth.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'enterprise',
     handler: async () => {
       const result = await client.enterpriseApi.enterpriseLicenseForecastRetrieve();
@@ -138,6 +144,7 @@ export function registerEnterpriseTools(
     name: 'authentik_enterprise_install_id',
     description: 'Get the authentik installation ID (used for license generation).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'enterprise',
     handler: async () => {
       const result = await client.enterpriseApi.enterpriseLicenseInstallIdRetrieve();

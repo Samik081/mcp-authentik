@@ -56,6 +56,7 @@ export function registerSourceTools(
     name: 'authentik_sources_list',
     description: 'List all sources across all types (OAuth, SAML, LDAP, Plex, Kerberos, SCIM).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'sources',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact source name'),
@@ -83,6 +84,7 @@ export function registerSourceTools(
     name: 'authentik_sources_get',
     description: 'Get a single source by its slug (cross-type).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'sources',
     inputSchema: {
       slug: z.string().describe('Source slug'),
@@ -100,8 +102,8 @@ export function registerSourceTools(
     name: 'authentik_sources_delete',
     description: 'Delete a source by its slug. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'sources',
-    tags: ['destructive'],
     inputSchema: {
       slug: z.string().describe('Source slug to delete'),
     },
@@ -118,6 +120,7 @@ export function registerSourceTools(
     name: 'authentik_sources_types_list',
     description: 'List all available source types that can be created.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'sources',
     inputSchema: {},
     handler: async () => {
@@ -133,6 +136,7 @@ export function registerSourceTools(
     name: 'authentik_sources_by_type_list',
     description: `List sources of a specific type. Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'sources',
     inputSchema: {
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
@@ -168,6 +172,7 @@ export function registerSourceTools(
     name: 'authentik_sources_by_type_get',
     description: `Get a single source by type and slug. Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'sources',
     inputSchema: {
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
@@ -191,6 +196,7 @@ export function registerSourceTools(
     name: 'authentik_sources_by_type_create',
     description: `Create a new source of a specific type. Valid types: ${VALID_SOURCE_TYPES}. Pass the source-specific configuration as a JSON object in the "config" parameter.`,
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'sources',
     inputSchema: {
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
@@ -215,6 +221,7 @@ export function registerSourceTools(
     name: 'authentik_sources_by_type_update',
     description: `Update an existing source by type and slug. Only provided fields are modified (partial update). Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'sources',
     inputSchema: {
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
@@ -243,8 +250,8 @@ export function registerSourceTools(
     name: 'authentik_sources_by_type_delete',
     description: `Delete a source by type and slug. This action is irreversible. Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'sources',
-    tags: ['destructive'],
     inputSchema: {
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
       slug: z.string().describe('Source slug to delete'),
@@ -267,6 +274,7 @@ export function registerSourceTools(
     name: 'authentik_sources_user_connections_list',
     description: 'List user-source connections across all source types.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'sources',
     inputSchema: {
       user: z.number().optional().describe('Filter by user ID'),

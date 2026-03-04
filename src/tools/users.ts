@@ -14,6 +14,7 @@ export function registerUserTools(
     name: 'authentik_users_list',
     description: 'List users with optional filters for username, email, name, active status, superuser status, path, groups, and search.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       username: z.string().optional().describe('Filter by exact username'),
@@ -53,6 +54,7 @@ export function registerUserTools(
     name: 'authentik_users_get',
     description: 'Get a single user by their numeric ID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       id: z.number().describe('User ID'),
@@ -70,6 +72,7 @@ export function registerUserTools(
     name: 'authentik_users_create',
     description: 'Create a new user. Use authentik_users_set_password to set the password after creation.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       username: z.string().describe('Username (required, must be unique)'),
@@ -99,6 +102,7 @@ export function registerUserTools(
     name: 'authentik_users_update',
     description: 'Update an existing user. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       id: z.number().describe('User ID (required)'),
@@ -130,8 +134,8 @@ export function registerUserTools(
     name: 'authentik_users_delete',
     description: 'Delete a user by their numeric ID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'core',
-    tags: ['destructive'],
     inputSchema: {
       id: z.number().describe('User ID to delete'),
     },
@@ -146,6 +150,7 @@ export function registerUserTools(
     name: 'authentik_users_me',
     description: 'Get information about the currently authenticated user.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     handler: async () => {
       const result = await client.coreApi.coreUsersMeRetrieve();
@@ -158,6 +163,7 @@ export function registerUserTools(
     name: 'authentik_users_set_password',
     description: 'Set a new password for a user.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'core',
     inputSchema: {
       id: z.number().describe('User ID'),
@@ -179,6 +185,7 @@ export function registerUserTools(
     name: 'authentik_users_create_service_account',
     description: 'Create a new service account user with an optional associated group and token.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       name: z.string().describe('Service account name (required)'),
@@ -204,6 +211,7 @@ export function registerUserTools(
     name: 'authentik_users_generate_recovery_link',
     description: 'Generate a temporary recovery link for a user to regain account access.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       id: z.number().describe('User ID'),
@@ -221,6 +229,7 @@ export function registerUserTools(
     name: 'authentik_users_send_recovery_email',
     description: 'Send a recovery email to a user using a specified email stage.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'core',
     inputSchema: {
       id: z.number().describe('User ID'),
@@ -240,6 +249,7 @@ export function registerUserTools(
     name: 'authentik_users_list_paths',
     description: 'List all user paths configured in the system.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'core',
     inputSchema: {
       search: z.string().optional().describe('Search filter for paths'),

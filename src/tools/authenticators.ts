@@ -45,6 +45,7 @@ export function registerAuthenticatorTools(
     name: 'authentik_authenticators_list',
     description: 'List all authenticator devices across all types for the current user.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'authenticators',
     handler: async () => {
       const result = await client.authenticatorsApi.authenticatorsAllList();
@@ -57,6 +58,7 @@ export function registerAuthenticatorTools(
     name: 'authentik_authenticators_admin_by_type_list',
     description: 'List authenticator devices of a specific type (admin view). Supports: duo, email, endpoint, sms, static, totp, webauthn.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'authenticators',
     inputSchema: {
       device_type: z.enum(DEVICE_TYPES).describe('Authenticator device type'),
@@ -84,6 +86,7 @@ export function registerAuthenticatorTools(
     name: 'authentik_authenticators_admin_by_type_get',
     description: 'Get a single authenticator device by type and ID (admin view). Use numeric id for most types, uuid string for endpoint type.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'authenticators',
     inputSchema: {
       device_type: z.enum(DEVICE_TYPES).describe('Authenticator device type'),
@@ -106,8 +109,8 @@ export function registerAuthenticatorTools(
     name: 'authentik_authenticators_admin_by_type_delete',
     description: 'Delete an authenticator device by type and ID (admin view). This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'authenticators',
-    tags: ['destructive'],
     inputSchema: {
       device_type: z.enum(DEVICE_TYPES).describe('Authenticator device type'),
       id: z.union([z.number(), z.string()]).describe('Device ID (number for most types, UUID string for endpoint)'),
@@ -129,6 +132,7 @@ export function registerAuthenticatorTools(
     name: 'authentik_authenticators_user_by_type_list',
     description: 'List authenticator devices of a specific type for the current user. Supports: duo, email, endpoint, sms, static, totp, webauthn.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'authenticators',
     inputSchema: {
       device_type: z.enum(DEVICE_TYPES).describe('Authenticator device type'),

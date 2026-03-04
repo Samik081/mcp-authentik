@@ -16,6 +16,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_list',
     description: 'List outpost instances with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       name: z.string().optional().describe('Filter by name (case-insensitive contains)'),
@@ -41,6 +42,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_get',
     description: 'Get a single outpost instance by its UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       uuid: z.string().describe('Outpost UUID'),
@@ -58,6 +60,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_create',
     description: 'Create a new outpost instance.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'outposts',
     inputSchema: {
       name: z.string().describe('Outpost name (required)'),
@@ -87,6 +90,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_update',
     description: 'Update an existing outpost instance. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       uuid: z.string().describe('Outpost UUID (required)'),
@@ -118,8 +122,8 @@ export function registerOutpostTools(
     name: 'authentik_outposts_delete',
     description: 'Delete an outpost instance by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'outposts',
-    tags: ['destructive'],
     inputSchema: {
       uuid: z.string().describe('Outpost UUID to delete'),
     },
@@ -136,6 +140,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_health',
     description: 'Get the current health status of an outpost.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       uuid: z.string().describe('Outpost UUID'),
@@ -153,6 +158,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_default_settings',
     description: 'Get the global default outpost configuration.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     handler: async () => {
       const result = await client.outpostsApi.outpostsInstancesDefaultSettingsRetrieve();
@@ -167,6 +173,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_service_connections_list',
     description: 'List all service connections (Docker and Kubernetes) with optional filters.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       name: z.string().optional().describe('Filter by name'),
@@ -192,6 +199,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_service_connections_state',
     description: 'Get the current state of a service connection.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       uuid: z.string().describe('Service connection UUID'),
@@ -209,6 +217,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_service_connections_types',
     description: 'List all available service connection types that can be created.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'outposts',
     handler: async () => {
       const result = await client.outpostsApi.outpostsServiceConnectionsAllTypesList();
@@ -221,6 +230,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_docker_create',
     description: 'Create a new Docker service connection.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'outposts',
     inputSchema: {
       name: z.string().describe('Connection name (required)'),
@@ -248,6 +258,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_docker_update',
     description: 'Update an existing Docker service connection. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       uuid: z.string().describe('Docker service connection UUID (required)'),
@@ -277,6 +288,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_kubernetes_create',
     description: 'Create a new Kubernetes service connection.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'outposts',
     inputSchema: {
       name: z.string().describe('Connection name (required)'),
@@ -302,6 +314,7 @@ export function registerOutpostTools(
     name: 'authentik_outposts_kubernetes_update',
     description: 'Update an existing Kubernetes service connection. Only provided fields are modified (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'outposts',
     inputSchema: {
       uuid: z.string().describe('Kubernetes service connection UUID (required)'),
@@ -329,8 +342,8 @@ export function registerOutpostTools(
     name: 'authentik_outposts_service_connections_delete',
     description: 'Delete a service connection by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'outposts',
-    tags: ['destructive'],
     inputSchema: {
       uuid: z.string().describe('Service connection UUID to delete'),
     },

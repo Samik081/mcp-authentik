@@ -79,6 +79,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_list',
     description: 'List all property mappings across all types.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {
       name: z.string().optional().describe('Filter by exact mapping name'),
@@ -104,6 +105,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_get',
     description: 'Get a single property mapping by its UUID (cross-type).',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {
       pm_uuid: z.string().describe('Property mapping UUID'),
@@ -121,8 +123,8 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_delete',
     description: 'Delete a property mapping by its UUID. This action is irreversible.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'property-mappings',
-    tags: ['destructive'],
     inputSchema: {
       pm_uuid: z.string().describe('Property mapping UUID to delete'),
     },
@@ -139,6 +141,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_types_list',
     description: 'List all available property mapping types that can be created.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {},
     handler: async () => {
@@ -152,6 +155,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_test',
     description: 'Test a property mapping by UUID. Optionally provide user, context, and format_result.',
     accessTier: 'full',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {
       pm_uuid: z.string().describe('Property mapping UUID to test'),
@@ -181,6 +185,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_by_type_list',
     description: `List property mappings of a specific type. Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
@@ -214,6 +219,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_by_type_get',
     description: `Get a single property mapping by type and UUID. Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
@@ -237,6 +243,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_by_type_create',
     description: `Create a new property mapping of a specific type. Valid types: ${VALID_PMAP_TYPES}. Pass the type-specific configuration as a JSON object in the "config" parameter.`,
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'property-mappings',
     inputSchema: {
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
@@ -261,6 +268,7 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_by_type_update',
     description: `Update an existing property mapping by type and UUID. Only provided fields are modified (partial update). Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'property-mappings',
     inputSchema: {
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
@@ -289,8 +297,8 @@ export function registerPropertyMappingTools(
     name: 'authentik_property_mappings_by_type_delete',
     description: `Delete a property mapping by type and UUID. This action is irreversible. Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
     category: 'property-mappings',
-    tags: ['destructive'],
     inputSchema: {
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
       pm_uuid: z.string().describe('Property mapping UUID to delete'),

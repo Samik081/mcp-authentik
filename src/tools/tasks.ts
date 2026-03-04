@@ -16,6 +16,7 @@ export function registerTaskTools(
     description:
       'List system tasks with optional filters by name, status, or UID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       name: z.string().optional().describe('Filter by task name'),
@@ -48,6 +49,7 @@ export function registerTaskTools(
     name: 'authentik_tasks_get',
     description: 'Get details of a specific system task by UUID.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'events',
     inputSchema: {
       uuid: z.string().describe('System task UUID'),
@@ -65,6 +67,7 @@ export function registerTaskTools(
     name: 'authentik_tasks_retry',
     description: 'Retry a failed system task by UUID.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'events',
     inputSchema: {
       uuid: z.string().describe('System task UUID to retry'),

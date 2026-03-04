@@ -15,6 +15,7 @@ export function registerAdminTools(
     description:
       'Get system information including HTTP host, runtime environment, server time, and embedded outpost status.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'admin',
     handler: async () => {
       const result = await client.adminApi.adminSystemRetrieve();
@@ -28,6 +29,7 @@ export function registerAdminTools(
     description:
       'Get Authentik version information including current version and build hash.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'admin',
     handler: async () => {
       const result = await client.adminApi.adminVersionRetrieve();
@@ -40,6 +42,7 @@ export function registerAdminTools(
     name: 'authentik_admin_settings_get',
     description: 'Get current system settings.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'admin',
     handler: async () => {
       const result = await client.adminApi.adminSettingsRetrieve();
@@ -52,6 +55,7 @@ export function registerAdminTools(
     name: 'authentik_admin_settings_update',
     description: 'Update system settings (partial update).',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
     category: 'admin',
     inputSchema: {
       avatars: z.string().optional().describe('Configure how authentik should show avatars for users'),
@@ -89,6 +93,7 @@ export function registerAdminTools(
     name: 'authentik_admin_apps',
     description: 'List installed Django applications in the Authentik instance.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'admin',
     handler: async () => {
       const result = await client.adminApi.adminAppsList();
@@ -101,6 +106,7 @@ export function registerAdminTools(
     name: 'authentik_admin_models',
     description: 'List all data models available in the Authentik instance.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'admin',
     handler: async () => {
       const result = await client.adminApi.adminModelsList();
@@ -113,6 +119,7 @@ export function registerAdminTools(
     name: 'authentik_admin_version_history',
     description: 'List Authentik version history entries.',
     accessTier: 'read-only',
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
     category: 'admin',
     inputSchema: {
       ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
@@ -137,6 +144,7 @@ export function registerAdminTools(
     description:
       'Trigger all system tasks (e.g., cleanup, cache clear). Returns updated system info.',
     accessTier: 'full',
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     category: 'admin',
     handler: async () => {
       const result = await client.adminApi.adminSystemCreate();
