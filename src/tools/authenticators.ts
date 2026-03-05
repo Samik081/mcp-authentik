@@ -43,6 +43,7 @@ export function registerAuthenticatorTools(
   // 1. List all authenticator devices (cross-type)
   registerTool(server, config, {
     name: 'authentik_authenticators_list',
+    title: 'List All Authenticator Devices',
     description: 'List all authenticator devices across all types for the current user.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -56,6 +57,7 @@ export function registerAuthenticatorTools(
   // 2. Admin list devices by type
   registerTool(server, config, {
     name: 'authentik_authenticators_admin_by_type_list',
+    title: 'List Authenticator Devices by Type (Admin)',
     description: 'List authenticator devices of a specific type (admin view). Supports: duo, email, endpoint, sms, static, totp, webauthn.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -84,6 +86,7 @@ export function registerAuthenticatorTools(
   // 3. Admin get device by type
   registerTool(server, config, {
     name: 'authentik_authenticators_admin_by_type_get',
+    title: 'Get Authenticator Device by Type (Admin)',
     description: 'Get a single authenticator device by type and ID (admin view). Use numeric id for most types, uuid string for endpoint type.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -107,6 +110,7 @@ export function registerAuthenticatorTools(
   // 4. Admin delete device by type
   registerTool(server, config, {
     name: 'authentik_authenticators_admin_by_type_delete',
+    title: 'Delete Authenticator Device by Type (Admin)',
     description: 'Delete an authenticator device by type and ID (admin view). This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -130,6 +134,7 @@ export function registerAuthenticatorTools(
   // 5. User list devices by type
   registerTool(server, config, {
     name: 'authentik_authenticators_user_by_type_list',
+    title: 'List Authenticator Devices by Type (User)',
     description: 'List authenticator devices of a specific type for the current user. Supports: duo, email, endpoint, sms, static, totp, webauthn.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

@@ -14,6 +14,7 @@ export function registerOauth2Tools(
   // 1. List OAuth2 access tokens
   registerTool(server, config, {
     name: 'authentik_oauth2_access_tokens_list',
+    title: 'List OAuth2 Access Tokens',
     description: 'List OAuth2 access tokens with optional filters. Tokens are system-managed.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -42,6 +43,7 @@ export function registerOauth2Tools(
   // 2. Get OAuth2 access token
   registerTool(server, config, {
     name: 'authentik_oauth2_access_tokens_get',
+    title: 'Get OAuth2 Access Token',
     description: 'Get a single OAuth2 access token by its numeric ID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -60,6 +62,7 @@ export function registerOauth2Tools(
   // 3. Delete OAuth2 access token
   registerTool(server, config, {
     name: 'authentik_oauth2_access_tokens_delete',
+    title: 'Delete OAuth2 Access Token',
     description: 'Delete (revoke) an OAuth2 access token by its ID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -80,6 +83,7 @@ export function registerOauth2Tools(
   // 4. List OAuth2 authorization codes
   registerTool(server, config, {
     name: 'authentik_oauth2_auth_codes_list',
+    title: 'List OAuth2 Authorization Codes',
     description: 'List OAuth2 authorization codes with optional filters. Codes are system-managed.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -108,6 +112,7 @@ export function registerOauth2Tools(
   // 5. Get OAuth2 authorization code
   registerTool(server, config, {
     name: 'authentik_oauth2_auth_codes_get',
+    title: 'Get OAuth2 Authorization Code',
     description: 'Get a single OAuth2 authorization code by its numeric ID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -126,6 +131,7 @@ export function registerOauth2Tools(
   // 6. Delete OAuth2 authorization code
   registerTool(server, config, {
     name: 'authentik_oauth2_auth_codes_delete',
+    title: 'Delete OAuth2 Authorization Code',
     description: 'Delete an OAuth2 authorization code by its ID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -146,6 +152,7 @@ export function registerOauth2Tools(
   // 7. List OAuth2 refresh tokens
   registerTool(server, config, {
     name: 'authentik_oauth2_refresh_tokens_list',
+    title: 'List OAuth2 Refresh Tokens',
     description: 'List OAuth2 refresh tokens with optional filters. Tokens are system-managed.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -174,6 +181,7 @@ export function registerOauth2Tools(
   // 8. Get OAuth2 refresh token
   registerTool(server, config, {
     name: 'authentik_oauth2_refresh_tokens_get',
+    title: 'Get OAuth2 Refresh Token',
     description: 'Get a single OAuth2 refresh token by its numeric ID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -192,6 +200,7 @@ export function registerOauth2Tools(
   // 9. Delete OAuth2 refresh token
   registerTool(server, config, {
     name: 'authentik_oauth2_refresh_tokens_delete',
+    title: 'Delete OAuth2 Refresh Token',
     description: 'Delete (revoke) an OAuth2 refresh token by its ID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

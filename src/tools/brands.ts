@@ -12,6 +12,7 @@ export function registerBrandTools(
   // 1. List brands
   registerTool(server, config, {
     name: 'authentik_brands_list',
+    title: 'List Brands',
     description: 'List brands with optional filters for UUID, domain, and search.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -40,6 +41,7 @@ export function registerBrandTools(
   // 2. Get brand
   registerTool(server, config, {
     name: 'authentik_brands_get',
+    title: 'Get Brand',
     description: 'Get a single brand by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -58,6 +60,7 @@ export function registerBrandTools(
   // 3. Create brand
   registerTool(server, config, {
     name: 'authentik_brands_create',
+    title: 'Create Brand',
     description: 'Create a new brand with domain, branding settings, flow assignments, and optional attributes.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -104,6 +107,7 @@ export function registerBrandTools(
   // 4. Update brand
   registerTool(server, config, {
     name: 'authentik_brands_update',
+    title: 'Update Brand',
     description: 'Update an existing brand. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -152,6 +156,7 @@ export function registerBrandTools(
   // 5. Delete brand
   registerTool(server, config, {
     name: 'authentik_brands_delete',
+    title: 'Delete Brand',
     description: 'Delete a brand by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -170,6 +175,7 @@ export function registerBrandTools(
   // 6. Get current brand
   registerTool(server, config, {
     name: 'authentik_brands_current',
+    title: 'Get Current Brand',
     description: 'Get the brand configuration for the current domain.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

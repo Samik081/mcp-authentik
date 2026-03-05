@@ -12,6 +12,7 @@ export function registerTokenTools(
   // 1. List tokens
   registerTool(server, config, {
     name: 'authentik_tokens_list',
+    title: 'List Tokens',
     description: 'List tokens with optional filters for identifier, intent, managed status, and search.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -44,6 +45,7 @@ export function registerTokenTools(
   // 2. Get token
   registerTool(server, config, {
     name: 'authentik_tokens_get',
+    title: 'Get Token',
     description: 'Get a single token by its identifier.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -62,6 +64,7 @@ export function registerTokenTools(
   // 3. Create token
   registerTool(server, config, {
     name: 'authentik_tokens_create',
+    title: 'Create Token',
     description: 'Create a new token with an identifier, optional intent, description, and expiration settings.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -92,6 +95,7 @@ export function registerTokenTools(
   // 4. Update token
   registerTool(server, config, {
     name: 'authentik_tokens_update',
+    title: 'Update Token',
     description: 'Update an existing token. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -122,6 +126,7 @@ export function registerTokenTools(
   // 5. Delete token
   registerTool(server, config, {
     name: 'authentik_tokens_delete',
+    title: 'Delete Token',
     description: 'Delete a token by its identifier. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -140,6 +145,7 @@ export function registerTokenTools(
   // 6. View token key
   registerTool(server, config, {
     name: 'authentik_tokens_view_key',
+    title: 'View Token Key',
     description: 'View the raw key value of a token. This is a privileged operation that is logged.',
     accessTier: 'full',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -158,6 +164,7 @@ export function registerTokenTools(
   // 7. Set token key
   registerTool(server, config, {
     name: 'authentik_tokens_set_key',
+    title: 'Set Token Key',
     description: 'Set a custom key value for a token. Requires authentik_core.set_token_key permission.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },

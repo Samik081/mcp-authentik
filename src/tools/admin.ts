@@ -12,6 +12,7 @@ export function registerAdminTools(
   // 1. Get system info
   registerTool(server, config, {
     name: 'authentik_admin_system_info',
+    title: 'Get System Info',
     description:
       'Get system information including HTTP host, runtime environment, server time, and embedded outpost status.',
     accessTier: 'read-only',
@@ -26,6 +27,7 @@ export function registerAdminTools(
   // 2. Get version
   registerTool(server, config, {
     name: 'authentik_admin_version',
+    title: 'Get Version',
     description:
       'Get Authentik version information including current version and build hash.',
     accessTier: 'read-only',
@@ -40,6 +42,7 @@ export function registerAdminTools(
   // 3. Get settings
   registerTool(server, config, {
     name: 'authentik_admin_settings_get',
+    title: 'Get Admin Settings',
     description: 'Get current system settings.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -53,6 +56,7 @@ export function registerAdminTools(
   // 4. Update settings (partial)
   registerTool(server, config, {
     name: 'authentik_admin_settings_update',
+    title: 'Update Admin Settings',
     description: 'Update system settings (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -91,6 +95,7 @@ export function registerAdminTools(
   // 5. List installed apps
   registerTool(server, config, {
     name: 'authentik_admin_apps',
+    title: 'List Installed Apps',
     description: 'List installed Django applications in the Authentik instance.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -104,6 +109,7 @@ export function registerAdminTools(
   // 6. List models
   registerTool(server, config, {
     name: 'authentik_admin_models',
+    title: 'List Models',
     description: 'List all data models available in the Authentik instance.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -117,6 +123,7 @@ export function registerAdminTools(
   // 7. Version history
   registerTool(server, config, {
     name: 'authentik_admin_version_history',
+    title: 'List Version History',
     description: 'List Authentik version history entries.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -141,6 +148,7 @@ export function registerAdminTools(
   // 8. Trigger system tasks
   registerTool(server, config, {
     name: 'authentik_admin_system_task_trigger',
+    title: 'Trigger System Tasks',
     description:
       'Trigger all system tasks (e.g., cleanup, cache clear). Returns updated system info.',
     accessTier: 'full',

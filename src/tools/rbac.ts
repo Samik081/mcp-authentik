@@ -14,6 +14,7 @@ export function registerRbacTools(
   // 1. List roles
   registerTool(server, config, {
     name: 'authentik_rbac_roles_list',
+    title: 'List RBAC Roles',
     description: 'List RBAC roles with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -40,6 +41,7 @@ export function registerRbacTools(
   // 2. Get role
   registerTool(server, config, {
     name: 'authentik_rbac_roles_get',
+    title: 'Get RBAC Role',
     description: 'Get a single RBAC role by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -58,6 +60,7 @@ export function registerRbacTools(
   // 3. Create role
   registerTool(server, config, {
     name: 'authentik_rbac_roles_create',
+    title: 'Create RBAC Role',
     description: 'Create a new RBAC role.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -78,6 +81,7 @@ export function registerRbacTools(
   // 4. Update role
   registerTool(server, config, {
     name: 'authentik_rbac_roles_update',
+    title: 'Update RBAC Role',
     description: 'Update an existing RBAC role. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -100,6 +104,7 @@ export function registerRbacTools(
   // 5. Delete role
   registerTool(server, config, {
     name: 'authentik_rbac_roles_delete',
+    title: 'Delete RBAC Role',
     description: 'Delete an RBAC role by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -120,6 +125,7 @@ export function registerRbacTools(
   // 6. List permissions
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_list',
+    title: 'List RBAC Permissions',
     description: 'List all available permissions, filterable by model and app.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -156,6 +162,7 @@ export function registerRbacTools(
   // 7. List permissions assigned to a role
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_by_role_list',
+    title: 'List Permissions by Role',
     description: 'List object permissions assigned to a specific model, filterable by role.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -184,6 +191,7 @@ export function registerRbacTools(
   // 8. Assign permissions to a role
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_by_role_assign',
+    title: 'Assign Permissions to Role',
     description: 'Assign permission(s) to a role. When object_pk is set, permissions are only assigned to the specific object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
@@ -210,6 +218,7 @@ export function registerRbacTools(
   // 9. Unassign permissions from a role
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_by_role_unassign',
+    title: 'Unassign Permissions from Role',
     description: 'Unassign permission(s) from a role. When object_pk is set, permissions are only unassigned from the specific object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -238,6 +247,7 @@ export function registerRbacTools(
   // 10. List permissions assigned to a user
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_by_user_list',
+    title: 'List Permissions by User',
     description: 'List object permissions assigned to a specific model, filterable by user.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -266,6 +276,7 @@ export function registerRbacTools(
   // 11. Assign permissions to a user
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_by_user_assign',
+    title: 'Assign Permissions to User',
     description: 'Assign permission(s) to a user.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
@@ -292,6 +303,7 @@ export function registerRbacTools(
   // 12. Unassign permissions from a user
   registerTool(server, config, {
     name: 'authentik_rbac_permissions_by_user_unassign',
+    title: 'Unassign Permissions from User',
     description: 'Unassign permission(s) from a user.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

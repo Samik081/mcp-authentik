@@ -54,6 +54,7 @@ export function registerSourceTools(
   // 1. List all sources (cross-type)
   registerTool(server, config, {
     name: 'authentik_sources_list',
+    title: 'List Sources',
     description: 'List all sources across all types (OAuth, SAML, LDAP, Plex, Kerberos, SCIM).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -82,6 +83,7 @@ export function registerSourceTools(
   // 2. Get a single source (cross-type)
   registerTool(server, config, {
     name: 'authentik_sources_get',
+    title: 'Get Source',
     description: 'Get a single source by its slug (cross-type).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -100,6 +102,7 @@ export function registerSourceTools(
   // 3. Delete a source (cross-type)
   registerTool(server, config, {
     name: 'authentik_sources_delete',
+    title: 'Delete Source',
     description: 'Delete a source by its slug. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -118,6 +121,7 @@ export function registerSourceTools(
   // 4. List source types
   registerTool(server, config, {
     name: 'authentik_sources_types_list',
+    title: 'List Source Types',
     description: 'List all available source types that can be created.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -134,6 +138,7 @@ export function registerSourceTools(
   // 5. List sources by type
   registerTool(server, config, {
     name: 'authentik_sources_by_type_list',
+    title: 'List Sources by Type',
     description: `List sources of a specific type. Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -170,6 +175,7 @@ export function registerSourceTools(
   // 6. Get a source by type and slug
   registerTool(server, config, {
     name: 'authentik_sources_by_type_get',
+    title: 'Get Source by Type',
     description: `Get a single source by type and slug. Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -194,6 +200,7 @@ export function registerSourceTools(
   // 7. Create a source by type
   registerTool(server, config, {
     name: 'authentik_sources_by_type_create',
+    title: 'Create Source by Type',
     description: `Create a new source of a specific type. Valid types: ${VALID_SOURCE_TYPES}. Pass the source-specific configuration as a JSON object in the "config" parameter.`,
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -219,6 +226,7 @@ export function registerSourceTools(
   // 8. Update a source by type (partial update)
   registerTool(server, config, {
     name: 'authentik_sources_by_type_update',
+    title: 'Update Source by Type',
     description: `Update an existing source by type and slug. Only provided fields are modified (partial update). Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -248,6 +256,7 @@ export function registerSourceTools(
   // 9. Delete a source by type
   registerTool(server, config, {
     name: 'authentik_sources_by_type_delete',
+    title: 'Delete Source by Type',
     description: `Delete a source by type and slug. This action is irreversible. Valid types: ${VALID_SOURCE_TYPES}.`,
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -272,6 +281,7 @@ export function registerSourceTools(
   // 10. List user source connections (cross-type)
   registerTool(server, config, {
     name: 'authentik_sources_user_connections_list',
+    title: 'List User Source Connections',
     description: 'List user-source connections across all source types.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

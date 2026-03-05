@@ -77,6 +77,7 @@ export function registerPropertyMappingTools(
   // 1. List all property mappings (cross-type)
   registerTool(server, config, {
     name: 'authentik_property_mappings_list',
+    title: 'List Property Mappings',
     description: 'List all property mappings across all types.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -103,6 +104,7 @@ export function registerPropertyMappingTools(
   // 2. Get a single property mapping (cross-type)
   registerTool(server, config, {
     name: 'authentik_property_mappings_get',
+    title: 'Get Property Mapping',
     description: 'Get a single property mapping by its UUID (cross-type).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -121,6 +123,7 @@ export function registerPropertyMappingTools(
   // 3. Delete a property mapping (cross-type)
   registerTool(server, config, {
     name: 'authentik_property_mappings_delete',
+    title: 'Delete Property Mapping',
     description: 'Delete a property mapping by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -139,6 +142,7 @@ export function registerPropertyMappingTools(
   // 4. List property mapping types
   registerTool(server, config, {
     name: 'authentik_property_mappings_types_list',
+    title: 'List Property Mapping Types',
     description: 'List all available property mapping types that can be created.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -153,6 +157,7 @@ export function registerPropertyMappingTools(
   // 5. Test a property mapping
   registerTool(server, config, {
     name: 'authentik_property_mappings_test',
+    title: 'Test Property Mapping',
     description: 'Test a property mapping by UUID. Optionally provide user, context, and format_result.',
     accessTier: 'full',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -183,6 +188,7 @@ export function registerPropertyMappingTools(
   // 6. List property mappings by type
   registerTool(server, config, {
     name: 'authentik_property_mappings_by_type_list',
+    title: 'List Property Mappings by Type',
     description: `List property mappings of a specific type. Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -217,6 +223,7 @@ export function registerPropertyMappingTools(
   // 7. Get a property mapping by type
   registerTool(server, config, {
     name: 'authentik_property_mappings_by_type_get',
+    title: 'Get Property Mapping by Type',
     description: `Get a single property mapping by type and UUID. Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -241,6 +248,7 @@ export function registerPropertyMappingTools(
   // 8. Create a property mapping by type
   registerTool(server, config, {
     name: 'authentik_property_mappings_by_type_create',
+    title: 'Create Property Mapping by Type',
     description: `Create a new property mapping of a specific type. Valid types: ${VALID_PMAP_TYPES}. Pass the type-specific configuration as a JSON object in the "config" parameter.`,
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -266,6 +274,7 @@ export function registerPropertyMappingTools(
   // 9. Update a property mapping by type (partial update)
   registerTool(server, config, {
     name: 'authentik_property_mappings_by_type_update',
+    title: 'Update Property Mapping by Type',
     description: `Update an existing property mapping by type and UUID. Only provided fields are modified (partial update). Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -295,6 +304,7 @@ export function registerPropertyMappingTools(
   // 10. Delete a property mapping by type
   registerTool(server, config, {
     name: 'authentik_property_mappings_by_type_delete',
+    title: 'Delete Property Mapping by Type',
     description: `Delete a property mapping by type and UUID. This action is irreversible. Valid types: ${VALID_PMAP_TYPES}.`,
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

@@ -14,6 +14,7 @@ export function registerTenantTools(
   // 1. List tenants
   registerTool(server, config, {
     name: 'authentik_tenants_list',
+    title: 'List Tenants',
     description: 'List tenants with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -38,6 +39,7 @@ export function registerTenantTools(
   // 2. Get tenant
   registerTool(server, config, {
     name: 'authentik_tenants_get',
+    title: 'Get Tenant',
     description: 'Get a single tenant by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -56,6 +58,7 @@ export function registerTenantTools(
   // 3. Create tenant
   registerTool(server, config, {
     name: 'authentik_tenants_create',
+    title: 'Create Tenant',
     description: 'Create a new tenant.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -80,6 +83,7 @@ export function registerTenantTools(
   // 4. Update tenant
   registerTool(server, config, {
     name: 'authentik_tenants_update',
+    title: 'Update Tenant',
     description: 'Update an existing tenant. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -104,6 +108,7 @@ export function registerTenantTools(
   // 5. Delete tenant
   registerTool(server, config, {
     name: 'authentik_tenants_delete',
+    title: 'Delete Tenant',
     description: 'Delete a tenant by its UUID. This action is irreversible and removes all tenant data.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -122,6 +127,7 @@ export function registerTenantTools(
   // 6. Create admin group for tenant
   registerTool(server, config, {
     name: 'authentik_tenants_create_admin_group',
+    title: 'Create Tenant Admin Group',
     description: 'Create an admin group for a tenant and add a user to it.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -144,6 +150,7 @@ export function registerTenantTools(
   // 7. Create recovery key for tenant
   registerTool(server, config, {
     name: 'authentik_tenants_create_recovery_key',
+    title: 'Create Tenant Recovery Key',
     description: 'Create a recovery key for a user in a tenant.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -170,6 +177,7 @@ export function registerTenantTools(
   // 8. List tenant domains
   registerTool(server, config, {
     name: 'authentik_tenants_domains_list',
+    title: 'List Tenant Domains',
     description: 'List tenant domains with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -194,6 +202,7 @@ export function registerTenantTools(
   // 9. Create tenant domain
   registerTool(server, config, {
     name: 'authentik_tenants_domains_create',
+    title: 'Create Tenant Domain',
     description: 'Create a new domain for a tenant.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -218,6 +227,7 @@ export function registerTenantTools(
   // 10. Delete tenant domain
   registerTool(server, config, {
     name: 'authentik_tenants_domains_delete',
+    title: 'Delete Tenant Domain',
     description: 'Delete a tenant domain by its numeric ID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

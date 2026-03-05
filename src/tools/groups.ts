@@ -12,6 +12,7 @@ export function registerGroupTools(
   // 1. List groups
   registerTool(server, config, {
     name: 'authentik_groups_list',
+    title: 'List Groups',
     description: 'List groups with optional filters for name, superuser status, members, and search.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -44,6 +45,7 @@ export function registerGroupTools(
   // 2. Get group
   registerTool(server, config, {
     name: 'authentik_groups_get',
+    title: 'Get Group',
     description: 'Get a single group by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -62,6 +64,7 @@ export function registerGroupTools(
   // 3. Create group
   registerTool(server, config, {
     name: 'authentik_groups_create',
+    title: 'Create Group',
     description: 'Create a new group with optional parent, superuser status, users, and custom attributes.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -90,6 +93,7 @@ export function registerGroupTools(
   // 4. Update group
   registerTool(server, config, {
     name: 'authentik_groups_update',
+    title: 'Update Group',
     description: 'Update an existing group. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -120,6 +124,7 @@ export function registerGroupTools(
   // 5. Delete group
   registerTool(server, config, {
     name: 'authentik_groups_delete',
+    title: 'Delete Group',
     description: 'Delete a group by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -138,6 +143,7 @@ export function registerGroupTools(
   // 6. Add user to group
   registerTool(server, config, {
     name: 'authentik_groups_add_user',
+    title: 'Add User to Group',
     description: 'Add a user to a group by group UUID and user ID.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
@@ -160,6 +166,7 @@ export function registerGroupTools(
   // 7. Remove user from group
   registerTool(server, config, {
     name: 'authentik_groups_remove_user',
+    title: 'Remove User from Group',
     description: 'Remove a user from a group by group UUID and user ID.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

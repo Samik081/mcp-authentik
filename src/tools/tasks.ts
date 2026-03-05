@@ -13,6 +13,7 @@ export function registerTaskTools(
   // 1. List system tasks
   registerTool(server, config, {
     name: 'authentik_tasks_list',
+    title: 'List System Tasks',
     description:
       'List system tasks with optional filters by name, status, or UID.',
     accessTier: 'read-only',
@@ -47,6 +48,7 @@ export function registerTaskTools(
   // 2. Get system task
   registerTool(server, config, {
     name: 'authentik_tasks_get',
+    title: 'Get System Task',
     description: 'Get details of a specific system task by UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -65,6 +67,7 @@ export function registerTaskTools(
   // 3. Retry system task
   registerTool(server, config, {
     name: 'authentik_tasks_retry',
+    title: 'Retry System Task',
     description: 'Retry a failed system task by UUID.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
