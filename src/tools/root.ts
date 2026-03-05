@@ -11,6 +11,7 @@ export function registerRootTools(
   // 1. Get root configuration
   registerTool(server, config, {
     name: 'authentik_root_config',
+    title: 'Get Root Configuration',
     description:
       'Get root configuration including capabilities, error reporting settings, and UI configuration.',
     accessTier: 'read-only',

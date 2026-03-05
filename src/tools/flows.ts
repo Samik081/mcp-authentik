@@ -14,6 +14,7 @@ export function registerFlowTools(
   // 1. List flows
   registerTool(server, config, {
     name: 'authentik_flows_list',
+    title: 'List Flows',
     description: 'List flows with optional filters for search, designation, and ordering.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -43,6 +44,7 @@ export function registerFlowTools(
   // 2. Get flow
   registerTool(server, config, {
     name: 'authentik_flows_get',
+    title: 'Get Flow',
     description: 'Get a single flow by its slug.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -61,6 +63,7 @@ export function registerFlowTools(
   // 3. Create flow
   registerTool(server, config, {
     name: 'authentik_flows_create',
+    title: 'Create Flow',
     description: 'Create a new flow with name, slug, title, and designation.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -102,6 +105,7 @@ export function registerFlowTools(
   // 4. Update flow
   registerTool(server, config, {
     name: 'authentik_flows_update',
+    title: 'Update Flow',
     description: 'Update an existing flow. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -143,6 +147,7 @@ export function registerFlowTools(
   // 5. Delete flow
   registerTool(server, config, {
     name: 'authentik_flows_delete',
+    title: 'Delete Flow',
     description: 'Delete a flow by its slug. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -161,6 +166,7 @@ export function registerFlowTools(
   // 6. Flow diagram
   registerTool(server, config, {
     name: 'authentik_flows_diagram',
+    title: 'Get Flow Diagram',
     description: 'Get a visual diagram of a flow showing its stages and bindings.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -179,6 +185,7 @@ export function registerFlowTools(
   // 7. Export flow
   registerTool(server, config, {
     name: 'authentik_flows_export',
+    title: 'Export Flow',
     description: 'Export a flow as YAML. Returns the YAML content as text.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -198,6 +205,7 @@ export function registerFlowTools(
   // 8. Import flow
   registerTool(server, config, {
     name: 'authentik_flows_import',
+    title: 'Import Flow',
     description: 'Import a flow from YAML content.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -218,6 +226,7 @@ export function registerFlowTools(
   // 9. Flow cache info
   registerTool(server, config, {
     name: 'authentik_flows_cache_info',
+    title: 'Get Flow Cache Info',
     description: 'Get information about cached flows.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -231,6 +240,7 @@ export function registerFlowTools(
   // 10. Clear flow cache
   registerTool(server, config, {
     name: 'authentik_flows_cache_clear',
+    title: 'Clear Flow Cache',
     description: 'Clear the flow cache.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -246,6 +256,7 @@ export function registerFlowTools(
   // 11. List flow stage bindings
   registerTool(server, config, {
     name: 'authentik_flows_bindings_list',
+    title: 'List Flow Stage Bindings',
     description: 'List flow stage bindings with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -274,6 +285,7 @@ export function registerFlowTools(
   // 12. Get flow stage binding
   registerTool(server, config, {
     name: 'authentik_flows_bindings_get',
+    title: 'Get Flow Stage Binding',
     description: 'Get a single flow stage binding by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -292,6 +304,7 @@ export function registerFlowTools(
   // 13. Create flow stage binding
   registerTool(server, config, {
     name: 'authentik_flows_bindings_create',
+    title: 'Create Flow Stage Binding',
     description: 'Create a new flow stage binding to attach a stage to a flow.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -324,6 +337,7 @@ export function registerFlowTools(
   // 14. Update flow stage binding
   registerTool(server, config, {
     name: 'authentik_flows_bindings_update',
+    title: 'Update Flow Stage Binding',
     description: 'Update an existing flow stage binding. Only provided fields are modified.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -358,6 +372,7 @@ export function registerFlowTools(
   // 15. Delete flow stage binding
   registerTool(server, config, {
     name: 'authentik_flows_bindings_delete',
+    title: 'Delete Flow Stage Binding',
     description: 'Delete a flow stage binding by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

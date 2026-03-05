@@ -14,6 +14,7 @@ export function registerRacTools(
   // 1. List RAC endpoints
   registerTool(server, config, {
     name: 'authentik_rac_endpoints_list',
+    title: 'List RAC Endpoints',
     description: 'List RAC (Remote Access Control) endpoints with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -42,6 +43,7 @@ export function registerRacTools(
   // 2. Get RAC endpoint
   registerTool(server, config, {
     name: 'authentik_rac_endpoints_get',
+    title: 'Get RAC Endpoint',
     description: 'Get a single RAC endpoint by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -60,6 +62,7 @@ export function registerRacTools(
   // 3. Create RAC endpoint
   registerTool(server, config, {
     name: 'authentik_rac_endpoints_create',
+    title: 'Create RAC Endpoint',
     description: 'Create a new RAC endpoint for remote access.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -94,6 +97,7 @@ export function registerRacTools(
   // 4. Update RAC endpoint
   registerTool(server, config, {
     name: 'authentik_rac_endpoints_update',
+    title: 'Update RAC Endpoint',
     description: 'Update an existing RAC endpoint. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -130,6 +134,7 @@ export function registerRacTools(
   // 5. Delete RAC endpoint
   registerTool(server, config, {
     name: 'authentik_rac_endpoints_delete',
+    title: 'Delete RAC Endpoint',
     description: 'Delete a RAC endpoint by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -150,6 +155,7 @@ export function registerRacTools(
   // 6. List RAC connection tokens
   registerTool(server, config, {
     name: 'authentik_rac_connection_tokens_list',
+    title: 'List RAC Connection Tokens',
     description: 'List RAC connection tokens with optional filters. Tokens are system-managed (no create).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -178,6 +184,7 @@ export function registerRacTools(
   // 7. Get RAC connection token
   registerTool(server, config, {
     name: 'authentik_rac_connection_tokens_get',
+    title: 'Get RAC Connection Token',
     description: 'Get a single RAC connection token by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -196,6 +203,7 @@ export function registerRacTools(
   // 8. Delete RAC connection token
   registerTool(server, config, {
     name: 'authentik_rac_connection_tokens_delete',
+    title: 'Delete RAC Connection Token',
     description: 'Delete a RAC connection token by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

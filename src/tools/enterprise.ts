@@ -12,6 +12,7 @@ export function registerEnterpriseTools(
   // 1. List enterprise licenses
   registerTool(server, config, {
     name: 'authentik_enterprise_license_list',
+    title: 'List Enterprise Licenses',
     description: 'List enterprise licenses with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -38,6 +39,7 @@ export function registerEnterpriseTools(
   // 2. Get enterprise license
   registerTool(server, config, {
     name: 'authentik_enterprise_license_get',
+    title: 'Get Enterprise License',
     description: 'Get a single enterprise license by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -56,6 +58,7 @@ export function registerEnterpriseTools(
   // 3. Create enterprise license
   registerTool(server, config, {
     name: 'authentik_enterprise_license_create',
+    title: 'Create Enterprise License',
     description: 'Install a new enterprise license key.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -76,6 +79,7 @@ export function registerEnterpriseTools(
   // 4. Update enterprise license
   registerTool(server, config, {
     name: 'authentik_enterprise_license_update',
+    title: 'Update Enterprise License',
     description: 'Update an existing enterprise license. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -98,6 +102,7 @@ export function registerEnterpriseTools(
   // 5. Delete enterprise license
   registerTool(server, config, {
     name: 'authentik_enterprise_license_delete',
+    title: 'Delete Enterprise License',
     description: 'Delete an enterprise license by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -116,6 +121,7 @@ export function registerEnterpriseTools(
   // 6. Get license summary
   registerTool(server, config, {
     name: 'authentik_enterprise_license_summary',
+    title: 'Get License Summary',
     description: 'Get the total enterprise license status summary.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -129,6 +135,7 @@ export function registerEnterpriseTools(
   // 7. Get license forecast
   registerTool(server, config, {
     name: 'authentik_enterprise_license_forecast',
+    title: 'Get License Forecast',
     description: 'Forecast how many users will be required in a year based on current growth.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -142,6 +149,7 @@ export function registerEnterpriseTools(
   // 8. Get install ID
   registerTool(server, config, {
     name: 'authentik_enterprise_install_id',
+    title: 'Get Install ID',
     description: 'Get the authentik installation ID (used for license generation).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

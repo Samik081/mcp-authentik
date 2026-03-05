@@ -6,6 +6,7 @@ import { sanitizeError } from './errors.js';
 
 export interface ToolRegistrationOptions {
   name: string;
+  title: string;
   description: string;
   accessTier: AccessTier;
   category: string;
@@ -38,10 +39,12 @@ export function registerTool(
 
   // Build registration config
   const toolConfig: {
+    title?: string;
     description: string;
     inputSchema?: ZodRawShape;
     annotations: ToolAnnotations;
   } = {
+    ...(!config.excludeToolTitles && { title: options.title }),
     description: options.description,
     annotations,
   };

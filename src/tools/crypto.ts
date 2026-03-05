@@ -12,6 +12,7 @@ export function registerCryptoTools(
   // 1. List certificate keypairs
   registerTool(server, config, {
     name: 'authentik_crypto_list',
+    title: 'List Certificate Keypairs',
     description: 'List certificate keypairs with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -40,6 +41,7 @@ export function registerCryptoTools(
   // 2. Get certificate keypair
   registerTool(server, config, {
     name: 'authentik_crypto_get',
+    title: 'Get Certificate Keypair',
     description: 'Get a single certificate keypair by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -58,6 +60,7 @@ export function registerCryptoTools(
   // 3. Create certificate keypair
   registerTool(server, config, {
     name: 'authentik_crypto_create',
+    title: 'Create Certificate Keypair',
     description: 'Create a new certificate keypair from PEM-encoded certificate and optional private key data.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -82,6 +85,7 @@ export function registerCryptoTools(
   // 4. Update certificate keypair
   registerTool(server, config, {
     name: 'authentik_crypto_update',
+    title: 'Update Certificate Keypair',
     description: 'Update an existing certificate keypair. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -108,6 +112,7 @@ export function registerCryptoTools(
   // 5. Delete certificate keypair
   registerTool(server, config, {
     name: 'authentik_crypto_delete',
+    title: 'Delete Certificate Keypair',
     description: 'Delete a certificate keypair by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -126,6 +131,7 @@ export function registerCryptoTools(
   // 6. Generate self-signed certificate
   registerTool(server, config, {
     name: 'authentik_crypto_generate',
+    title: 'Generate Self-Signed Certificate',
     description: 'Generate a new self-signed certificate keypair.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -150,6 +156,7 @@ export function registerCryptoTools(
   // 7. View certificate PEM data
   registerTool(server, config, {
     name: 'authentik_crypto_view_certificate',
+    title: 'View Certificate Data',
     description: 'View the PEM-encoded certificate data for a keypair. Access is logged.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -168,6 +175,7 @@ export function registerCryptoTools(
   // 8. View private key PEM data
   registerTool(server, config, {
     name: 'authentik_crypto_view_private_key',
+    title: 'View Private Key Data',
     description: 'View the PEM-encoded private key data for a keypair. Access is logged. Sensitive operation.',
     accessTier: 'full',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

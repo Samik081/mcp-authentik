@@ -50,6 +50,8 @@ export function loadConfig(): AppConfig {
   const accessTier = parseAccessTier(process.env.AUTHENTIK_ACCESS_TIER);
   const categories = parseCategories(process.env.AUTHENTIK_CATEGORIES);
 
+  const excludeToolTitles = process.env.MCP_EXCLUDE_TOOL_TITLES === 'true';
+
   const transport =
     process.env.MCP_TRANSPORT === 'http' ? ('http' as const) : ('stdio' as const);
   const rawPort = process.env.MCP_PORT ?? '3000';
@@ -66,6 +68,7 @@ export function loadConfig(): AppConfig {
     token,
     accessTier,
     categories,
+    excludeToolTitles,
     transport,
     httpPort,
     httpHost,

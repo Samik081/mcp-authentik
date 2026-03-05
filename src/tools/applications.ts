@@ -12,6 +12,7 @@ export function registerApplicationTools(
   // 1. List applications
   registerTool(server, config, {
     name: 'authentik_apps_list',
+    title: 'List Applications',
     description: 'List applications with optional filters for name, slug, group, search, and more.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -46,6 +47,7 @@ export function registerApplicationTools(
   // 2. Get application
   registerTool(server, config, {
     name: 'authentik_apps_get',
+    title: 'Get Application',
     description: 'Get a single application by its slug.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -64,6 +66,7 @@ export function registerApplicationTools(
   // 3. Create application
   registerTool(server, config, {
     name: 'authentik_apps_create',
+    title: 'Create Application',
     description: 'Create a new application with name, slug, and optional provider, group, and metadata.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -100,6 +103,7 @@ export function registerApplicationTools(
   // 4. Update application
   registerTool(server, config, {
     name: 'authentik_apps_update',
+    title: 'Update Application',
     description: 'Update an existing application. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -136,6 +140,7 @@ export function registerApplicationTools(
   // 4b. Set application icon via URL
   registerTool(server, config, {
     name: 'authentik_apps_set_icon_url',
+    title: 'Set Application Icon URL',
     description: 'Set an application icon from a URL. Provide a URL pointing to an image to use as the application icon, or set clear to true to remove the current icon.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -165,6 +170,7 @@ export function registerApplicationTools(
   // 5. Delete application
   registerTool(server, config, {
     name: 'authentik_apps_delete',
+    title: 'Delete Application',
     description: 'Delete an application by its slug. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -181,6 +187,7 @@ export function registerApplicationTools(
   // 6. Check access
   registerTool(server, config, {
     name: 'authentik_apps_check_access',
+    title: 'Check Application Access',
     description: 'Check whether a specific user has access to an application.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -201,6 +208,7 @@ export function registerApplicationTools(
   // 7. Transactional application update (create app + provider atomically)
   registerTool(server, config, {
     name: 'authentik_apps_update_transactional',
+    title: 'Update Application Transactional',
     description: 'Create or update an application and its provider in a single atomic transaction. Useful for setting up an application with a new provider.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -242,6 +250,7 @@ export function registerApplicationTools(
   // 8. List application entitlements
   registerTool(server, config, {
     name: 'authentik_app_entitlements_list',
+    title: 'List Application Entitlements',
     description: 'List application entitlements with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -270,6 +279,7 @@ export function registerApplicationTools(
   // 9. Get application entitlement
   registerTool(server, config, {
     name: 'authentik_app_entitlements_get',
+    title: 'Get Application Entitlement',
     description: 'Get a single application entitlement by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -288,6 +298,7 @@ export function registerApplicationTools(
   // 10. Create application entitlement
   registerTool(server, config, {
     name: 'authentik_app_entitlements_create',
+    title: 'Create Application Entitlement',
     description: 'Create a new application entitlement.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -312,6 +323,7 @@ export function registerApplicationTools(
   // 11. Update application entitlement
   registerTool(server, config, {
     name: 'authentik_app_entitlements_update',
+    title: 'Update Application Entitlement',
     description: 'Update an existing application entitlement. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -338,6 +350,7 @@ export function registerApplicationTools(
   // 12. Delete application entitlement
   registerTool(server, config, {
     name: 'authentik_app_entitlements_delete',
+    title: 'Delete Application Entitlement',
     description: 'Delete an application entitlement by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

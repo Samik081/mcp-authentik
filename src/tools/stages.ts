@@ -113,6 +113,7 @@ export function registerStageTools(
   // 1. List all stages (cross-type)
   registerTool(server, config, {
     name: 'authentik_stages_list',
+    title: 'List Stages',
     description: 'List all stages across all types with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -139,6 +140,7 @@ export function registerStageTools(
   // 2. Get stage (cross-type)
   registerTool(server, config, {
     name: 'authentik_stages_get',
+    title: 'Get Stage',
     description: 'Get a single stage by its UUID (cross-type).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -157,6 +159,7 @@ export function registerStageTools(
   // 3. Delete stage (cross-type)
   registerTool(server, config, {
     name: 'authentik_stages_delete',
+    title: 'Delete Stage',
     description: 'Delete a stage by its UUID (cross-type). This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -173,6 +176,7 @@ export function registerStageTools(
   // 4. List stage types
   registerTool(server, config, {
     name: 'authentik_stages_types_list',
+    title: 'List Stage Types',
     description: 'List all available stage types.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -188,6 +192,7 @@ export function registerStageTools(
   // 5. List stages by type
   registerTool(server, config, {
     name: 'authentik_stages_by_type_list',
+    title: 'List Stages by Type',
     description: 'List stages of a specific type with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -216,6 +221,7 @@ export function registerStageTools(
   // 6. Get stage by type
   registerTool(server, config, {
     name: 'authentik_stages_by_type_get',
+    title: 'Get Stage by Type',
     description: 'Get a single stage of a specific type by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -238,6 +244,7 @@ export function registerStageTools(
   // 7. Create stage by type
   registerTool(server, config, {
     name: 'authentik_stages_by_type_create',
+    title: 'Create Stage by Type',
     description: 'Create a new stage of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -263,6 +270,7 @@ export function registerStageTools(
   // 8. Update stage by type
   registerTool(server, config, {
     name: 'authentik_stages_by_type_update',
+    title: 'Update Stage by Type',
     description: 'Update an existing stage of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -289,6 +297,7 @@ export function registerStageTools(
   // 9. Delete stage by type
   registerTool(server, config, {
     name: 'authentik_stages_by_type_delete',
+    title: 'Delete Stage by Type',
     description: 'Delete a stage of a specific type by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -313,6 +322,7 @@ export function registerStageTools(
   // 10. List invitations
   registerTool(server, config, {
     name: 'authentik_invitations_list',
+    title: 'List Invitations',
     description: 'List invitations with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -343,6 +353,7 @@ export function registerStageTools(
   // 11. Get invitation
   registerTool(server, config, {
     name: 'authentik_invitations_get',
+    title: 'Get Invitation',
     description: 'Get a single invitation by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -361,6 +372,7 @@ export function registerStageTools(
   // 12. Create invitation
   registerTool(server, config, {
     name: 'authentik_invitations_create',
+    title: 'Create Invitation',
     description: 'Create a new invitation.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -389,6 +401,7 @@ export function registerStageTools(
   // 13. Update invitation
   registerTool(server, config, {
     name: 'authentik_invitations_update',
+    title: 'Update Invitation',
     description: 'Update an existing invitation. Only provided fields are modified.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -419,6 +432,7 @@ export function registerStageTools(
   // 14. Delete invitation
   registerTool(server, config, {
     name: 'authentik_invitations_delete',
+    title: 'Delete Invitation',
     description: 'Delete an invitation by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -439,6 +453,7 @@ export function registerStageTools(
   // 15. List prompts
   registerTool(server, config, {
     name: 'authentik_prompts_list',
+    title: 'List Prompts',
     description: 'List prompt field definitions with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -469,6 +484,7 @@ export function registerStageTools(
   // 16. Get prompt
   registerTool(server, config, {
     name: 'authentik_prompts_get',
+    title: 'Get Prompt',
     description: 'Get a single prompt field definition by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -487,6 +503,7 @@ export function registerStageTools(
   // 17. Create prompt
   registerTool(server, config, {
     name: 'authentik_prompts_create',
+    title: 'Create Prompt',
     description: 'Create a new prompt field definition.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -527,6 +544,7 @@ export function registerStageTools(
   // 18. Update prompt
   registerTool(server, config, {
     name: 'authentik_prompts_update',
+    title: 'Update Prompt',
     description: 'Update an existing prompt field definition. Only provided fields are modified.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -569,6 +587,7 @@ export function registerStageTools(
   // 19. Delete prompt
   registerTool(server, config, {
     name: 'authentik_prompts_delete',
+    title: 'Delete Prompt',
     description: 'Delete a prompt field definition by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

@@ -61,6 +61,7 @@ export function registerPolicyTools(
   // 1. List all policies (cross-type)
   registerTool(server, config, {
     name: 'authentik_policies_list',
+    title: 'List Policies',
     description: 'List all policies across all types with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -87,6 +88,7 @@ export function registerPolicyTools(
   // 2. Get policy (cross-type)
   registerTool(server, config, {
     name: 'authentik_policies_get',
+    title: 'Get Policy',
     description: 'Get a single policy by its UUID (cross-type).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -105,6 +107,7 @@ export function registerPolicyTools(
   // 3. Delete policy (cross-type)
   registerTool(server, config, {
     name: 'authentik_policies_delete',
+    title: 'Delete Policy',
     description: 'Delete a policy by its UUID (cross-type). This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -121,6 +124,7 @@ export function registerPolicyTools(
   // 4. List policy types
   registerTool(server, config, {
     name: 'authentik_policies_types_list',
+    title: 'List Policy Types',
     description: 'List all available policy types.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -134,6 +138,7 @@ export function registerPolicyTools(
   // 5. Test policy
   registerTool(server, config, {
     name: 'authentik_policies_test',
+    title: 'Test Policy',
     description: 'Test a policy against a specific user to see if it passes or fails.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -158,6 +163,7 @@ export function registerPolicyTools(
   // 6. Policy cache info
   registerTool(server, config, {
     name: 'authentik_policies_cache_info',
+    title: 'Get Policy Cache Info',
     description: 'Get information about cached policies.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -171,6 +177,7 @@ export function registerPolicyTools(
   // 7. Clear policy cache
   registerTool(server, config, {
     name: 'authentik_policies_cache_clear',
+    title: 'Clear Policy Cache',
     description: 'Clear the policy cache.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -186,6 +193,7 @@ export function registerPolicyTools(
   // 8. List policies by type
   registerTool(server, config, {
     name: 'authentik_policies_by_type_list',
+    title: 'List Policies by Type',
     description: 'List policies of a specific type with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -214,6 +222,7 @@ export function registerPolicyTools(
   // 9. Get policy by type
   registerTool(server, config, {
     name: 'authentik_policies_by_type_get',
+    title: 'Get Policy by Type',
     description: 'Get a single policy of a specific type by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -236,6 +245,7 @@ export function registerPolicyTools(
   // 10. Create policy by type
   registerTool(server, config, {
     name: 'authentik_policies_by_type_create',
+    title: 'Create Policy by Type',
     description: 'Create a new policy of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -261,6 +271,7 @@ export function registerPolicyTools(
   // 11. Update policy by type
   registerTool(server, config, {
     name: 'authentik_policies_by_type_update',
+    title: 'Update Policy by Type',
     description: 'Update an existing policy of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -287,6 +298,7 @@ export function registerPolicyTools(
   // 12. Delete policy by type
   registerTool(server, config, {
     name: 'authentik_policies_by_type_delete',
+    title: 'Delete Policy by Type',
     description: 'Delete a policy of a specific type by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -311,6 +323,7 @@ export function registerPolicyTools(
   // 13. List policy bindings
   registerTool(server, config, {
     name: 'authentik_policy_bindings_list',
+    title: 'List Policy Bindings',
     description: 'List policy bindings with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -341,6 +354,7 @@ export function registerPolicyTools(
   // 14. Get policy binding
   registerTool(server, config, {
     name: 'authentik_policy_bindings_get',
+    title: 'Get Policy Binding',
     description: 'Get a single policy binding by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -359,6 +373,7 @@ export function registerPolicyTools(
   // 15. Create policy binding
   registerTool(server, config, {
     name: 'authentik_policy_bindings_create',
+    title: 'Create Policy Binding',
     description: 'Create a new policy binding to attach a policy to a target (flow, stage, etc.).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -395,6 +410,7 @@ export function registerPolicyTools(
   // 16. Update policy binding
   registerTool(server, config, {
     name: 'authentik_policy_bindings_update',
+    title: 'Update Policy Binding',
     description: 'Update an existing policy binding. Only provided fields are modified.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -433,6 +449,7 @@ export function registerPolicyTools(
   // 17. Delete policy binding
   registerTool(server, config, {
     name: 'authentik_policy_bindings_delete',
+    title: 'Delete Policy Binding',
     description: 'Delete a policy binding by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -453,6 +470,7 @@ export function registerPolicyTools(
   // 18. List reputation scores
   registerTool(server, config, {
     name: 'authentik_reputation_scores_list',
+    title: 'List Reputation Scores',
     description: 'List reputation scores with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -483,6 +501,7 @@ export function registerPolicyTools(
   // 19. Delete reputation score
   registerTool(server, config, {
     name: 'authentik_reputation_scores_delete',
+    title: 'Delete Reputation Score',
     description: 'Delete a reputation score by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },

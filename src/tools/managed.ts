@@ -12,6 +12,7 @@ export function registerManagedTools(
   // 1. List blueprint instances
   registerTool(server, config, {
     name: 'authentik_blueprints_list',
+    title: 'List Blueprints',
     description: 'List managed blueprint instances with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -40,6 +41,7 @@ export function registerManagedTools(
   // 2. Get blueprint instance
   registerTool(server, config, {
     name: 'authentik_blueprints_get',
+    title: 'Get Blueprint',
     description: 'Get a single blueprint instance by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -58,6 +60,7 @@ export function registerManagedTools(
   // 3. Create blueprint instance
   registerTool(server, config, {
     name: 'authentik_blueprints_create',
+    title: 'Create Blueprint',
     description: 'Create a new managed blueprint instance.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -86,6 +89,7 @@ export function registerManagedTools(
   // 4. Update blueprint instance
   registerTool(server, config, {
     name: 'authentik_blueprints_update',
+    title: 'Update Blueprint',
     description: 'Update an existing blueprint instance. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -116,6 +120,7 @@ export function registerManagedTools(
   // 5. Delete blueprint instance
   registerTool(server, config, {
     name: 'authentik_blueprints_delete',
+    title: 'Delete Blueprint',
     description: 'Delete a blueprint instance by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -134,6 +139,7 @@ export function registerManagedTools(
   // 6. List available blueprints
   registerTool(server, config, {
     name: 'authentik_blueprints_available',
+    title: 'List Available Blueprints',
     description: 'List all available blueprint files that can be used to create blueprint instances.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -147,6 +153,7 @@ export function registerManagedTools(
   // 7. Apply blueprint
   registerTool(server, config, {
     name: 'authentik_blueprints_apply',
+    title: 'Apply Blueprint',
     description: 'Apply a blueprint instance, executing its configuration. This may create, update, or delete objects.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },

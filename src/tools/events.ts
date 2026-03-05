@@ -14,6 +14,7 @@ export function registerEventTools(
   // 1. List events
   registerTool(server, config, {
     name: 'authentik_events_list',
+    title: 'List Events',
     description: 'List audit events with optional filters for action, username, client IP, and more.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -44,6 +45,7 @@ export function registerEventTools(
   // 2. Get event
   registerTool(server, config, {
     name: 'authentik_events_get',
+    title: 'Get Event',
     description: 'Get a single audit event by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -62,6 +64,7 @@ export function registerEventTools(
   // 3. Create event
   registerTool(server, config, {
     name: 'authentik_events_create',
+    title: 'Create Event',
     description: 'Create a new audit event.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -90,6 +93,7 @@ export function registerEventTools(
   // 4. List event actions
   registerTool(server, config, {
     name: 'authentik_events_actions_list',
+    title: 'List Event Actions',
     description: 'List all available event action types.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -104,6 +108,7 @@ export function registerEventTools(
   // 5. Top events per user
   registerTool(server, config, {
     name: 'authentik_events_top_per_user',
+    title: 'Get Top Events per User',
     description: 'Get the top N events grouped by user count.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -124,6 +129,7 @@ export function registerEventTools(
   // 6. Event volume
   registerTool(server, config, {
     name: 'authentik_events_volume',
+    title: 'Get Event Volume',
     description: 'Get event volume data for specified filters and timeframe.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -150,6 +156,7 @@ export function registerEventTools(
   // 7. List notification rules
   registerTool(server, config, {
     name: 'authentik_events_rules_list',
+    title: 'List Notification Rules',
     description: 'List notification rules with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -178,6 +185,7 @@ export function registerEventTools(
   // 8. Get notification rule
   registerTool(server, config, {
     name: 'authentik_events_rules_get',
+    title: 'Get Notification Rule',
     description: 'Get a single notification rule by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -196,6 +204,7 @@ export function registerEventTools(
   // 9. Create notification rule
   registerTool(server, config, {
     name: 'authentik_events_rules_create',
+    title: 'Create Notification Rule',
     description: 'Create a new notification rule.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -224,6 +233,7 @@ export function registerEventTools(
   // 10. Update notification rule
   registerTool(server, config, {
     name: 'authentik_events_rules_update',
+    title: 'Update Notification Rule',
     description: 'Update an existing notification rule. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -254,6 +264,7 @@ export function registerEventTools(
   // 11. Delete notification rule
   registerTool(server, config, {
     name: 'authentik_events_rules_delete',
+    title: 'Delete Notification Rule',
     description: 'Delete a notification rule by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -274,6 +285,7 @@ export function registerEventTools(
   // 12. List notification transports
   registerTool(server, config, {
     name: 'authentik_events_transports_list',
+    title: 'List Notification Transports',
     description: 'List notification transports with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -302,6 +314,7 @@ export function registerEventTools(
   // 13. Get notification transport
   registerTool(server, config, {
     name: 'authentik_events_transports_get',
+    title: 'Get Notification Transport',
     description: 'Get a single notification transport by its UUID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -320,6 +333,7 @@ export function registerEventTools(
   // 14. Create notification transport
   registerTool(server, config, {
     name: 'authentik_events_transports_create',
+    title: 'Create Notification Transport',
     description: 'Create a new notification transport.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -350,6 +364,7 @@ export function registerEventTools(
   // 15. Update notification transport
   registerTool(server, config, {
     name: 'authentik_events_transports_update',
+    title: 'Update Notification Transport',
     description: 'Update an existing notification transport. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -382,6 +397,7 @@ export function registerEventTools(
   // 16. Delete notification transport
   registerTool(server, config, {
     name: 'authentik_events_transports_delete',
+    title: 'Delete Notification Transport',
     description: 'Delete a notification transport by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -400,6 +416,7 @@ export function registerEventTools(
   // 17. Test notification transport
   registerTool(server, config, {
     name: 'authentik_events_transports_test',
+    title: 'Test Notification Transport',
     description: 'Send a test notification using the specified transport.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -420,6 +437,7 @@ export function registerEventTools(
   // 18. List notifications
   registerTool(server, config, {
     name: 'authentik_events_notifications_list',
+    title: 'List Notifications',
     description: 'List notifications for the current user with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -448,6 +466,7 @@ export function registerEventTools(
   // 19. Update notification (mark seen/unseen)
   registerTool(server, config, {
     name: 'authentik_events_notifications_update',
+    title: 'Update Notification',
     description: 'Update a notification, typically to mark it as seen or unseen.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -470,6 +489,7 @@ export function registerEventTools(
   // 20. Delete notification
   registerTool(server, config, {
     name: 'authentik_events_notifications_delete',
+    title: 'Delete Notification',
     description: 'Delete a notification by its UUID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -488,6 +508,7 @@ export function registerEventTools(
   // 21. Mark all notifications as seen
   registerTool(server, config, {
     name: 'authentik_events_notifications_mark_all_seen',
+    title: 'Mark All Notifications Seen',
     description: 'Mark all notifications as seen for the current user.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },

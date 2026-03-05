@@ -5,6 +5,7 @@ export interface AppConfig {
   token: string;
   accessTier: AccessTier;
   categories: string[] | null;
+  excludeToolTitles: boolean;
   transport: 'stdio' | 'http';
   httpPort: number;
   httpHost: string;

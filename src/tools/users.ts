@@ -12,6 +12,7 @@ export function registerUserTools(
   // 1. List users
   registerTool(server, config, {
     name: 'authentik_users_list',
+    title: 'List Users',
     description: 'List users with optional filters for username, email, name, active status, superuser status, path, groups, and search.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -52,6 +53,7 @@ export function registerUserTools(
   // 2. Get user
   registerTool(server, config, {
     name: 'authentik_users_get',
+    title: 'Get User',
     description: 'Get a single user by their numeric ID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -70,6 +72,7 @@ export function registerUserTools(
   // 3. Create user
   registerTool(server, config, {
     name: 'authentik_users_create',
+    title: 'Create User',
     description: 'Create a new user. Use authentik_users_set_password to set the password after creation.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -100,6 +103,7 @@ export function registerUserTools(
   // 4. Update user
   registerTool(server, config, {
     name: 'authentik_users_update',
+    title: 'Update User',
     description: 'Update an existing user. Only provided fields are modified (partial update).',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -132,6 +136,7 @@ export function registerUserTools(
   // 5. Delete user
   registerTool(server, config, {
     name: 'authentik_users_delete',
+    title: 'Delete User',
     description: 'Delete a user by their numeric ID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -148,6 +153,7 @@ export function registerUserTools(
   // 6. Get current user (me)
   registerTool(server, config, {
     name: 'authentik_users_me',
+    title: 'Get Current User',
     description: 'Get information about the currently authenticated user.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -161,6 +167,7 @@ export function registerUserTools(
   // 7. Set password
   registerTool(server, config, {
     name: 'authentik_users_set_password',
+    title: 'Set User Password',
     description: 'Set a new password for a user.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -183,6 +190,7 @@ export function registerUserTools(
   // 8. Create service account
   registerTool(server, config, {
     name: 'authentik_users_create_service_account',
+    title: 'Create Service Account',
     description: 'Create a new service account user with an optional associated group and token.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -209,6 +217,7 @@ export function registerUserTools(
   // 9. Generate recovery link
   registerTool(server, config, {
     name: 'authentik_users_generate_recovery_link',
+    title: 'Generate Recovery Link',
     description: 'Generate a temporary recovery link for a user to regain account access.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -227,6 +236,7 @@ export function registerUserTools(
   // 10. Send recovery email
   registerTool(server, config, {
     name: 'authentik_users_send_recovery_email',
+    title: 'Send Recovery Email',
     description: 'Send a recovery email to a user using a specified email stage.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -247,6 +257,7 @@ export function registerUserTools(
   // 11. List user paths
   registerTool(server, config, {
     name: 'authentik_users_list_paths',
+    title: 'List User Paths',
     description: 'List all user paths configured in the system.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

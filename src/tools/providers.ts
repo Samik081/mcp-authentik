@@ -64,6 +64,7 @@ export function registerProviderTools(
   // 1. List all providers (cross-type)
   registerTool(server, config, {
     name: 'authentik_providers_list',
+    title: 'List Providers',
     description: 'List all providers across all types with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -92,6 +93,7 @@ export function registerProviderTools(
   // 2. Get provider (cross-type)
   registerTool(server, config, {
     name: 'authentik_providers_get',
+    title: 'Get Provider',
     description: 'Get a single provider by its numeric ID (cross-type).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -110,6 +112,7 @@ export function registerProviderTools(
   // 3. Delete provider (cross-type)
   registerTool(server, config, {
     name: 'authentik_providers_delete',
+    title: 'Delete Provider',
     description: 'Delete a provider by its numeric ID (cross-type). This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -126,6 +129,7 @@ export function registerProviderTools(
   // 4. List provider types
   registerTool(server, config, {
     name: 'authentik_providers_types_list',
+    title: 'List Provider Types',
     description: 'List all available provider types.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -141,6 +145,7 @@ export function registerProviderTools(
   // 5. List providers by type
   registerTool(server, config, {
     name: 'authentik_providers_by_type_list',
+    title: 'List Providers by Type',
     description: 'List providers of a specific type with optional filters.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -171,6 +176,7 @@ export function registerProviderTools(
   // 6. Get provider by type
   registerTool(server, config, {
     name: 'authentik_providers_by_type_get',
+    title: 'Get Provider by Type',
     description: 'Get a single provider of a specific type by its numeric ID.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -193,6 +199,7 @@ export function registerProviderTools(
   // 7. Create provider by type
   registerTool(server, config, {
     name: 'authentik_providers_by_type_create',
+    title: 'Create Provider by Type',
     description: 'Create a new provider of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
@@ -223,6 +230,7 @@ export function registerProviderTools(
   // 8. Update provider by type
   registerTool(server, config, {
     name: 'authentik_providers_by_type_update',
+    title: 'Update Provider by Type',
     description: 'Update an existing provider of a specific type. Pass type-specific fields in the config object.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
@@ -249,6 +257,7 @@ export function registerProviderTools(
   // 9. Delete provider by type
   registerTool(server, config, {
     name: 'authentik_providers_by_type_delete',
+    title: 'Delete Provider by Type',
     description: 'Delete a provider of a specific type by its numeric ID. This action is irreversible.',
     accessTier: 'full',
     annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
@@ -271,6 +280,7 @@ export function registerProviderTools(
   // 10. OAuth2 setup URLs
   registerTool(server, config, {
     name: 'authentik_providers_oauth2_setup_urls',
+    title: 'Get OAuth2 Setup URLs',
     description: 'Get OAuth2 provider setup URLs (authorize, token, userinfo, etc.).',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -289,6 +299,7 @@ export function registerProviderTools(
   // 11. SAML metadata
   registerTool(server, config, {
     name: 'authentik_providers_saml_metadata',
+    title: 'Get SAML Metadata',
     description: 'Get SAML provider metadata XML.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },

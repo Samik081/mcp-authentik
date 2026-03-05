@@ -14,6 +14,7 @@ export function registerSsfTools(
   // 1. List SSF event streams
   registerTool(server, config, {
     name: 'authentik_ssf_streams_list',
+    title: 'List SSF Streams',
     description: 'List Shared Signals Framework (SSF) event streams with optional filters. Read-only.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
@@ -42,6 +43,7 @@ export function registerSsfTools(
   // 2. Get SSF event stream
   registerTool(server, config, {
     name: 'authentik_ssf_streams_get',
+    title: 'Get SSF Stream',
     description: 'Get a single SSF event stream by its UUID. Read-only.',
     accessTier: 'read-only',
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
