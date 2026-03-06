@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerFlowTools(
   server: McpServer,
@@ -13,21 +13,37 @@ export function registerFlowTools(
 
   // 1. List flows
   registerTool(server, config, {
-    name: 'authentik_flows_list',
-    title: 'List Flows',
-    description: 'List flows with optional filters for search, designation, and ordering.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_list",
+    title: "List Flows",
+    description:
+      "List flows with optional filters for search, designation, and ordering.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      search: z.string().optional().describe('Search across flow fields'),
-      designation: z.enum([
-        'authentication', 'authorization', 'invalidation',
-        'enrollment', 'unenrollment', 'recovery', 'stage_configuration',
-      ]).optional().describe('Filter by flow designation'),
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      search: z.string().optional().describe("Search across flow fields"),
+      designation: z
+        .enum([
+          "authentication",
+          "authorization",
+          "invalidation",
+          "enrollment",
+          "unenrollment",
+          "recovery",
+          "stage_configuration",
+        ])
+        .optional()
+        .describe("Filter by flow designation"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesList({
@@ -43,14 +59,18 @@ export function registerFlowTools(
 
   // 2. Get flow
   registerTool(server, config, {
-    name: 'authentik_flows_get',
-    title: 'Get Flow',
-    description: 'Get a single flow by its slug.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_get",
+    title: "Get Flow",
+    description: "Get a single flow by its slug.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      slug: z.string().describe('Flow slug'),
+      slug: z.string().describe("Flow slug"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesRetrieve({
@@ -62,28 +82,53 @@ export function registerFlowTools(
 
   // 3. Create flow
   registerTool(server, config, {
-    name: 'authentik_flows_create',
-    title: 'Create Flow',
-    description: 'Create a new flow with name, slug, title, and designation.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'flows',
+    name: "authentik_flows_create",
+    title: "Create Flow",
+    description: "Create a new flow with name, slug, title, and designation.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "flows",
     inputSchema: {
-      name: z.string().describe('Flow display name (required)'),
-      slug: z.string().describe('Flow slug for URLs (required)'),
-      title: z.string().describe('Flow title shown to users (required)'),
-      designation: z.enum([
-        'authentication', 'authorization', 'invalidation',
-        'enrollment', 'unenrollment', 'recovery', 'stage_configuration',
-      ]).describe('Flow designation (required)'),
-      policy_engine_mode: z.enum(['all', 'any']).optional().describe('Policy engine mode'),
-      compatibility_mode: z.boolean().optional().describe('Enable compatibility mode for older browsers'),
-      layout: z.enum([
-        'stacked', 'content_left', 'content_right', 'sidebar_left', 'sidebar_right',
-      ]).optional().describe('Flow layout'),
-      denied_action: z.enum([
-        'message_continue', 'message', 'continue',
-      ]).optional().describe('Action when access is denied'),
+      name: z.string().describe("Flow display name (required)"),
+      slug: z.string().describe("Flow slug for URLs (required)"),
+      title: z.string().describe("Flow title shown to users (required)"),
+      designation: z
+        .enum([
+          "authentication",
+          "authorization",
+          "invalidation",
+          "enrollment",
+          "unenrollment",
+          "recovery",
+          "stage_configuration",
+        ])
+        .describe("Flow designation (required)"),
+      policy_engine_mode: z
+        .enum(["all", "any"])
+        .optional()
+        .describe("Policy engine mode"),
+      compatibility_mode: z
+        .boolean()
+        .optional()
+        .describe("Enable compatibility mode for older browsers"),
+      layout: z
+        .enum([
+          "stacked",
+          "content_left",
+          "content_right",
+          "sidebar_left",
+          "sidebar_right",
+        ])
+        .optional()
+        .describe("Flow layout"),
+      denied_action: z
+        .enum(["message_continue", "message", "continue"])
+        .optional()
+        .describe("Action when access is denied"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesCreate({
@@ -104,28 +149,55 @@ export function registerFlowTools(
 
   // 4. Update flow
   registerTool(server, config, {
-    name: 'authentik_flows_update',
-    title: 'Update Flow',
-    description: 'Update an existing flow. Only provided fields are modified (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_update",
+    title: "Update Flow",
+    description:
+      "Update an existing flow. Only provided fields are modified (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      slug: z.string().describe('Flow slug (required, used as identifier)'),
-      name: z.string().optional().describe('New display name'),
-      title: z.string().optional().describe('New title'),
-      designation: z.enum([
-        'authentication', 'authorization', 'invalidation',
-        'enrollment', 'unenrollment', 'recovery', 'stage_configuration',
-      ]).optional().describe('New designation'),
-      policy_engine_mode: z.enum(['all', 'any']).optional().describe('Policy engine mode'),
-      compatibility_mode: z.boolean().optional().describe('Enable compatibility mode'),
-      layout: z.enum([
-        'stacked', 'content_left', 'content_right', 'sidebar_left', 'sidebar_right',
-      ]).optional().describe('Flow layout'),
-      denied_action: z.enum([
-        'message_continue', 'message', 'continue',
-      ]).optional().describe('Action when access is denied'),
+      slug: z.string().describe("Flow slug (required, used as identifier)"),
+      name: z.string().optional().describe("New display name"),
+      title: z.string().optional().describe("New title"),
+      designation: z
+        .enum([
+          "authentication",
+          "authorization",
+          "invalidation",
+          "enrollment",
+          "unenrollment",
+          "recovery",
+          "stage_configuration",
+        ])
+        .optional()
+        .describe("New designation"),
+      policy_engine_mode: z
+        .enum(["all", "any"])
+        .optional()
+        .describe("Policy engine mode"),
+      compatibility_mode: z
+        .boolean()
+        .optional()
+        .describe("Enable compatibility mode"),
+      layout: z
+        .enum([
+          "stacked",
+          "content_left",
+          "content_right",
+          "sidebar_left",
+          "sidebar_right",
+        ])
+        .optional()
+        .describe("Flow layout"),
+      denied_action: z
+        .enum(["message_continue", "message", "continue"])
+        .optional()
+        .describe("Action when access is denied"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesPartialUpdate({
@@ -146,17 +218,23 @@ export function registerFlowTools(
 
   // 5. Delete flow
   registerTool(server, config, {
-    name: 'authentik_flows_delete',
-    title: 'Delete Flow',
-    description: 'Delete a flow by its slug. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'flows',
+    name: "authentik_flows_delete",
+    title: "Delete Flow",
+    description: "Delete a flow by its slug. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "flows",
     inputSchema: {
-      slug: z.string().describe('Flow slug to delete'),
+      slug: z.string().describe("Flow slug to delete"),
     },
     handler: async (args) => {
-      await client.flowsApi.flowsInstancesDestroy({ slug: args.slug as string });
+      await client.flowsApi.flowsInstancesDestroy({
+        slug: args.slug as string,
+      });
       return `Flow "${args.slug}" deleted successfully.`;
     },
   });
@@ -165,14 +243,19 @@ export function registerFlowTools(
 
   // 6. Flow diagram
   registerTool(server, config, {
-    name: 'authentik_flows_diagram',
-    title: 'Get Flow Diagram',
-    description: 'Get a visual diagram of a flow showing its stages and bindings.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_diagram",
+    title: "Get Flow Diagram",
+    description:
+      "Get a visual diagram of a flow showing its stages and bindings.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      slug: z.string().describe('Flow slug'),
+      slug: z.string().describe("Flow slug"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesDiagramRetrieve({
@@ -184,14 +267,18 @@ export function registerFlowTools(
 
   // 7. Export flow
   registerTool(server, config, {
-    name: 'authentik_flows_export',
-    title: 'Export Flow',
-    description: 'Export a flow as YAML. Returns the YAML content as text.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_export",
+    title: "Export Flow",
+    description: "Export a flow as YAML. Returns the YAML content as text.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      slug: z.string().describe('Flow slug to export'),
+      slug: z.string().describe("Flow slug to export"),
     },
     handler: async (args) => {
       const blob = await client.flowsApi.flowsInstancesExportRetrieve({
@@ -204,15 +291,22 @@ export function registerFlowTools(
 
   // 8. Import flow
   registerTool(server, config, {
-    name: 'authentik_flows_import',
-    title: 'Import Flow',
-    description: 'Import a flow from YAML content.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'flows',
+    name: "authentik_flows_import",
+    title: "Import Flow",
+    description: "Import a flow from YAML content.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "flows",
     inputSchema: {
-      content: z.string().describe('YAML flow definition content'),
-      clear: z.boolean().optional().describe('Clear existing flow objects before import'),
+      content: z.string().describe("YAML flow definition content"),
+      clear: z
+        .boolean()
+        .optional()
+        .describe("Clear existing flow objects before import"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesImportCreate({
@@ -225,12 +319,16 @@ export function registerFlowTools(
 
   // 9. Flow cache info
   registerTool(server, config, {
-    name: 'authentik_flows_cache_info',
-    title: 'Get Flow Cache Info',
-    description: 'Get information about cached flows.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_cache_info",
+    title: "Get Flow Cache Info",
+    description: "Get information about cached flows.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     handler: async () => {
       const result = await client.flowsApi.flowsInstancesCacheInfoRetrieve();
       return JSON.stringify(result, null, 2);
@@ -239,15 +337,19 @@ export function registerFlowTools(
 
   // 10. Clear flow cache
   registerTool(server, config, {
-    name: 'authentik_flows_cache_clear',
-    title: 'Clear Flow Cache',
-    description: 'Clear the flow cache.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_cache_clear",
+    title: "Clear Flow Cache",
+    description: "Clear the flow cache.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "flows",
     handler: async () => {
       await client.flowsApi.flowsInstancesCacheClearCreate();
-      return 'Flow cache cleared successfully.';
+      return "Flow cache cleared successfully.";
     },
   });
 
@@ -255,19 +357,23 @@ export function registerFlowTools(
 
   // 11. List flow stage bindings
   registerTool(server, config, {
-    name: 'authentik_flows_bindings_list',
-    title: 'List Flow Stage Bindings',
-    description: 'List flow stage bindings with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_bindings_list",
+    title: "List Flow Stage Bindings",
+    description: "List flow stage bindings with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      target: z.string().optional().describe('Filter by target flow slug'),
-      stage: z.string().optional().describe('Filter by stage UUID'),
-      search: z.string().optional().describe('Search across binding fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      target: z.string().optional().describe("Filter by target flow slug"),
+      stage: z.string().optional().describe("Filter by stage UUID"),
+      search: z.string().optional().describe("Search across binding fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsBindingsList({
@@ -284,14 +390,18 @@ export function registerFlowTools(
 
   // 12. Get flow stage binding
   registerTool(server, config, {
-    name: 'authentik_flows_bindings_get',
-    title: 'Get Flow Stage Binding',
-    description: 'Get a single flow stage binding by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_bindings_get",
+    title: "Get Flow Stage Binding",
+    description: "Get a single flow stage binding by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      fsb_uuid: z.string().describe('Flow stage binding UUID'),
+      fsb_uuid: z.string().describe("Flow stage binding UUID"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsBindingsRetrieve({
@@ -303,20 +413,36 @@ export function registerFlowTools(
 
   // 13. Create flow stage binding
   registerTool(server, config, {
-    name: 'authentik_flows_bindings_create',
-    title: 'Create Flow Stage Binding',
-    description: 'Create a new flow stage binding to attach a stage to a flow.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'flows',
+    name: "authentik_flows_bindings_create",
+    title: "Create Flow Stage Binding",
+    description: "Create a new flow stage binding to attach a stage to a flow.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "flows",
     inputSchema: {
-      target: z.string().describe('Target flow UUID (required)'),
-      stage: z.string().describe('Stage UUID to bind (required)'),
-      order: z.number().describe('Binding order (required)'),
-      evaluate_on_plan: z.boolean().optional().describe('Evaluate policies during plan phase'),
-      re_evaluate_policies: z.boolean().optional().describe('Re-evaluate policies on each request'),
-      policy_engine_mode: z.enum(['all', 'any']).optional().describe('Policy engine mode'),
-      invalid_response_action: z.enum(['retry', 'restart', 'skip']).optional().describe('Action on invalid response'),
+      target: z.string().describe("Target flow UUID (required)"),
+      stage: z.string().describe("Stage UUID to bind (required)"),
+      order: z.number().describe("Binding order (required)"),
+      evaluate_on_plan: z
+        .boolean()
+        .optional()
+        .describe("Evaluate policies during plan phase"),
+      re_evaluate_policies: z
+        .boolean()
+        .optional()
+        .describe("Re-evaluate policies on each request"),
+      policy_engine_mode: z
+        .enum(["all", "any"])
+        .optional()
+        .describe("Policy engine mode"),
+      invalid_response_action: z
+        .enum(["retry", "restart", "skip"])
+        .optional()
+        .describe("Action on invalid response"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsBindingsCreate({
@@ -336,21 +462,38 @@ export function registerFlowTools(
 
   // 14. Update flow stage binding
   registerTool(server, config, {
-    name: 'authentik_flows_bindings_update',
-    title: 'Update Flow Stage Binding',
-    description: 'Update an existing flow stage binding. Only provided fields are modified.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'flows',
+    name: "authentik_flows_bindings_update",
+    title: "Update Flow Stage Binding",
+    description:
+      "Update an existing flow stage binding. Only provided fields are modified.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "flows",
     inputSchema: {
-      fsb_uuid: z.string().describe('Flow stage binding UUID (required)'),
-      target: z.string().optional().describe('New target flow UUID'),
-      stage: z.string().optional().describe('New stage UUID'),
-      order: z.number().optional().describe('New binding order'),
-      evaluate_on_plan: z.boolean().optional().describe('Evaluate policies during plan phase'),
-      re_evaluate_policies: z.boolean().optional().describe('Re-evaluate policies on each request'),
-      policy_engine_mode: z.enum(['all', 'any']).optional().describe('Policy engine mode'),
-      invalid_response_action: z.enum(['retry', 'restart', 'skip']).optional().describe('Action on invalid response'),
+      fsb_uuid: z.string().describe("Flow stage binding UUID (required)"),
+      target: z.string().optional().describe("New target flow UUID"),
+      stage: z.string().optional().describe("New stage UUID"),
+      order: z.number().optional().describe("New binding order"),
+      evaluate_on_plan: z
+        .boolean()
+        .optional()
+        .describe("Evaluate policies during plan phase"),
+      re_evaluate_policies: z
+        .boolean()
+        .optional()
+        .describe("Re-evaluate policies on each request"),
+      policy_engine_mode: z
+        .enum(["all", "any"])
+        .optional()
+        .describe("Policy engine mode"),
+      invalid_response_action: z
+        .enum(["retry", "restart", "skip"])
+        .optional()
+        .describe("Action on invalid response"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsBindingsPartialUpdate({
@@ -371,17 +514,24 @@ export function registerFlowTools(
 
   // 15. Delete flow stage binding
   registerTool(server, config, {
-    name: 'authentik_flows_bindings_delete',
-    title: 'Delete Flow Stage Binding',
-    description: 'Delete a flow stage binding by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'flows',
+    name: "authentik_flows_bindings_delete",
+    title: "Delete Flow Stage Binding",
+    description:
+      "Delete a flow stage binding by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "flows",
     inputSchema: {
-      fsb_uuid: z.string().describe('Flow stage binding UUID to delete'),
+      fsb_uuid: z.string().describe("Flow stage binding UUID to delete"),
     },
     handler: async (args) => {
-      await client.flowsApi.flowsBindingsDestroy({ fsbUuid: args.fsb_uuid as string });
+      await client.flowsApi.flowsBindingsDestroy({
+        fsbUuid: args.fsb_uuid as string,
+      });
       return `Flow stage binding ${args.fsb_uuid} deleted successfully.`;
     },
   });

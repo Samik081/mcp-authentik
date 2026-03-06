@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerBrandTools(
   server: McpServer,
@@ -11,19 +11,27 @@ export function registerBrandTools(
 ): void {
   // 1. List brands
   registerTool(server, config, {
-    name: 'authentik_brands_list',
-    title: 'List Brands',
-    description: 'List brands with optional filters for UUID, domain, and search.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'core',
+    name: "authentik_brands_list",
+    title: "List Brands",
+    description:
+      "List brands with optional filters for UUID, domain, and search.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      brand_uuid: z.string().optional().describe('Filter by brand UUID'),
-      domain: z.string().optional().describe('Filter by domain'),
-      search: z.string().optional().describe('Search across brand fields'),
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      brand_uuid: z.string().optional().describe("Filter by brand UUID"),
+      domain: z.string().optional().describe("Filter by domain"),
+      search: z.string().optional().describe("Search across brand fields"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreBrandsList({
@@ -40,14 +48,18 @@ export function registerBrandTools(
 
   // 2. Get brand
   registerTool(server, config, {
-    name: 'authentik_brands_get',
-    title: 'Get Brand',
-    description: 'Get a single brand by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'core',
+    name: "authentik_brands_get",
+    title: "Get Brand",
+    description: "Get a single brand by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      brand_uuid: z.string().describe('Brand UUID'),
+      brand_uuid: z.string().describe("Brand UUID"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreBrandsRetrieve({
@@ -59,27 +71,77 @@ export function registerBrandTools(
 
   // 3. Create brand
   registerTool(server, config, {
-    name: 'authentik_brands_create',
-    title: 'Create Brand',
-    description: 'Create a new brand with domain, branding settings, flow assignments, and optional attributes.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'core',
+    name: "authentik_brands_create",
+    title: "Create Brand",
+    description:
+      "Create a new brand with domain, branding settings, flow assignments, and optional attributes.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "core",
     inputSchema: {
-      domain: z.string().describe('Domain that activates this brand (required). Can be a superset, e.g. "a.b" matches "aa.b" and "ba.b".'),
-      is_default: z.boolean().optional().describe('Whether this is the default brand'),
-      branding_title: z.string().optional().describe('Branding title displayed in the UI'),
-      branding_logo: z.string().optional().describe('URL or path to the branding logo'),
-      branding_favicon: z.string().optional().describe('URL or path to the favicon'),
-      flow_authentication: z.string().optional().describe('Flow UUID for authentication'),
-      flow_invalidation: z.string().optional().describe('Flow UUID for session invalidation'),
-      flow_recovery: z.string().optional().describe('Flow UUID for account recovery'),
-      flow_unenrollment: z.string().optional().describe('Flow UUID for unenrollment'),
-      flow_user_settings: z.string().optional().describe('Flow UUID for user settings'),
-      flow_device_code: z.string().optional().describe('Flow UUID for device code authentication'),
-      default_application: z.string().optional().describe('Application slug to redirect external users to after authentication'),
-      web_certificate: z.string().optional().describe('Web certificate UUID for the authentik core webserver'),
-      attributes: z.record(z.unknown()).optional().describe('Custom attributes key-value pairs'),
+      domain: z
+        .string()
+        .describe(
+          'Domain that activates this brand (required). Can be a superset, e.g. "a.b" matches "aa.b" and "ba.b".',
+        ),
+      is_default: z
+        .boolean()
+        .optional()
+        .describe("Whether this is the default brand"),
+      branding_title: z
+        .string()
+        .optional()
+        .describe("Branding title displayed in the UI"),
+      branding_logo: z
+        .string()
+        .optional()
+        .describe("URL or path to the branding logo"),
+      branding_favicon: z
+        .string()
+        .optional()
+        .describe("URL or path to the favicon"),
+      flow_authentication: z
+        .string()
+        .optional()
+        .describe("Flow UUID for authentication"),
+      flow_invalidation: z
+        .string()
+        .optional()
+        .describe("Flow UUID for session invalidation"),
+      flow_recovery: z
+        .string()
+        .optional()
+        .describe("Flow UUID for account recovery"),
+      flow_unenrollment: z
+        .string()
+        .optional()
+        .describe("Flow UUID for unenrollment"),
+      flow_user_settings: z
+        .string()
+        .optional()
+        .describe("Flow UUID for user settings"),
+      flow_device_code: z
+        .string()
+        .optional()
+        .describe("Flow UUID for device code authentication"),
+      default_application: z
+        .string()
+        .optional()
+        .describe(
+          "Application slug to redirect external users to after authentication",
+        ),
+      web_certificate: z
+        .string()
+        .optional()
+        .describe("Web certificate UUID for the authentik core webserver"),
+      attributes: z
+        .record(z.unknown())
+        .optional()
+        .describe("Custom attributes key-value pairs"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreBrandsCreate({
@@ -106,28 +168,60 @@ export function registerBrandTools(
 
   // 4. Update brand
   registerTool(server, config, {
-    name: 'authentik_brands_update',
-    title: 'Update Brand',
-    description: 'Update an existing brand. Only provided fields are modified (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'core',
+    name: "authentik_brands_update",
+    title: "Update Brand",
+    description:
+      "Update an existing brand. Only provided fields are modified (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      brand_uuid: z.string().describe('Brand UUID (required)'),
-      domain: z.string().optional().describe('New domain'),
-      is_default: z.boolean().optional().describe('Whether this is the default brand'),
-      branding_title: z.string().optional().describe('New branding title'),
-      branding_logo: z.string().optional().describe('New logo URL or path'),
-      branding_favicon: z.string().optional().describe('New favicon URL or path'),
-      flow_authentication: z.string().optional().describe('Flow UUID for authentication'),
-      flow_invalidation: z.string().optional().describe('Flow UUID for session invalidation'),
-      flow_recovery: z.string().optional().describe('Flow UUID for account recovery'),
-      flow_unenrollment: z.string().optional().describe('Flow UUID for unenrollment'),
-      flow_user_settings: z.string().optional().describe('Flow UUID for user settings'),
-      flow_device_code: z.string().optional().describe('Flow UUID for device code authentication'),
-      default_application: z.string().optional().describe('Application slug'),
-      web_certificate: z.string().optional().describe('Web certificate UUID'),
-      attributes: z.record(z.unknown()).optional().describe('Custom attributes key-value pairs'),
+      brand_uuid: z.string().describe("Brand UUID (required)"),
+      domain: z.string().optional().describe("New domain"),
+      is_default: z
+        .boolean()
+        .optional()
+        .describe("Whether this is the default brand"),
+      branding_title: z.string().optional().describe("New branding title"),
+      branding_logo: z.string().optional().describe("New logo URL or path"),
+      branding_favicon: z
+        .string()
+        .optional()
+        .describe("New favicon URL or path"),
+      flow_authentication: z
+        .string()
+        .optional()
+        .describe("Flow UUID for authentication"),
+      flow_invalidation: z
+        .string()
+        .optional()
+        .describe("Flow UUID for session invalidation"),
+      flow_recovery: z
+        .string()
+        .optional()
+        .describe("Flow UUID for account recovery"),
+      flow_unenrollment: z
+        .string()
+        .optional()
+        .describe("Flow UUID for unenrollment"),
+      flow_user_settings: z
+        .string()
+        .optional()
+        .describe("Flow UUID for user settings"),
+      flow_device_code: z
+        .string()
+        .optional()
+        .describe("Flow UUID for device code authentication"),
+      default_application: z.string().optional().describe("Application slug"),
+      web_certificate: z.string().optional().describe("Web certificate UUID"),
+      attributes: z
+        .record(z.unknown())
+        .optional()
+        .describe("Custom attributes key-value pairs"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreBrandsPartialUpdate({
@@ -155,14 +249,18 @@ export function registerBrandTools(
 
   // 5. Delete brand
   registerTool(server, config, {
-    name: 'authentik_brands_delete',
-    title: 'Delete Brand',
-    description: 'Delete a brand by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'core',
+    name: "authentik_brands_delete",
+    title: "Delete Brand",
+    description: "Delete a brand by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "core",
     inputSchema: {
-      brand_uuid: z.string().describe('Brand UUID to delete'),
+      brand_uuid: z.string().describe("Brand UUID to delete"),
     },
     handler: async (args) => {
       await client.coreApi.coreBrandsDestroy({
@@ -174,12 +272,16 @@ export function registerBrandTools(
 
   // 6. Get current brand
   registerTool(server, config, {
-    name: 'authentik_brands_current',
-    title: 'Get Current Brand',
-    description: 'Get the brand configuration for the current domain.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'core',
+    name: "authentik_brands_current",
+    title: "Get Current Brand",
+    description: "Get the brand configuration for the current domain.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "core",
     handler: async () => {
       const result = await client.coreApi.coreBrandsCurrentRetrieve();
       return JSON.stringify(result, null, 2);

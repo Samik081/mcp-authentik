@@ -1,7 +1,7 @@
 import {
-  Configuration,
   AdminApi,
   AuthenticatorsApi,
+  Configuration,
   CoreApi,
   CryptoApi,
   EnterpriseApi,
@@ -21,7 +21,7 @@ import {
   SsfApi,
   StagesApi,
   TenantsApi,
-} from '@goauthentik/api';
+} from "@goauthentik/api";
 
 export class AuthentikClient {
   private readonly config: Configuration;
@@ -37,107 +37,128 @@ export class AuthentikClient {
 
   private _adminApi?: AdminApi;
   get adminApi(): AdminApi {
-    return (this._adminApi ??= new AdminApi(this.config));
+    this._adminApi ??= new AdminApi(this.config);
+    return this._adminApi;
   }
 
   private _authenticatorsApi?: AuthenticatorsApi;
   get authenticatorsApi(): AuthenticatorsApi {
-    return (this._authenticatorsApi ??= new AuthenticatorsApi(this.config));
+    this._authenticatorsApi ??= new AuthenticatorsApi(this.config);
+    return this._authenticatorsApi;
   }
 
   private _coreApi?: CoreApi;
   get coreApi(): CoreApi {
-    return (this._coreApi ??= new CoreApi(this.config));
+    this._coreApi ??= new CoreApi(this.config);
+    return this._coreApi;
   }
 
   private _cryptoApi?: CryptoApi;
   get cryptoApi(): CryptoApi {
-    return (this._cryptoApi ??= new CryptoApi(this.config));
+    this._cryptoApi ??= new CryptoApi(this.config);
+    return this._cryptoApi;
   }
 
   private _enterpriseApi?: EnterpriseApi;
   get enterpriseApi(): EnterpriseApi {
-    return (this._enterpriseApi ??= new EnterpriseApi(this.config));
+    this._enterpriseApi ??= new EnterpriseApi(this.config);
+    return this._enterpriseApi;
   }
 
   private _eventsApi?: EventsApi;
   get eventsApi(): EventsApi {
-    return (this._eventsApi ??= new EventsApi(this.config));
+    this._eventsApi ??= new EventsApi(this.config);
+    return this._eventsApi;
   }
 
   private _flowsApi?: FlowsApi;
   get flowsApi(): FlowsApi {
-    return (this._flowsApi ??= new FlowsApi(this.config));
+    this._flowsApi ??= new FlowsApi(this.config);
+    return this._flowsApi;
   }
 
   private _managedApi?: ManagedApi;
   get managedApi(): ManagedApi {
-    return (this._managedApi ??= new ManagedApi(this.config));
+    this._managedApi ??= new ManagedApi(this.config);
+    return this._managedApi;
   }
 
   private _oauth2Api?: Oauth2Api;
   get oauth2Api(): Oauth2Api {
-    return (this._oauth2Api ??= new Oauth2Api(this.config));
+    this._oauth2Api ??= new Oauth2Api(this.config);
+    return this._oauth2Api;
   }
 
   private _outpostsApi?: OutpostsApi;
   get outpostsApi(): OutpostsApi {
-    return (this._outpostsApi ??= new OutpostsApi(this.config));
+    this._outpostsApi ??= new OutpostsApi(this.config);
+    return this._outpostsApi;
   }
 
   private _policiesApi?: PoliciesApi;
   get policiesApi(): PoliciesApi {
-    return (this._policiesApi ??= new PoliciesApi(this.config));
+    this._policiesApi ??= new PoliciesApi(this.config);
+    return this._policiesApi;
   }
 
   private _propertymappingsApi?: PropertymappingsApi;
   get propertymappingsApi(): PropertymappingsApi {
-    return (this._propertymappingsApi ??= new PropertymappingsApi(this.config));
+    this._propertymappingsApi ??= new PropertymappingsApi(this.config);
+    return this._propertymappingsApi;
   }
 
   private _providersApi?: ProvidersApi;
   get providersApi(): ProvidersApi {
-    return (this._providersApi ??= new ProvidersApi(this.config));
+    this._providersApi ??= new ProvidersApi(this.config);
+    return this._providersApi;
   }
 
   private _racApi?: RacApi;
   get racApi(): RacApi {
-    return (this._racApi ??= new RacApi(this.config));
+    this._racApi ??= new RacApi(this.config);
+    return this._racApi;
   }
 
   private _rbacApi?: RbacApi;
   get rbacApi(): RbacApi {
-    return (this._rbacApi ??= new RbacApi(this.config));
+    this._rbacApi ??= new RbacApi(this.config);
+    return this._rbacApi;
   }
 
   private _rootApi?: RootApi;
   get rootApi(): RootApi {
-    return (this._rootApi ??= new RootApi(this.config));
+    this._rootApi ??= new RootApi(this.config);
+    return this._rootApi;
   }
 
   private _schemaApi?: SchemaApi;
   get schemaApi(): SchemaApi {
-    return (this._schemaApi ??= new SchemaApi(this.config));
+    this._schemaApi ??= new SchemaApi(this.config);
+    return this._schemaApi;
   }
 
   private _sourcesApi?: SourcesApi;
   get sourcesApi(): SourcesApi {
-    return (this._sourcesApi ??= new SourcesApi(this.config));
+    this._sourcesApi ??= new SourcesApi(this.config);
+    return this._sourcesApi;
   }
 
   private _ssfApi?: SsfApi;
   get ssfApi(): SsfApi {
-    return (this._ssfApi ??= new SsfApi(this.config));
+    this._ssfApi ??= new SsfApi(this.config);
+    return this._ssfApi;
   }
 
   private _stagesApi?: StagesApi;
   get stagesApi(): StagesApi {
-    return (this._stagesApi ??= new StagesApi(this.config));
+    this._stagesApi ??= new StagesApi(this.config);
+    return this._stagesApi;
   }
 
   private _tenantsApi?: TenantsApi;
   get tenantsApi(): TenantsApi {
-    return (this._tenantsApi ??= new TenantsApi(this.config));
+    this._tenantsApi ??= new TenantsApi(this.config);
+    return this._tenantsApi;
   }
 
   async validateConnection(): Promise<string> {

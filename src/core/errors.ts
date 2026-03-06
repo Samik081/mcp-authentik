@@ -1,42 +1,49 @@
-import { ResponseError, FetchError } from '@goauthentik/api';
-import { AppConfig } from '../types/index.js';
+import { FetchError, ResponseError } from "@goauthentik/api";
+import type { AppConfig } from "../types/index.js";
 
 function sanitizeMessage(message: string, config: AppConfig): string {
   let sanitized = message;
 
   // Replace token occurrences
   if (config.token) {
-    sanitized = sanitized.replaceAll(config.token, '[REDACTED]');
+    sanitized = sanitized.replaceAll(config.token, "[REDACTED]");
   }
 
   // Replace URL occurrences
   if (config.url) {
-    sanitized = sanitized.replaceAll(config.url, '[AUTHENTIK_URL]');
+    sanitized = sanitized.replaceAll(config.url, "[AUTHENTIK_URL]");
   }
 
   // Replace Bearer token patterns
-  sanitized = sanitized.replace(/Bearer\s+\S+/gi, 'Bearer [REDACTED]');
+  sanitized = sanitized.replace(/Bearer\s+\S+/gi, "Bearer [REDACTED]");
 
   // Replace Authorization header patterns
-  sanitized = sanitized.replace(/Authorization:\s*\S+/gi, 'Authorization: [REDACTED]');
+  sanitized = sanitized.replace(
+    /Authorization:\s*\S+/gi,
+    "Authorization: [REDACTED]",
+  );
 
   return sanitized;
 }
 
-export async function sanitizeError(error: unknown, config: AppConfig): Promise<string> {
+export async function sanitizeError(
+  error: unknown,
+  config: AppConfig,
+): Promise<string> {
   if (error instanceof ResponseError) {
     const status = error.response.status;
     const statusText = error.response.statusText;
     try {
       const body = await error.response.json();
-      if (typeof body === 'object' && body !== null) {
+      if (typeof body === "object" && body !== null) {
         const details = Object.entries(body)
           .map(([key, val]) => {
-            if (Array.isArray(val)) return `${key}: ${val.join(', ')}`;
-            if (typeof val === 'object' && val !== null) return `${key}: ${JSON.stringify(val)}`;
+            if (Array.isArray(val)) return `${key}: ${val.join(", ")}`;
+            if (typeof val === "object" && val !== null)
+              return `${key}: ${JSON.stringify(val)}`;
             return `${key}: ${val}`;
           })
-          .join('; ');
+          .join("; ");
         return sanitizeMessage(`${status} ${statusText}: ${details}`, config);
       }
     } catch {
@@ -46,7 +53,7 @@ export async function sanitizeError(error: unknown, config: AppConfig): Promise<
   }
 
   if (error instanceof FetchError) {
-    const causeMsg = error.cause?.message ?? 'Unknown fetch error';
+    const causeMsg = error.cause?.message ?? "Unknown fetch error";
     return sanitizeMessage(causeMsg, config);
   }
 
@@ -54,5 +61,5 @@ export async function sanitizeError(error: unknown, config: AppConfig): Promise<
     return sanitizeMessage(error.message, config);
   }
 
-  return 'An unknown error occurred';
+  return "An unknown error occurred";
 }

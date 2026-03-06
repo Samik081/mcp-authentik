@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerManagedTools(
   server: McpServer,
@@ -11,19 +11,26 @@ export function registerManagedTools(
 ): void {
   // 1. List blueprint instances
   registerTool(server, config, {
-    name: 'authentik_blueprints_list',
-    title: 'List Blueprints',
-    description: 'List managed blueprint instances with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'managed',
+    name: "authentik_blueprints_list",
+    title: "List Blueprints",
+    description: "List managed blueprint instances with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "managed",
     inputSchema: {
-      name: z.string().optional().describe('Filter by exact name'),
-      path: z.string().optional().describe('Filter by blueprint path'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      name: z.string().optional().describe("Filter by exact name"),
+      path: z.string().optional().describe("Filter by blueprint path"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.managedApi.managedBlueprintsList({
@@ -40,14 +47,18 @@ export function registerManagedTools(
 
   // 2. Get blueprint instance
   registerTool(server, config, {
-    name: 'authentik_blueprints_get',
-    title: 'Get Blueprint',
-    description: 'Get a single blueprint instance by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'managed',
+    name: "authentik_blueprints_get",
+    title: "Get Blueprint",
+    description: "Get a single blueprint instance by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "managed",
     inputSchema: {
-      instance_uuid: z.string().describe('Blueprint instance UUID'),
+      instance_uuid: z.string().describe("Blueprint instance UUID"),
     },
     handler: async (args) => {
       const result = await client.managedApi.managedBlueprintsRetrieve({
@@ -59,18 +70,31 @@ export function registerManagedTools(
 
   // 3. Create blueprint instance
   registerTool(server, config, {
-    name: 'authentik_blueprints_create',
-    title: 'Create Blueprint',
-    description: 'Create a new managed blueprint instance.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'managed',
+    name: "authentik_blueprints_create",
+    title: "Create Blueprint",
+    description: "Create a new managed blueprint instance.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "managed",
     inputSchema: {
-      name: z.string().describe('Blueprint name (required)'),
-      path: z.string().optional().describe('Path to the blueprint file'),
-      context: z.record(z.unknown()).optional().describe('Context variables for the blueprint'),
-      enabled: z.boolean().optional().describe('Whether the blueprint is enabled'),
-      content: z.string().optional().describe('Inline blueprint content (YAML)'),
+      name: z.string().describe("Blueprint name (required)"),
+      path: z.string().optional().describe("Path to the blueprint file"),
+      context: z
+        .record(z.unknown())
+        .optional()
+        .describe("Context variables for the blueprint"),
+      enabled: z
+        .boolean()
+        .optional()
+        .describe("Whether the blueprint is enabled"),
+      content: z
+        .string()
+        .optional()
+        .describe("Inline blueprint content (YAML)"),
     },
     handler: async (args) => {
       const result = await client.managedApi.managedBlueprintsCreate({
@@ -88,19 +112,30 @@ export function registerManagedTools(
 
   // 4. Update blueprint instance
   registerTool(server, config, {
-    name: 'authentik_blueprints_update',
-    title: 'Update Blueprint',
-    description: 'Update an existing blueprint instance. Only provided fields are modified (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'managed',
+    name: "authentik_blueprints_update",
+    title: "Update Blueprint",
+    description:
+      "Update an existing blueprint instance. Only provided fields are modified (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "managed",
     inputSchema: {
-      instance_uuid: z.string().describe('Blueprint instance UUID (required)'),
-      name: z.string().optional().describe('New blueprint name'),
-      path: z.string().optional().describe('New blueprint file path'),
-      context: z.record(z.unknown()).optional().describe('New context variables'),
-      enabled: z.boolean().optional().describe('Whether the blueprint is enabled'),
-      content: z.string().optional().describe('New inline blueprint content'),
+      instance_uuid: z.string().describe("Blueprint instance UUID (required)"),
+      name: z.string().optional().describe("New blueprint name"),
+      path: z.string().optional().describe("New blueprint file path"),
+      context: z
+        .record(z.unknown())
+        .optional()
+        .describe("New context variables"),
+      enabled: z
+        .boolean()
+        .optional()
+        .describe("Whether the blueprint is enabled"),
+      content: z.string().optional().describe("New inline blueprint content"),
     },
     handler: async (args) => {
       const result = await client.managedApi.managedBlueprintsPartialUpdate({
@@ -119,14 +154,19 @@ export function registerManagedTools(
 
   // 5. Delete blueprint instance
   registerTool(server, config, {
-    name: 'authentik_blueprints_delete',
-    title: 'Delete Blueprint',
-    description: 'Delete a blueprint instance by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'managed',
+    name: "authentik_blueprints_delete",
+    title: "Delete Blueprint",
+    description:
+      "Delete a blueprint instance by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "managed",
     inputSchema: {
-      instance_uuid: z.string().describe('Blueprint instance UUID to delete'),
+      instance_uuid: z.string().describe("Blueprint instance UUID to delete"),
     },
     handler: async (args) => {
       await client.managedApi.managedBlueprintsDestroy({
@@ -138,12 +178,17 @@ export function registerManagedTools(
 
   // 6. List available blueprints
   registerTool(server, config, {
-    name: 'authentik_blueprints_available',
-    title: 'List Available Blueprints',
-    description: 'List all available blueprint files that can be used to create blueprint instances.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'managed',
+    name: "authentik_blueprints_available",
+    title: "List Available Blueprints",
+    description:
+      "List all available blueprint files that can be used to create blueprint instances.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "managed",
     handler: async () => {
       const result = await client.managedApi.managedBlueprintsAvailableList();
       return JSON.stringify(result, null, 2);
@@ -152,14 +197,19 @@ export function registerManagedTools(
 
   // 7. Apply blueprint
   registerTool(server, config, {
-    name: 'authentik_blueprints_apply',
-    title: 'Apply Blueprint',
-    description: 'Apply a blueprint instance, executing its configuration. This may create, update, or delete objects.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'managed',
+    name: "authentik_blueprints_apply",
+    title: "Apply Blueprint",
+    description:
+      "Apply a blueprint instance, executing its configuration. This may create, update, or delete objects.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "managed",
     inputSchema: {
-      instance_uuid: z.string().describe('Blueprint instance UUID to apply'),
+      instance_uuid: z.string().describe("Blueprint instance UUID to apply"),
     },
     handler: async (args) => {
       const result = await client.managedApi.managedBlueprintsApplyCreate({

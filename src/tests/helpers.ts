@@ -1,22 +1,22 @@
-import { vi } from 'vitest';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AppConfig } from '../types/index.js';
-import type { AuthentikClient } from '../core/client.js';
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { vi } from "vitest";
+import type { AuthentikClient } from "../core/client.js";
+import type { AppConfig } from "../types/index.js";
 
 export function makeConfig(overrides: Partial<AppConfig> = {}): AppConfig {
   return {
-    url: 'https://authentik.test',
-    token: 'test-api-token',
-    accessTier: 'full',
+    url: "https://authentik.test",
+    token: "test-api-token",
+    accessTier: "full",
     categories: null,
     toolBlacklist: null,
     toolWhitelist: null,
     excludeToolTitles: false,
-    transport: 'stdio',
+    transport: "stdio",
     httpPort: 3000,
-    httpHost: '0.0.0.0',
+    httpHost: "0.0.0.0",
     ...overrides,
   };
 }
@@ -32,7 +32,7 @@ export function makeMockClient(): AuthentikClient {
       {},
       {
         get: (_target, prop) => {
-          if (typeof prop === 'string') {
+          if (typeof prop === "string") {
             // Lazily create and cache mock functions per method name
             const cache = _target as Record<string, ReturnType<typeof vi.fn>>;
             if (!cache[prop]) {
@@ -47,15 +47,15 @@ export function makeMockClient(): AuthentikClient {
 
   return new Proxy({} as AuthentikClient, {
     get: (_target, prop) => {
-      if (typeof prop === 'string' && prop.endsWith('Api')) {
+      if (typeof prop === "string" && prop.endsWith("Api")) {
         const cache = _target as Record<string, unknown>;
         if (!cache[prop]) {
           cache[prop] = makeApiProxy();
         }
         return cache[prop];
       }
-      if (prop === 'validateConnection') {
-        return vi.fn().mockResolvedValue('ok');
+      if (prop === "validateConnection") {
+        return vi.fn().mockResolvedValue("ok");
       }
       return undefined;
     },
@@ -66,7 +66,7 @@ export async function connectTestClient(server: McpServer) {
   const [clientTransport, serverTransport] =
     InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
-  const client = new Client({ name: 'test-client', version: '1.0.0' });
+  const client = new Client({ name: "test-client", version: "1.0.0" });
   await client.connect(clientTransport);
   return {
     client,

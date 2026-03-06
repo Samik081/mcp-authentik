@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerCryptoTools(
   server: McpServer,
@@ -11,19 +11,29 @@ export function registerCryptoTools(
 ): void {
   // 1. List certificate keypairs
   registerTool(server, config, {
-    name: 'authentik_crypto_list',
-    title: 'List Certificate Keypairs',
-    description: 'List certificate keypairs with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'crypto',
+    name: "authentik_crypto_list",
+    title: "List Certificate Keypairs",
+    description: "List certificate keypairs with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "crypto",
     inputSchema: {
-      name: z.string().optional().describe('Filter by exact name'),
-      search: z.string().optional().describe('Search across fields'),
-      has_key: z.boolean().optional().describe('Filter by whether keypair has a private key'),
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      name: z.string().optional().describe("Filter by exact name"),
+      search: z.string().optional().describe("Search across fields"),
+      has_key: z
+        .boolean()
+        .optional()
+        .describe("Filter by whether keypair has a private key"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.cryptoApi.cryptoCertificatekeypairsList({
@@ -40,14 +50,18 @@ export function registerCryptoTools(
 
   // 2. Get certificate keypair
   registerTool(server, config, {
-    name: 'authentik_crypto_get',
-    title: 'Get Certificate Keypair',
-    description: 'Get a single certificate keypair by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'crypto',
+    name: "authentik_crypto_get",
+    title: "Get Certificate Keypair",
+    description: "Get a single certificate keypair by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "crypto",
     inputSchema: {
-      kp_uuid: z.string().describe('Certificate keypair UUID'),
+      kp_uuid: z.string().describe("Certificate keypair UUID"),
     },
     handler: async (args) => {
       const result = await client.cryptoApi.cryptoCertificatekeypairsRetrieve({
@@ -59,16 +73,28 @@ export function registerCryptoTools(
 
   // 3. Create certificate keypair
   registerTool(server, config, {
-    name: 'authentik_crypto_create',
-    title: 'Create Certificate Keypair',
-    description: 'Create a new certificate keypair from PEM-encoded certificate and optional private key data.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'crypto',
+    name: "authentik_crypto_create",
+    title: "Create Certificate Keypair",
+    description:
+      "Create a new certificate keypair from PEM-encoded certificate and optional private key data.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "crypto",
     inputSchema: {
-      name: z.string().describe('Keypair name (required)'),
-      certificate_data: z.string().describe('PEM-encoded certificate data (required)'),
-      key_data: z.string().optional().describe('PEM-encoded private key data (optional, enables encryption)'),
+      name: z.string().describe("Keypair name (required)"),
+      certificate_data: z
+        .string()
+        .describe("PEM-encoded certificate data (required)"),
+      key_data: z
+        .string()
+        .optional()
+        .describe(
+          "PEM-encoded private key data (optional, enables encryption)",
+        ),
     },
     handler: async (args) => {
       const result = await client.cryptoApi.cryptoCertificatekeypairsCreate({
@@ -84,41 +110,58 @@ export function registerCryptoTools(
 
   // 4. Update certificate keypair
   registerTool(server, config, {
-    name: 'authentik_crypto_update',
-    title: 'Update Certificate Keypair',
-    description: 'Update an existing certificate keypair. Only provided fields are modified (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'crypto',
+    name: "authentik_crypto_update",
+    title: "Update Certificate Keypair",
+    description:
+      "Update an existing certificate keypair. Only provided fields are modified (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "crypto",
     inputSchema: {
-      kp_uuid: z.string().describe('Certificate keypair UUID (required)'),
-      name: z.string().optional().describe('New keypair name'),
-      certificate_data: z.string().optional().describe('New PEM-encoded certificate data'),
-      key_data: z.string().optional().describe('New PEM-encoded private key data'),
+      kp_uuid: z.string().describe("Certificate keypair UUID (required)"),
+      name: z.string().optional().describe("New keypair name"),
+      certificate_data: z
+        .string()
+        .optional()
+        .describe("New PEM-encoded certificate data"),
+      key_data: z
+        .string()
+        .optional()
+        .describe("New PEM-encoded private key data"),
     },
     handler: async (args) => {
-      const result = await client.cryptoApi.cryptoCertificatekeypairsPartialUpdate({
-        kpUuid: args.kp_uuid as string,
-        patchedCertificateKeyPairRequest: {
-          name: args.name as string | undefined,
-          certificateData: args.certificate_data as string | undefined,
-          keyData: args.key_data as string | undefined,
-        },
-      });
+      const result =
+        await client.cryptoApi.cryptoCertificatekeypairsPartialUpdate({
+          kpUuid: args.kp_uuid as string,
+          patchedCertificateKeyPairRequest: {
+            name: args.name as string | undefined,
+            certificateData: args.certificate_data as string | undefined,
+            keyData: args.key_data as string | undefined,
+          },
+        });
       return JSON.stringify(result, null, 2);
     },
   });
 
   // 5. Delete certificate keypair
   registerTool(server, config, {
-    name: 'authentik_crypto_delete',
-    title: 'Delete Certificate Keypair',
-    description: 'Delete a certificate keypair by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'crypto',
+    name: "authentik_crypto_delete",
+    title: "Delete Certificate Keypair",
+    description:
+      "Delete a certificate keypair by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "crypto",
     inputSchema: {
-      kp_uuid: z.string().describe('Certificate keypair UUID to delete'),
+      kp_uuid: z.string().describe("Certificate keypair UUID to delete"),
     },
     handler: async (args) => {
       await client.cryptoApi.cryptoCertificatekeypairsDestroy({
@@ -130,63 +173,89 @@ export function registerCryptoTools(
 
   // 6. Generate self-signed certificate
   registerTool(server, config, {
-    name: 'authentik_crypto_generate',
-    title: 'Generate Self-Signed Certificate',
-    description: 'Generate a new self-signed certificate keypair.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'crypto',
+    name: "authentik_crypto_generate",
+    title: "Generate Self-Signed Certificate",
+    description: "Generate a new self-signed certificate keypair.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "crypto",
     inputSchema: {
-      common_name: z.string().describe('Certificate common name (CN) (required)'),
-      subject_alt_name: z.string().optional().describe('Subject alternative name (SAN)'),
-      validity_days: z.number().describe('Number of days the certificate is valid (required)'),
+      common_name: z
+        .string()
+        .describe("Certificate common name (CN) (required)"),
+      subject_alt_name: z
+        .string()
+        .optional()
+        .describe("Subject alternative name (SAN)"),
+      validity_days: z
+        .number()
+        .describe("Number of days the certificate is valid (required)"),
     },
     handler: async (args) => {
-      const result = await client.cryptoApi.cryptoCertificatekeypairsGenerateCreate({
-        certificateGenerationRequest: {
-          commonName: args.common_name as string,
-          subjectAltName: args.subject_alt_name as string | undefined,
-          validityDays: args.validity_days as number,
-        },
-      });
+      const result =
+        await client.cryptoApi.cryptoCertificatekeypairsGenerateCreate({
+          certificateGenerationRequest: {
+            commonName: args.common_name as string,
+            subjectAltName: args.subject_alt_name as string | undefined,
+            validityDays: args.validity_days as number,
+          },
+        });
       return JSON.stringify(result, null, 2);
     },
   });
 
   // 7. View certificate PEM data
   registerTool(server, config, {
-    name: 'authentik_crypto_view_certificate',
-    title: 'View Certificate Data',
-    description: 'View the PEM-encoded certificate data for a keypair. Access is logged.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'crypto',
+    name: "authentik_crypto_view_certificate",
+    title: "View Certificate Data",
+    description:
+      "View the PEM-encoded certificate data for a keypair. Access is logged.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "crypto",
     inputSchema: {
-      kp_uuid: z.string().describe('Certificate keypair UUID'),
+      kp_uuid: z.string().describe("Certificate keypair UUID"),
     },
     handler: async (args) => {
-      const result = await client.cryptoApi.cryptoCertificatekeypairsViewCertificateRetrieve({
-        kpUuid: args.kp_uuid as string,
-      });
+      const result =
+        await client.cryptoApi.cryptoCertificatekeypairsViewCertificateRetrieve(
+          {
+            kpUuid: args.kp_uuid as string,
+          },
+        );
       return JSON.stringify(result, null, 2);
     },
   });
 
   // 8. View private key PEM data
   registerTool(server, config, {
-    name: 'authentik_crypto_view_private_key',
-    title: 'View Private Key Data',
-    description: 'View the PEM-encoded private key data for a keypair. Access is logged. Sensitive operation.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'crypto',
+    name: "authentik_crypto_view_private_key",
+    title: "View Private Key Data",
+    description:
+      "View the PEM-encoded private key data for a keypair. Access is logged. Sensitive operation.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "crypto",
     inputSchema: {
-      kp_uuid: z.string().describe('Certificate keypair UUID'),
+      kp_uuid: z.string().describe("Certificate keypair UUID"),
     },
     handler: async (args) => {
-      const result = await client.cryptoApi.cryptoCertificatekeypairsViewPrivateKeyRetrieve({
-        kpUuid: args.kp_uuid as string,
-      });
+      const result =
+        await client.cryptoApi.cryptoCertificatekeypairsViewPrivateKeyRetrieve({
+          kpUuid: args.kp_uuid as string,
+        });
       return JSON.stringify(result, null, 2);
     },
   });

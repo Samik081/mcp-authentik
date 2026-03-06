@@ -1,52 +1,58 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 // ── Per-type policy lookup maps ─────────────────────────────────────────
 
 const POLICY_TYPES = [
-  'dummy', 'event_matcher', 'expression', 'geoip',
-  'password', 'password_expiry', 'reputation', 'unique_password',
+  "dummy",
+  "event_matcher",
+  "expression",
+  "geoip",
+  "password",
+  "password_expiry",
+  "reputation",
+  "unique_password",
 ] as const;
 
-type PolicyType = typeof POLICY_TYPES[number];
+type PolicyType = (typeof POLICY_TYPES)[number];
 
 /** Maps policy_type -> SDK method prefix (e.g., policiesDummyList) */
 const POLICY_TYPE_SDK_PREFIX: Record<PolicyType, string> = {
-  dummy: 'Dummy',
-  event_matcher: 'EventMatcher',
-  expression: 'Expression',
-  geoip: 'Geoip',
-  password: 'Password',
-  password_expiry: 'PasswordExpiry',
-  reputation: 'Reputation',
-  unique_password: 'UniquePassword',
+  dummy: "Dummy",
+  event_matcher: "EventMatcher",
+  expression: "Expression",
+  geoip: "Geoip",
+  password: "Password",
+  password_expiry: "PasswordExpiry",
+  reputation: "Reputation",
+  unique_password: "UniquePassword",
 };
 
 /** Maps policy_type -> request body key for create */
 const POLICY_TYPE_REQUEST_KEY: Record<PolicyType, string> = {
-  dummy: 'dummyPolicyRequest',
-  event_matcher: 'eventMatcherPolicyRequest',
-  expression: 'expressionPolicyRequest',
-  geoip: 'geoIPPolicyRequest',
-  password: 'passwordPolicyRequest',
-  password_expiry: 'passwordExpiryPolicyRequest',
-  reputation: 'reputationPolicyRequest',
-  unique_password: 'uniquePasswordPolicyRequest',
+  dummy: "dummyPolicyRequest",
+  event_matcher: "eventMatcherPolicyRequest",
+  expression: "expressionPolicyRequest",
+  geoip: "geoIPPolicyRequest",
+  password: "passwordPolicyRequest",
+  password_expiry: "passwordExpiryPolicyRequest",
+  reputation: "reputationPolicyRequest",
+  unique_password: "uniquePasswordPolicyRequest",
 };
 
 /** Maps policy_type -> patched request body key for update */
 const POLICY_TYPE_PATCHED_KEY: Record<PolicyType, string> = {
-  dummy: 'patchedDummyPolicyRequest',
-  event_matcher: 'patchedEventMatcherPolicyRequest',
-  expression: 'patchedExpressionPolicyRequest',
-  geoip: 'patchedGeoIPPolicyRequest',
-  password: 'patchedPasswordPolicyRequest',
-  password_expiry: 'patchedPasswordExpiryPolicyRequest',
-  reputation: 'patchedReputationPolicyRequest',
-  unique_password: 'patchedUniquePasswordPolicyRequest',
+  dummy: "patchedDummyPolicyRequest",
+  event_matcher: "patchedEventMatcherPolicyRequest",
+  expression: "patchedExpressionPolicyRequest",
+  geoip: "patchedGeoIPPolicyRequest",
+  password: "patchedPasswordPolicyRequest",
+  password_expiry: "patchedPasswordExpiryPolicyRequest",
+  reputation: "patchedReputationPolicyRequest",
+  unique_password: "patchedUniquePasswordPolicyRequest",
 };
 
 const policyTypeEnum = z.enum(POLICY_TYPES);
@@ -60,18 +66,25 @@ export function registerPolicyTools(
 
   // 1. List all policies (cross-type)
   registerTool(server, config, {
-    name: 'authentik_policies_list',
-    title: 'List Policies',
-    description: 'List all policies across all types with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_list",
+    title: "List Policies",
+    description: "List all policies across all types with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      search: z.string().optional().describe('Search across policy fields'),
-      bindings_isnull: z.boolean().optional().describe('Filter by whether bindings exist'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      search: z.string().optional().describe("Search across policy fields"),
+      bindings_isnull: z
+        .boolean()
+        .optional()
+        .describe("Filter by whether bindings exist"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesAllList({
@@ -87,14 +100,18 @@ export function registerPolicyTools(
 
   // 2. Get policy (cross-type)
   registerTool(server, config, {
-    name: 'authentik_policies_get',
-    title: 'Get Policy',
-    description: 'Get a single policy by its UUID (cross-type).',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_get",
+    title: "Get Policy",
+    description: "Get a single policy by its UUID (cross-type).",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_uuid: z.string().describe('Policy UUID'),
+      policy_uuid: z.string().describe("Policy UUID"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesAllRetrieve({
@@ -106,29 +123,40 @@ export function registerPolicyTools(
 
   // 3. Delete policy (cross-type)
   registerTool(server, config, {
-    name: 'authentik_policies_delete',
-    title: 'Delete Policy',
-    description: 'Delete a policy by its UUID (cross-type). This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'policies',
+    name: "authentik_policies_delete",
+    title: "Delete Policy",
+    description:
+      "Delete a policy by its UUID (cross-type). This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "policies",
     inputSchema: {
-      policy_uuid: z.string().describe('Policy UUID to delete'),
+      policy_uuid: z.string().describe("Policy UUID to delete"),
     },
     handler: async (args) => {
-      await client.policiesApi.policiesAllDestroy({ policyUuid: args.policy_uuid as string });
+      await client.policiesApi.policiesAllDestroy({
+        policyUuid: args.policy_uuid as string,
+      });
       return `Policy ${args.policy_uuid} deleted successfully.`;
     },
   });
 
   // 4. List policy types
   registerTool(server, config, {
-    name: 'authentik_policies_types_list',
-    title: 'List Policy Types',
-    description: 'List all available policy types.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_types_list",
+    title: "List Policy Types",
+    description: "List all available policy types.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     handler: async () => {
       const result = await client.policiesApi.policiesAllTypesList();
       return JSON.stringify(result, null, 2);
@@ -137,16 +165,26 @@ export function registerPolicyTools(
 
   // 5. Test policy
   registerTool(server, config, {
-    name: 'authentik_policies_test',
-    title: 'Test Policy',
-    description: 'Test a policy against a specific user to see if it passes or fails.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_test",
+    title: "Test Policy",
+    description:
+      "Test a policy against a specific user to see if it passes or fails.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_uuid: z.string().describe('Policy UUID to test'),
-      user: z.number().describe('User ID to test the policy against (required)'),
-      context: z.record(z.unknown()).optional().describe('Additional context for the policy test'),
+      policy_uuid: z.string().describe("Policy UUID to test"),
+      user: z
+        .number()
+        .describe("User ID to test the policy against (required)"),
+      context: z
+        .record(z.unknown())
+        .optional()
+        .describe("Additional context for the policy test"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesAllTestCreate({
@@ -162,12 +200,16 @@ export function registerPolicyTools(
 
   // 6. Policy cache info
   registerTool(server, config, {
-    name: 'authentik_policies_cache_info',
-    title: 'Get Policy Cache Info',
-    description: 'Get information about cached policies.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_cache_info",
+    title: "Get Policy Cache Info",
+    description: "Get information about cached policies.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     handler: async () => {
       const result = await client.policiesApi.policiesAllCacheInfoRetrieve();
       return JSON.stringify(result, null, 2);
@@ -176,15 +218,19 @@ export function registerPolicyTools(
 
   // 7. Clear policy cache
   registerTool(server, config, {
-    name: 'authentik_policies_cache_clear',
-    title: 'Clear Policy Cache',
-    description: 'Clear the policy cache.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_cache_clear",
+    title: "Clear Policy Cache",
+    description: "Clear the policy cache.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "policies",
     handler: async () => {
       await client.policiesApi.policiesAllCacheClearCreate();
-      return 'Policy cache cleared successfully.';
+      return "Policy cache cleared successfully.";
     },
   });
 
@@ -192,18 +238,22 @@ export function registerPolicyTools(
 
   // 8. List policies by type
   registerTool(server, config, {
-    name: 'authentik_policies_by_type_list',
-    title: 'List Policies by Type',
-    description: 'List policies of a specific type with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_by_type_list",
+    title: "List Policies by Type",
+    description: "List policies of a specific type with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_type: policyTypeEnum.describe('Policy type to list'),
-      name: z.string().optional().describe('Filter by policy name'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      policy_type: policyTypeEnum.describe("Policy type to list"),
+      name: z.string().optional().describe("Filter by policy name"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const policyType = args.policy_type as PolicyType;
@@ -221,15 +271,19 @@ export function registerPolicyTools(
 
   // 9. Get policy by type
   registerTool(server, config, {
-    name: 'authentik_policies_by_type_get',
-    title: 'Get Policy by Type',
-    description: 'Get a single policy of a specific type by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_by_type_get",
+    title: "Get Policy by Type",
+    description: "Get a single policy of a specific type by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_type: policyTypeEnum.describe('Policy type'),
-      policy_uuid: z.string().describe('Policy UUID'),
+      policy_type: policyTypeEnum.describe("Policy type"),
+      policy_uuid: z.string().describe("Policy UUID"),
     },
     handler: async (args) => {
       const policyType = args.policy_type as PolicyType;
@@ -244,16 +298,26 @@ export function registerPolicyTools(
 
   // 10. Create policy by type
   registerTool(server, config, {
-    name: 'authentik_policies_by_type_create',
-    title: 'Create Policy by Type',
-    description: 'Create a new policy of a specific type. Pass type-specific fields in the config object.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'policies',
+    name: "authentik_policies_by_type_create",
+    title: "Create Policy by Type",
+    description:
+      "Create a new policy of a specific type. Pass type-specific fields in the config object.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "policies",
     inputSchema: {
-      policy_type: policyTypeEnum.describe('Policy type to create'),
-      name: z.string().describe('Policy name (required)'),
-      config: z.record(z.unknown()).optional().describe('Type-specific configuration fields (camelCase keys matching the SDK request type)'),
+      policy_type: policyTypeEnum.describe("Policy type to create"),
+      name: z.string().describe("Policy name (required)"),
+      config: z
+        .record(z.unknown())
+        .optional()
+        .describe(
+          "Type-specific configuration fields (camelCase keys matching the SDK request type)",
+        ),
     },
     handler: async (args) => {
       const policyType = args.policy_type as PolicyType;
@@ -270,16 +334,26 @@ export function registerPolicyTools(
 
   // 11. Update policy by type
   registerTool(server, config, {
-    name: 'authentik_policies_by_type_update',
-    title: 'Update Policy by Type',
-    description: 'Update an existing policy of a specific type. Pass type-specific fields in the config object.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policies_by_type_update",
+    title: "Update Policy by Type",
+    description:
+      "Update an existing policy of a specific type. Pass type-specific fields in the config object.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_type: policyTypeEnum.describe('Policy type'),
-      policy_uuid: z.string().describe('Policy UUID (required)'),
-      config: z.record(z.unknown()).optional().describe('Type-specific fields to update (camelCase keys matching the SDK patched request type)'),
+      policy_type: policyTypeEnum.describe("Policy type"),
+      policy_uuid: z.string().describe("Policy UUID (required)"),
+      config: z
+        .record(z.unknown())
+        .optional()
+        .describe(
+          "Type-specific fields to update (camelCase keys matching the SDK patched request type)",
+        ),
     },
     handler: async (args) => {
       const policyType = args.policy_type as PolicyType;
@@ -297,15 +371,20 @@ export function registerPolicyTools(
 
   // 12. Delete policy by type
   registerTool(server, config, {
-    name: 'authentik_policies_by_type_delete',
-    title: 'Delete Policy by Type',
-    description: 'Delete a policy of a specific type by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'policies',
+    name: "authentik_policies_by_type_delete",
+    title: "Delete Policy by Type",
+    description:
+      "Delete a policy of a specific type by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "policies",
     inputSchema: {
-      policy_type: policyTypeEnum.describe('Policy type'),
-      policy_uuid: z.string().describe('Policy UUID to delete'),
+      policy_type: policyTypeEnum.describe("Policy type"),
+      policy_uuid: z.string().describe("Policy UUID to delete"),
     },
     handler: async (args) => {
       const policyType = args.policy_type as PolicyType;
@@ -322,20 +401,24 @@ export function registerPolicyTools(
 
   // 13. List policy bindings
   registerTool(server, config, {
-    name: 'authentik_policy_bindings_list',
-    title: 'List Policy Bindings',
-    description: 'List policy bindings with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policy_bindings_list",
+    title: "List Policy Bindings",
+    description: "List policy bindings with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      target: z.string().optional().describe('Filter by target UUID'),
-      policy: z.string().optional().describe('Filter by policy UUID'),
-      enabled: z.boolean().optional().describe('Filter by enabled status'),
-      search: z.string().optional().describe('Search across binding fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      target: z.string().optional().describe("Filter by target UUID"),
+      policy: z.string().optional().describe("Filter by policy UUID"),
+      enabled: z.boolean().optional().describe("Filter by enabled status"),
+      search: z.string().optional().describe("Search across binding fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesBindingsList({
@@ -353,14 +436,18 @@ export function registerPolicyTools(
 
   // 14. Get policy binding
   registerTool(server, config, {
-    name: 'authentik_policy_bindings_get',
-    title: 'Get Policy Binding',
-    description: 'Get a single policy binding by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policy_bindings_get",
+    title: "Get Policy Binding",
+    description: "Get a single policy binding by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_binding_uuid: z.string().describe('Policy binding UUID'),
+      policy_binding_uuid: z.string().describe("Policy binding UUID"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesBindingsRetrieve({
@@ -372,22 +459,35 @@ export function registerPolicyTools(
 
   // 15. Create policy binding
   registerTool(server, config, {
-    name: 'authentik_policy_bindings_create',
-    title: 'Create Policy Binding',
-    description: 'Create a new policy binding to attach a policy to a target (flow, stage, etc.).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'policies',
+    name: "authentik_policy_bindings_create",
+    title: "Create Policy Binding",
+    description:
+      "Create a new policy binding to attach a policy to a target (flow, stage, etc.).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "policies",
     inputSchema: {
-      target: z.string().describe('Target UUID (flow, stage binding, etc.) (required)'),
-      order: z.number().describe('Binding order (required)'),
-      policy: z.string().optional().describe('Policy UUID to bind'),
-      group: z.string().optional().describe('Group UUID to bind'),
-      user: z.number().optional().describe('User ID to bind'),
-      negate: z.boolean().optional().describe('Negate the policy result'),
-      enabled: z.boolean().optional().describe('Whether the binding is enabled'),
-      timeout: z.number().optional().describe('Policy timeout in seconds'),
-      failure_result: z.boolean().optional().describe('Result when policy execution fails'),
+      target: z
+        .string()
+        .describe("Target UUID (flow, stage binding, etc.) (required)"),
+      order: z.number().describe("Binding order (required)"),
+      policy: z.string().optional().describe("Policy UUID to bind"),
+      group: z.string().optional().describe("Group UUID to bind"),
+      user: z.number().optional().describe("User ID to bind"),
+      negate: z.boolean().optional().describe("Negate the policy result"),
+      enabled: z
+        .boolean()
+        .optional()
+        .describe("Whether the binding is enabled"),
+      timeout: z.number().optional().describe("Policy timeout in seconds"),
+      failure_result: z
+        .boolean()
+        .optional()
+        .describe("Result when policy execution fails"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesBindingsCreate({
@@ -409,23 +509,36 @@ export function registerPolicyTools(
 
   // 16. Update policy binding
   registerTool(server, config, {
-    name: 'authentik_policy_bindings_update',
-    title: 'Update Policy Binding',
-    description: 'Update an existing policy binding. Only provided fields are modified.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_policy_bindings_update",
+    title: "Update Policy Binding",
+    description:
+      "Update an existing policy binding. Only provided fields are modified.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      policy_binding_uuid: z.string().describe('Policy binding UUID (required)'),
-      target: z.string().optional().describe('New target UUID'),
-      order: z.number().optional().describe('New binding order'),
-      policy: z.string().optional().describe('New policy UUID'),
-      group: z.string().optional().describe('New group UUID'),
-      user: z.number().optional().describe('New user ID'),
-      negate: z.boolean().optional().describe('Negate the policy result'),
-      enabled: z.boolean().optional().describe('Whether the binding is enabled'),
-      timeout: z.number().optional().describe('Policy timeout in seconds'),
-      failure_result: z.boolean().optional().describe('Result when policy execution fails'),
+      policy_binding_uuid: z
+        .string()
+        .describe("Policy binding UUID (required)"),
+      target: z.string().optional().describe("New target UUID"),
+      order: z.number().optional().describe("New binding order"),
+      policy: z.string().optional().describe("New policy UUID"),
+      group: z.string().optional().describe("New group UUID"),
+      user: z.number().optional().describe("New user ID"),
+      negate: z.boolean().optional().describe("Negate the policy result"),
+      enabled: z
+        .boolean()
+        .optional()
+        .describe("Whether the binding is enabled"),
+      timeout: z.number().optional().describe("Policy timeout in seconds"),
+      failure_result: z
+        .boolean()
+        .optional()
+        .describe("Result when policy execution fails"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesBindingsPartialUpdate({
@@ -448,14 +561,19 @@ export function registerPolicyTools(
 
   // 17. Delete policy binding
   registerTool(server, config, {
-    name: 'authentik_policy_bindings_delete',
-    title: 'Delete Policy Binding',
-    description: 'Delete a policy binding by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'policies',
+    name: "authentik_policy_bindings_delete",
+    title: "Delete Policy Binding",
+    description:
+      "Delete a policy binding by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "policies",
     inputSchema: {
-      policy_binding_uuid: z.string().describe('Policy binding UUID to delete'),
+      policy_binding_uuid: z.string().describe("Policy binding UUID to delete"),
     },
     handler: async (args) => {
       await client.policiesApi.policiesBindingsDestroy({
@@ -469,20 +587,24 @@ export function registerPolicyTools(
 
   // 18. List reputation scores
   registerTool(server, config, {
-    name: 'authentik_reputation_scores_list',
-    title: 'List Reputation Scores',
-    description: 'List reputation scores with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'policies',
+    name: "authentik_reputation_scores_list",
+    title: "List Reputation Scores",
+    description: "List reputation scores with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "policies",
     inputSchema: {
-      identifier: z.string().optional().describe('Filter by identifier'),
-      ip: z.string().optional().describe('Filter by IP address'),
-      score: z.number().optional().describe('Filter by exact score'),
-      search: z.string().optional().describe('Search across reputation fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      identifier: z.string().optional().describe("Filter by identifier"),
+      ip: z.string().optional().describe("Filter by IP address"),
+      score: z.number().optional().describe("Filter by exact score"),
+      search: z.string().optional().describe("Search across reputation fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.policiesApi.policiesReputationScoresList({
@@ -500,14 +622,19 @@ export function registerPolicyTools(
 
   // 19. Delete reputation score
   registerTool(server, config, {
-    name: 'authentik_reputation_scores_delete',
-    title: 'Delete Reputation Score',
-    description: 'Delete a reputation score by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'policies',
+    name: "authentik_reputation_scores_delete",
+    title: "Delete Reputation Score",
+    description:
+      "Delete a reputation score by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "policies",
     inputSchema: {
-      reputation_uuid: z.string().describe('Reputation score UUID to delete'),
+      reputation_uuid: z.string().describe("Reputation score UUID to delete"),
     },
     handler: async (args) => {
       await client.policiesApi.policiesReputationScoresDestroy({

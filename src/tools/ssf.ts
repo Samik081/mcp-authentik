@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerSsfTools(
   server: McpServer,
@@ -13,19 +13,24 @@ export function registerSsfTools(
 
   // 1. List SSF event streams
   registerTool(server, config, {
-    name: 'authentik_ssf_streams_list',
-    title: 'List SSF Streams',
-    description: 'List Shared Signals Framework (SSF) event streams with optional filters. Read-only.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'ssf',
+    name: "authentik_ssf_streams_list",
+    title: "List SSF Streams",
+    description:
+      "List Shared Signals Framework (SSF) event streams with optional filters. Read-only.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "ssf",
     inputSchema: {
-      endpoint_url: z.string().optional().describe('Filter by endpoint URL'),
-      provider: z.number().optional().describe('Filter by provider ID'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      endpoint_url: z.string().optional().describe("Filter by endpoint URL"),
+      provider: z.number().optional().describe("Filter by provider ID"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.ssfApi.ssfStreamsList({
@@ -42,14 +47,18 @@ export function registerSsfTools(
 
   // 2. Get SSF event stream
   registerTool(server, config, {
-    name: 'authentik_ssf_streams_get',
-    title: 'Get SSF Stream',
-    description: 'Get a single SSF event stream by its UUID. Read-only.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'ssf',
+    name: "authentik_ssf_streams_get",
+    title: "Get SSF Stream",
+    description: "Get a single SSF event stream by its UUID. Read-only.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "ssf",
     inputSchema: {
-      uuid: z.string().describe('SSF stream UUID'),
+      uuid: z.string().describe("SSF stream UUID"),
     },
     handler: async (args) => {
       const result = await client.ssfApi.ssfStreamsRetrieve({
