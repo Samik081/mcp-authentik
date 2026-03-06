@@ -3,6 +3,7 @@ import type { ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
 import type { ZodRawShape } from 'zod';
 import { AccessTier, AppConfig } from '../types/index.js';
 import { sanitizeError } from './errors.js';
+import { logger } from './logger.js';
 
 export interface ToolRegistrationOptions {
   name: string;
@@ -15,19 +16,54 @@ export interface ToolRegistrationOptions {
   handler: (args: Record<string, unknown>) => Promise<string>;
 }
 
+/** Tracks all tool names seen during registration for post-registration validation. */
+const seenToolNames = new Set<string>();
+
+/**
+ * Register a tool with the MCP server, respecting blacklist/whitelist,
+ * access tier, and category filters.
+ *
+ * Filter precedence:
+ * 1. Blacklist always wins (even over whitelist — logs warning if both)
+ * 2. Whitelist bypasses access tier and category filters
+ * 3. Access tier gate
+ * 4. Category gate
+ */
 export function registerTool(
   server: McpServer,
   config: AppConfig,
   options: ToolRegistrationOptions,
 ): boolean {
-  // Tier gate: read-only config prevents full-tier tools
-  if (config.accessTier === 'read-only' && options.accessTier === 'full') {
+  seenToolNames.add(options.name);
+
+  const isBlacklisted =
+    config.toolBlacklist !== null && config.toolBlacklist.includes(options.name);
+  const isWhitelisted =
+    config.toolWhitelist !== null && config.toolWhitelist.includes(options.name);
+
+  // Blacklist always wins
+  if (isBlacklisted) {
+    if (isWhitelisted) {
+      logger.warn(
+        `Tool "${options.name}" is both blacklisted and whitelisted — blacklist takes precedence, skipping`,
+      );
+    } else {
+      logger.debug(`Skipping tool "${options.name}" (blacklisted)`);
+    }
     return false;
   }
 
-  // Category filter: skip silently if category not in allowed list
-  if (config.categories !== null && !config.categories.includes(options.category)) {
-    return false;
+  // Whitelist bypasses tier and category filters
+  if (!isWhitelisted) {
+    // Tier gate: read-only config prevents full-tier tools
+    if (config.accessTier === 'read-only' && options.accessTier === 'full') {
+      return false;
+    }
+
+    // Category filter: skip silently if category not in allowed list
+    if (config.categories !== null && !config.categories.includes(options.category)) {
+      return false;
+    }
   }
 
   // Build annotations
@@ -69,4 +105,21 @@ export function registerTool(
   });
 
   return true;
+}
+
+/**
+ * Validate that all tool names in blacklist/whitelist actually exist.
+ * Call after registerAllTools() to warn about typos or stale entries.
+ */
+export function validateToolLists(config: AppConfig): void {
+  for (const name of config.toolBlacklist ?? []) {
+    if (!seenToolNames.has(name)) {
+      logger.warn(`Blacklisted tool "${name}" does not match any known tool`);
+    }
+  }
+  for (const name of config.toolWhitelist ?? []) {
+    if (!seenToolNames.has(name)) {
+      logger.warn(`Whitelisted tool "${name}" does not match any known tool`);
+    }
+  }
 }

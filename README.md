@@ -144,6 +144,8 @@ Tools that are not available in your tier are not registered with the MCP server
 | `AUTHENTIK_TOKEN` | Yes | -- | API token with appropriate permissions |
 | `AUTHENTIK_ACCESS_TIER` | No | `full` | `read-only` for read-only tools only, `full` for all tools |
 | `AUTHENTIK_CATEGORIES` | No | *(all)* | Comma-separated category allowlist (e.g., `core,admin,flows`) |
+| `AUTHENTIK_TOOL_BLACKLIST` | No | *(none)* | Comma-separated list of tool names to exclude (e.g., `authentik_users_delete`) |
+| `AUTHENTIK_TOOL_WHITELIST` | No | *(none)* | Comma-separated list of tool names to force-include, bypassing access tier and category filters |
 | `MCP_TRANSPORT` | No | `stdio` | Transport mode: `stdio` (default) or `http` |
 | `MCP_PORT` | No | `3000` | HTTP server port (only used when `MCP_TRANSPORT=http`) |
 | `MCP_HOST` | No | `0.0.0.0` | HTTP server bind address (only used when `MCP_TRANSPORT=http`) |
