@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { createServer } from '../core/server.js';
 import { registerAllTools } from '../tools/index.js';
+import { logger } from '../core/logger.js';
 import { makeConfig, makeMockClient, connectTestClient } from './helpers.js';
 
 describe('tool registration', () => {
@@ -76,6 +77,98 @@ describe('tool registration', () => {
         expect(tool.title, `${tool.name} should not have title`).toBeUndefined();
       }
       await cleanup();
+    });
+  });
+
+  describe('blacklist/whitelist', () => {
+    it('blacklist excludes specific tools', async () => {
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({ toolBlacklist: ['authentik_users_list'] }));
+      const { client, cleanup } = await connectTestClient(server);
+      const { tools } = await client.listTools();
+      const names = tools.map((t) => t.name);
+      expect(names).not.toContain('authentik_users_list');
+      await cleanup();
+    });
+
+    it('blacklist does not affect non-blacklisted tools', async () => {
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({ toolBlacklist: ['authentik_users_list'] }));
+      const { client, cleanup } = await connectTestClient(server);
+      const { tools } = await client.listTools();
+      const names = tools.map((t) => t.name);
+      expect(names).toContain('authentik_users_delete');
+      await cleanup();
+    });
+
+    it('whitelist includes tool excluded by tier filter', async () => {
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({
+        accessTier: 'read-only',
+        toolWhitelist: ['authentik_users_delete'],
+      }));
+      const { client, cleanup } = await connectTestClient(server);
+      const { tools } = await client.listTools();
+      const names = tools.map((t) => t.name);
+      expect(names).toContain('authentik_users_delete');
+      await cleanup();
+    });
+
+    it('whitelist includes tool excluded by category filter', async () => {
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({
+        categories: ['admin'],
+        toolWhitelist: ['authentik_users_list'],
+      }));
+      const { client, cleanup } = await connectTestClient(server);
+      const { tools } = await client.listTools();
+      const names = tools.map((t) => t.name);
+      expect(names).toContain('authentik_users_list');
+      await cleanup();
+    });
+
+    it('blacklist takes precedence over whitelist', async () => {
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({
+        toolBlacklist: ['authentik_users_list'],
+        toolWhitelist: ['authentik_users_list'],
+      }));
+      const { client, cleanup } = await connectTestClient(server);
+      const { tools } = await client.listTools();
+      const names = tools.map((t) => t.name);
+      expect(names).not.toContain('authentik_users_list');
+      await cleanup();
+    });
+
+    it('blacklist + whitelist conflict logs warning', async () => {
+      const spy = vi.spyOn(logger, 'warn');
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({
+        toolBlacklist: ['authentik_users_list'],
+        toolWhitelist: ['authentik_users_list'],
+      }));
+      expect(spy).toHaveBeenCalledWith(expect.stringContaining('blacklist takes precedence'));
+      spy.mockRestore();
+    });
+
+    it('validates unknown blacklisted tool name', async () => {
+      const spy = vi.spyOn(logger, 'warn');
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({
+        toolBlacklist: ['nonexistent_tool_xyz'],
+      }));
+      expect(spy).toHaveBeenCalledWith(expect.stringContaining('does not match'));
+      spy.mockRestore();
+    });
+
+    it('validates unknown whitelisted tool name', async () => {
+      const spy = vi.spyOn(logger, 'warn');
+      const server = createServer();
+      registerAllTools(server, makeMockClient(), makeConfig({
+        toolWhitelist: ['nonexistent_tool_abc'],
+      }));
+      expect(spy).toHaveBeenCalledWith(expect.stringContaining('does not match'));
+      spy.mockRestore();
     });
   });
 

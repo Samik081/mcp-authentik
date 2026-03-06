@@ -36,6 +36,16 @@ function parseCategories(value: string | undefined): string[] | null {
     .filter((s) => s.length > 0);
 }
 
+function parseToolList(value: string | undefined): string[] | null {
+  if (value === undefined || value === '') {
+    return null;
+  }
+  return value
+    .split(',')
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+}
+
 export function loadConfig(): AppConfig {
   const url = process.env.AUTHENTIK_URL;
   if (!url) {
@@ -49,6 +59,8 @@ export function loadConfig(): AppConfig {
 
   const accessTier = parseAccessTier(process.env.AUTHENTIK_ACCESS_TIER);
   const categories = parseCategories(process.env.AUTHENTIK_CATEGORIES);
+  const toolBlacklist = parseToolList(process.env.AUTHENTIK_TOOL_BLACKLIST);
+  const toolWhitelist = parseToolList(process.env.AUTHENTIK_TOOL_WHITELIST);
 
   const excludeToolTitles = process.env.MCP_EXCLUDE_TOOL_TITLES === 'true';
 
@@ -68,6 +80,8 @@ export function loadConfig(): AppConfig {
     token,
     accessTier,
     categories,
+    toolBlacklist,
+    toolWhitelist,
     excludeToolTitles,
     transport,
     httpPort,

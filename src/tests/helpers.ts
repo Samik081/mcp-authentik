@@ -11,6 +11,8 @@ export function makeConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     token: 'test-api-token',
     accessTier: 'full',
     categories: null,
+    toolBlacklist: null,
+    toolWhitelist: null,
     excludeToolTitles: false,
     transport: 'stdio',
     httpPort: 3000,

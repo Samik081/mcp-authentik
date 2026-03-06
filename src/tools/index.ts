@@ -1,6 +1,7 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { AuthentikClient } from '../core/client.js';
 import type { AppConfig } from '../types/index.js';
+import { validateToolLists } from '../core/tools.js';
 import { registerUserTools } from './users.js';
 import { registerGroupTools } from './groups.js';
 import { registerApplicationTools } from './applications.js';
@@ -64,4 +65,6 @@ export function registerAllTools(
   registerRacTools(server, client, config);
   registerSsfTools(server, client, config);
   registerTenantTools(server, client, config);
+
+  validateToolLists(config);
 }
