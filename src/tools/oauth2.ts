@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerOauth2Tools(
   server: McpServer,
@@ -13,19 +13,24 @@ export function registerOauth2Tools(
 
   // 1. List OAuth2 access tokens
   registerTool(server, config, {
-    name: 'authentik_oauth2_access_tokens_list',
-    title: 'List OAuth2 Access Tokens',
-    description: 'List OAuth2 access tokens with optional filters. Tokens are system-managed.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'oauth2',
+    name: "authentik_oauth2_access_tokens_list",
+    title: "List OAuth2 Access Tokens",
+    description:
+      "List OAuth2 access tokens with optional filters. Tokens are system-managed.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "oauth2",
     inputSchema: {
-      user: z.number().optional().describe('Filter by user ID'),
-      provider: z.number().optional().describe('Filter by provider ID'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      user: z.number().optional().describe("Filter by user ID"),
+      provider: z.number().optional().describe("Filter by provider ID"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.oauth2Api.oauth2AccessTokensList({
@@ -42,14 +47,18 @@ export function registerOauth2Tools(
 
   // 2. Get OAuth2 access token
   registerTool(server, config, {
-    name: 'authentik_oauth2_access_tokens_get',
-    title: 'Get OAuth2 Access Token',
-    description: 'Get a single OAuth2 access token by its numeric ID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'oauth2',
+    name: "authentik_oauth2_access_tokens_get",
+    title: "Get OAuth2 Access Token",
+    description: "Get a single OAuth2 access token by its numeric ID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "oauth2",
     inputSchema: {
-      id: z.number().describe('Access token ID'),
+      id: z.number().describe("Access token ID"),
     },
     handler: async (args) => {
       const result = await client.oauth2Api.oauth2AccessTokensRetrieve({
@@ -61,14 +70,19 @@ export function registerOauth2Tools(
 
   // 3. Delete OAuth2 access token
   registerTool(server, config, {
-    name: 'authentik_oauth2_access_tokens_delete',
-    title: 'Delete OAuth2 Access Token',
-    description: 'Delete (revoke) an OAuth2 access token by its ID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'oauth2',
+    name: "authentik_oauth2_access_tokens_delete",
+    title: "Delete OAuth2 Access Token",
+    description:
+      "Delete (revoke) an OAuth2 access token by its ID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "oauth2",
     inputSchema: {
-      id: z.number().describe('Access token ID to delete'),
+      id: z.number().describe("Access token ID to delete"),
     },
     handler: async (args) => {
       await client.oauth2Api.oauth2AccessTokensDestroy({
@@ -82,19 +96,24 @@ export function registerOauth2Tools(
 
   // 4. List OAuth2 authorization codes
   registerTool(server, config, {
-    name: 'authentik_oauth2_auth_codes_list',
-    title: 'List OAuth2 Authorization Codes',
-    description: 'List OAuth2 authorization codes with optional filters. Codes are system-managed.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'oauth2',
+    name: "authentik_oauth2_auth_codes_list",
+    title: "List OAuth2 Authorization Codes",
+    description:
+      "List OAuth2 authorization codes with optional filters. Codes are system-managed.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "oauth2",
     inputSchema: {
-      user: z.number().optional().describe('Filter by user ID'),
-      provider: z.number().optional().describe('Filter by provider ID'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      user: z.number().optional().describe("Filter by user ID"),
+      provider: z.number().optional().describe("Filter by provider ID"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.oauth2Api.oauth2AuthorizationCodesList({
@@ -111,14 +130,18 @@ export function registerOauth2Tools(
 
   // 5. Get OAuth2 authorization code
   registerTool(server, config, {
-    name: 'authentik_oauth2_auth_codes_get',
-    title: 'Get OAuth2 Authorization Code',
-    description: 'Get a single OAuth2 authorization code by its numeric ID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'oauth2',
+    name: "authentik_oauth2_auth_codes_get",
+    title: "Get OAuth2 Authorization Code",
+    description: "Get a single OAuth2 authorization code by its numeric ID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "oauth2",
     inputSchema: {
-      id: z.number().describe('Authorization code ID'),
+      id: z.number().describe("Authorization code ID"),
     },
     handler: async (args) => {
       const result = await client.oauth2Api.oauth2AuthorizationCodesRetrieve({
@@ -130,14 +153,19 @@ export function registerOauth2Tools(
 
   // 6. Delete OAuth2 authorization code
   registerTool(server, config, {
-    name: 'authentik_oauth2_auth_codes_delete',
-    title: 'Delete OAuth2 Authorization Code',
-    description: 'Delete an OAuth2 authorization code by its ID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'oauth2',
+    name: "authentik_oauth2_auth_codes_delete",
+    title: "Delete OAuth2 Authorization Code",
+    description:
+      "Delete an OAuth2 authorization code by its ID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "oauth2",
     inputSchema: {
-      id: z.number().describe('Authorization code ID to delete'),
+      id: z.number().describe("Authorization code ID to delete"),
     },
     handler: async (args) => {
       await client.oauth2Api.oauth2AuthorizationCodesDestroy({
@@ -151,19 +179,24 @@ export function registerOauth2Tools(
 
   // 7. List OAuth2 refresh tokens
   registerTool(server, config, {
-    name: 'authentik_oauth2_refresh_tokens_list',
-    title: 'List OAuth2 Refresh Tokens',
-    description: 'List OAuth2 refresh tokens with optional filters. Tokens are system-managed.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'oauth2',
+    name: "authentik_oauth2_refresh_tokens_list",
+    title: "List OAuth2 Refresh Tokens",
+    description:
+      "List OAuth2 refresh tokens with optional filters. Tokens are system-managed.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "oauth2",
     inputSchema: {
-      user: z.number().optional().describe('Filter by user ID'),
-      provider: z.number().optional().describe('Filter by provider ID'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      user: z.number().optional().describe("Filter by user ID"),
+      provider: z.number().optional().describe("Filter by provider ID"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.oauth2Api.oauth2RefreshTokensList({
@@ -180,14 +213,18 @@ export function registerOauth2Tools(
 
   // 8. Get OAuth2 refresh token
   registerTool(server, config, {
-    name: 'authentik_oauth2_refresh_tokens_get',
-    title: 'Get OAuth2 Refresh Token',
-    description: 'Get a single OAuth2 refresh token by its numeric ID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'oauth2',
+    name: "authentik_oauth2_refresh_tokens_get",
+    title: "Get OAuth2 Refresh Token",
+    description: "Get a single OAuth2 refresh token by its numeric ID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "oauth2",
     inputSchema: {
-      id: z.number().describe('Refresh token ID'),
+      id: z.number().describe("Refresh token ID"),
     },
     handler: async (args) => {
       const result = await client.oauth2Api.oauth2RefreshTokensRetrieve({
@@ -199,14 +236,19 @@ export function registerOauth2Tools(
 
   // 9. Delete OAuth2 refresh token
   registerTool(server, config, {
-    name: 'authentik_oauth2_refresh_tokens_delete',
-    title: 'Delete OAuth2 Refresh Token',
-    description: 'Delete (revoke) an OAuth2 refresh token by its ID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'oauth2',
+    name: "authentik_oauth2_refresh_tokens_delete",
+    title: "Delete OAuth2 Refresh Token",
+    description:
+      "Delete (revoke) an OAuth2 refresh token by its ID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "oauth2",
     inputSchema: {
-      id: z.number().describe('Refresh token ID to delete'),
+      id: z.number().describe("Refresh token ID to delete"),
     },
     handler: async (args) => {
       await client.oauth2Api.oauth2RefreshTokensDestroy({

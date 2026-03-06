@@ -1,35 +1,35 @@
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { validateToolLists } from '../core/tools.js';
-import { registerUserTools } from './users.js';
-import { registerGroupTools } from './groups.js';
-import { registerApplicationTools } from './applications.js';
-import { registerTokenTools } from './tokens.js';
-import { registerBrandTools } from './brands.js';
-import { registerAdminTools } from './admin.js';
-import { registerTaskTools } from './tasks.js';
-import { registerRootTools } from './root.js';
-// Phase 3 Wave 1
-import { registerFlowTools } from './flows.js';
-import { registerStageTools } from './stages.js';
-import { registerProviderTools } from './providers.js';
-import { registerPolicyTools } from './policies.js';
-// Phase 3 Wave 1 (Plan 02)
-import { registerSourceTools } from './sources.js';
-import { registerPropertyMappingTools } from './property-mappings.js';
-import { registerRbacTools } from './rbac.js';
-import { registerEventTools } from './events.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { AuthentikClient } from "../core/client.js";
+import { validateToolLists } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
+import { registerAdminTools } from "./admin.js";
+import { registerApplicationTools } from "./applications.js";
+import { registerAuthenticatorTools } from "./authenticators.js";
+import { registerBrandTools } from "./brands.js";
 // Phase 3 Wave 2 (Plan 03)
-import { registerCryptoTools } from './crypto.js';
-import { registerOutpostTools } from './outposts.js';
-import { registerManagedTools } from './managed.js';
-import { registerOauth2Tools } from './oauth2.js';
-import { registerAuthenticatorTools } from './authenticators.js';
-import { registerEnterpriseTools } from './enterprise.js';
-import { registerRacTools } from './rac.js';
-import { registerSsfTools } from './ssf.js';
-import { registerTenantTools } from './tenants.js';
+import { registerCryptoTools } from "./crypto.js";
+import { registerEnterpriseTools } from "./enterprise.js";
+import { registerEventTools } from "./events.js";
+// Phase 3 Wave 1
+import { registerFlowTools } from "./flows.js";
+import { registerGroupTools } from "./groups.js";
+import { registerManagedTools } from "./managed.js";
+import { registerOauth2Tools } from "./oauth2.js";
+import { registerOutpostTools } from "./outposts.js";
+import { registerPolicyTools } from "./policies.js";
+import { registerPropertyMappingTools } from "./property-mappings.js";
+import { registerProviderTools } from "./providers.js";
+import { registerRacTools } from "./rac.js";
+import { registerRbacTools } from "./rbac.js";
+import { registerRootTools } from "./root.js";
+// Phase 3 Wave 1 (Plan 02)
+import { registerSourceTools } from "./sources.js";
+import { registerSsfTools } from "./ssf.js";
+import { registerStageTools } from "./stages.js";
+import { registerTaskTools } from "./tasks.js";
+import { registerTenantTools } from "./tenants.js";
+import { registerTokenTools } from "./tokens.js";
+import { registerUserTools } from "./users.js";
 
 export function registerAllTools(
   server: McpServer,

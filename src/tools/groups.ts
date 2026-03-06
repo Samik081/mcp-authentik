@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerGroupTools(
   server: McpServer,
@@ -11,21 +11,38 @@ export function registerGroupTools(
 ): void {
   // 1. List groups
   registerTool(server, config, {
-    name: 'authentik_groups_list',
-    title: 'List Groups',
-    description: 'List groups with optional filters for name, superuser status, members, and search.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'core',
+    name: "authentik_groups_list",
+    title: "List Groups",
+    description:
+      "List groups with optional filters for name, superuser status, members, and search.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      name: z.string().optional().describe('Filter by exact group name'),
-      search: z.string().optional().describe('Search across group fields'),
-      members_by_pk: z.array(z.number()).optional().describe('Filter by member user IDs'),
-      members_by_username: z.array(z.string()).optional().describe('Filter by member usernames'),
-      is_superuser: z.boolean().optional().describe('Filter by superuser group status'),
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      name: z.string().optional().describe("Filter by exact group name"),
+      search: z.string().optional().describe("Search across group fields"),
+      members_by_pk: z
+        .array(z.number())
+        .optional()
+        .describe("Filter by member user IDs"),
+      members_by_username: z
+        .array(z.string())
+        .optional()
+        .describe("Filter by member usernames"),
+      is_superuser: z
+        .boolean()
+        .optional()
+        .describe("Filter by superuser group status"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreGroupsList({
@@ -44,14 +61,18 @@ export function registerGroupTools(
 
   // 2. Get group
   registerTool(server, config, {
-    name: 'authentik_groups_get',
-    title: 'Get Group',
-    description: 'Get a single group by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'core',
+    name: "authentik_groups_get",
+    title: "Get Group",
+    description: "Get a single group by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      group_uuid: z.string().describe('Group UUID'),
+      group_uuid: z.string().describe("Group UUID"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreGroupsRetrieve({
@@ -63,18 +84,32 @@ export function registerGroupTools(
 
   // 3. Create group
   registerTool(server, config, {
-    name: 'authentik_groups_create',
-    title: 'Create Group',
-    description: 'Create a new group with optional parent, superuser status, users, and custom attributes.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'core',
+    name: "authentik_groups_create",
+    title: "Create Group",
+    description:
+      "Create a new group with optional parent, superuser status, users, and custom attributes.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "core",
     inputSchema: {
-      name: z.string().describe('Group name (required)'),
-      parent: z.string().optional().describe('Parent group UUID'),
-      is_superuser: z.boolean().optional().describe('Whether members of this group are superusers'),
-      users: z.array(z.number()).optional().describe('Array of user IDs to add as members'),
-      attributes: z.record(z.unknown()).optional().describe('Custom attributes key-value pairs'),
+      name: z.string().describe("Group name (required)"),
+      parent: z.string().optional().describe("Parent group UUID"),
+      is_superuser: z
+        .boolean()
+        .optional()
+        .describe("Whether members of this group are superusers"),
+      users: z
+        .array(z.number())
+        .optional()
+        .describe("Array of user IDs to add as members"),
+      attributes: z
+        .record(z.unknown())
+        .optional()
+        .describe("Custom attributes key-value pairs"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreGroupsCreate({
@@ -92,19 +127,30 @@ export function registerGroupTools(
 
   // 4. Update group
   registerTool(server, config, {
-    name: 'authentik_groups_update',
-    title: 'Update Group',
-    description: 'Update an existing group. Only provided fields are modified (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'core',
+    name: "authentik_groups_update",
+    title: "Update Group",
+    description:
+      "Update an existing group. Only provided fields are modified (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      group_uuid: z.string().describe('Group UUID (required)'),
-      name: z.string().optional().describe('New group name'),
-      parent: z.string().optional().describe('New parent group UUID'),
-      is_superuser: z.boolean().optional().describe('Whether members are superusers'),
-      users: z.array(z.number()).optional().describe('Array of user IDs'),
-      attributes: z.record(z.unknown()).optional().describe('Custom attributes key-value pairs'),
+      group_uuid: z.string().describe("Group UUID (required)"),
+      name: z.string().optional().describe("New group name"),
+      parent: z.string().optional().describe("New parent group UUID"),
+      is_superuser: z
+        .boolean()
+        .optional()
+        .describe("Whether members are superusers"),
+      users: z.array(z.number()).optional().describe("Array of user IDs"),
+      attributes: z
+        .record(z.unknown())
+        .optional()
+        .describe("Custom attributes key-value pairs"),
     },
     handler: async (args) => {
       const result = await client.coreApi.coreGroupsPartialUpdate({
@@ -123,14 +169,18 @@ export function registerGroupTools(
 
   // 5. Delete group
   registerTool(server, config, {
-    name: 'authentik_groups_delete',
-    title: 'Delete Group',
-    description: 'Delete a group by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'core',
+    name: "authentik_groups_delete",
+    title: "Delete Group",
+    description: "Delete a group by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "core",
     inputSchema: {
-      group_uuid: z.string().describe('Group UUID to delete'),
+      group_uuid: z.string().describe("Group UUID to delete"),
     },
     handler: async (args) => {
       await client.coreApi.coreGroupsDestroy({
@@ -142,15 +192,19 @@ export function registerGroupTools(
 
   // 6. Add user to group
   registerTool(server, config, {
-    name: 'authentik_groups_add_user',
-    title: 'Add User to Group',
-    description: 'Add a user to a group by group UUID and user ID.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
-    category: 'core',
+    name: "authentik_groups_add_user",
+    title: "Add User to Group",
+    description: "Add a user to a group by group UUID and user ID.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "core",
     inputSchema: {
-      group_uuid: z.string().describe('Group UUID'),
-      user_id: z.number().describe('User ID to add to the group'),
+      group_uuid: z.string().describe("Group UUID"),
+      user_id: z.number().describe("User ID to add to the group"),
     },
     handler: async (args) => {
       await client.coreApi.coreGroupsAddUserCreate({
@@ -165,15 +219,19 @@ export function registerGroupTools(
 
   // 7. Remove user from group
   registerTool(server, config, {
-    name: 'authentik_groups_remove_user',
-    title: 'Remove User from Group',
-    description: 'Remove a user from a group by group UUID and user ID.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'core',
+    name: "authentik_groups_remove_user",
+    title: "Remove User from Group",
+    description: "Remove a user from a group by group UUID and user ID.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "core",
     inputSchema: {
-      group_uuid: z.string().describe('Group UUID'),
-      user_id: z.number().describe('User ID to remove from the group'),
+      group_uuid: z.string().describe("Group UUID"),
+      user_id: z.number().describe("User ID to remove from the group"),
     },
     handler: async (args) => {
       await client.coreApi.coreGroupsRemoveUserCreate({

@@ -1,4 +1,4 @@
-export type AccessTier = 'read-only' | 'full';
+export type AccessTier = "read-only" | "full";
 
 export interface AppConfig {
   url: string;
@@ -8,7 +8,7 @@ export interface AppConfig {
   toolBlacklist: string[] | null;
   toolWhitelist: string[] | null;
   excludeToolTitles: boolean;
-  transport: 'stdio' | 'http';
+  transport: "stdio" | "http";
   httpPort: number;
   httpHost: string;
 }

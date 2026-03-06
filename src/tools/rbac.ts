@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerRbacTools(
   server: McpServer,
@@ -13,18 +13,25 @@ export function registerRbacTools(
 
   // 1. List roles
   registerTool(server, config, {
-    name: 'authentik_rbac_roles_list',
-    title: 'List RBAC Roles',
-    description: 'List RBAC roles with optional filters.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_roles_list",
+    title: "List RBAC Roles",
+    description: "List RBAC roles with optional filters.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      group_name: z.string().optional().describe('Filter by group name'),
-      search: z.string().optional().describe('Search across role fields'),
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      group_name: z.string().optional().describe("Filter by group name"),
+      search: z.string().optional().describe("Search across role fields"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacRolesList({
@@ -40,14 +47,18 @@ export function registerRbacTools(
 
   // 2. Get role
   registerTool(server, config, {
-    name: 'authentik_rbac_roles_get',
-    title: 'Get RBAC Role',
-    description: 'Get a single RBAC role by its UUID.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_roles_get",
+    title: "Get RBAC Role",
+    description: "Get a single RBAC role by its UUID.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      uuid: z.string().describe('Role UUID'),
+      uuid: z.string().describe("Role UUID"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacRolesRetrieve({
@@ -59,14 +70,18 @@ export function registerRbacTools(
 
   // 3. Create role
   registerTool(server, config, {
-    name: 'authentik_rbac_roles_create',
-    title: 'Create RBAC Role',
-    description: 'Create a new RBAC role.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'rbac',
+    name: "authentik_rbac_roles_create",
+    title: "Create RBAC Role",
+    description: "Create a new RBAC role.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "rbac",
     inputSchema: {
-      name: z.string().describe('Role name (required)'),
+      name: z.string().describe("Role name (required)"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacRolesCreate({
@@ -80,15 +95,20 @@ export function registerRbacTools(
 
   // 4. Update role
   registerTool(server, config, {
-    name: 'authentik_rbac_roles_update',
-    title: 'Update RBAC Role',
-    description: 'Update an existing RBAC role. Only provided fields are modified (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_roles_update",
+    title: "Update RBAC Role",
+    description:
+      "Update an existing RBAC role. Only provided fields are modified (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      uuid: z.string().describe('Role UUID (required)'),
-      name: z.string().optional().describe('New role name'),
+      uuid: z.string().describe("Role UUID (required)"),
+      name: z.string().optional().describe("New role name"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacRolesPartialUpdate({
@@ -103,14 +123,19 @@ export function registerRbacTools(
 
   // 5. Delete role
   registerTool(server, config, {
-    name: 'authentik_rbac_roles_delete',
-    title: 'Delete RBAC Role',
-    description: 'Delete an RBAC role by its UUID. This action is irreversible.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'rbac',
+    name: "authentik_rbac_roles_delete",
+    title: "Delete RBAC Role",
+    description:
+      "Delete an RBAC role by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "rbac",
     inputSchema: {
-      uuid: z.string().describe('Role UUID to delete'),
+      uuid: z.string().describe("Role UUID to delete"),
     },
     handler: async (args) => {
       await client.rbacApi.rbacRolesDestroy({
@@ -124,22 +149,32 @@ export function registerRbacTools(
 
   // 6. List permissions
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_list',
-    title: 'List RBAC Permissions',
-    description: 'List all available permissions, filterable by model and app.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_list",
+    title: "List RBAC Permissions",
+    description: "List all available permissions, filterable by model and app.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      codename: z.string().optional().describe('Filter by permission codename'),
-      content_type_model: z.string().optional().describe('Filter by content type model'),
-      content_type_app_label: z.string().optional().describe('Filter by content type app label'),
-      role: z.string().optional().describe('Filter by role UUID'),
-      user: z.number().optional().describe('Filter by user ID'),
-      search: z.string().optional().describe('Search across permission fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      codename: z.string().optional().describe("Filter by permission codename"),
+      content_type_model: z
+        .string()
+        .optional()
+        .describe("Filter by content type model"),
+      content_type_app_label: z
+        .string()
+        .optional()
+        .describe("Filter by content type app label"),
+      role: z.string().optional().describe("Filter by role UUID"),
+      user: z.number().optional().describe("Filter by user ID"),
+      search: z.string().optional().describe("Search across permission fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacPermissionsList({
@@ -161,19 +196,29 @@ export function registerRbacTools(
 
   // 7. List permissions assigned to a role
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_by_role_list',
-    title: 'List Permissions by Role',
-    description: 'List object permissions assigned to a specific model, filterable by role.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_by_role_list",
+    title: "List Permissions by Role",
+    description:
+      "List object permissions assigned to a specific model, filterable by role.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      model: z.string().describe('Model identifier (e.g. "authentik_core.application")'),
-      object_pk: z.string().optional().describe('Object primary key to filter permissions for'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      model: z
+        .string()
+        .describe('Model identifier (e.g. "authentik_core.application")'),
+      object_pk: z
+        .string()
+        .optional()
+        .describe("Object primary key to filter permissions for"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacPermissionsAssignedByRolesList({
@@ -190,17 +235,30 @@ export function registerRbacTools(
 
   // 8. Assign permissions to a role
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_by_role_assign',
-    title: 'Assign Permissions to Role',
-    description: 'Assign permission(s) to a role. When object_pk is set, permissions are only assigned to the specific object.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_by_role_assign",
+    title: "Assign Permissions to Role",
+    description:
+      "Assign permission(s) to a role. When object_pk is set, permissions are only assigned to the specific object.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      uuid: z.string().describe('Role UUID'),
-      permissions: z.array(z.string()).describe('Array of permission codenames to assign'),
-      model: z.string().optional().describe('Model identifier for scoped permissions'),
-      object_pk: z.string().optional().describe('Object primary key for object-level permissions'),
+      uuid: z.string().describe("Role UUID"),
+      permissions: z
+        .array(z.string())
+        .describe("Array of permission codenames to assign"),
+      model: z
+        .string()
+        .optional()
+        .describe("Model identifier for scoped permissions"),
+      object_pk: z
+        .string()
+        .optional()
+        .describe("Object primary key for object-level permissions"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacPermissionsAssignedByRolesAssign({
@@ -217,17 +275,30 @@ export function registerRbacTools(
 
   // 9. Unassign permissions from a role
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_by_role_unassign',
-    title: 'Unassign Permissions from Role',
-    description: 'Unassign permission(s) from a role. When object_pk is set, permissions are only unassigned from the specific object.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_by_role_unassign",
+    title: "Unassign Permissions from Role",
+    description:
+      "Unassign permission(s) from a role. When object_pk is set, permissions are only unassigned from the specific object.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "rbac",
     inputSchema: {
-      uuid: z.string().describe('Role UUID'),
-      permissions: z.array(z.string()).describe('Array of permission codenames to unassign'),
-      model: z.string().optional().describe('Model identifier for scoped permissions'),
-      object_pk: z.string().optional().describe('Object primary key for object-level permissions'),
+      uuid: z.string().describe("Role UUID"),
+      permissions: z
+        .array(z.string())
+        .describe("Array of permission codenames to unassign"),
+      model: z
+        .string()
+        .optional()
+        .describe("Model identifier for scoped permissions"),
+      object_pk: z
+        .string()
+        .optional()
+        .describe("Object primary key for object-level permissions"),
     },
     handler: async (args) => {
       await client.rbacApi.rbacPermissionsAssignedByRolesUnassignPartialUpdate({
@@ -246,19 +317,29 @@ export function registerRbacTools(
 
   // 10. List permissions assigned to a user
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_by_user_list',
-    title: 'List Permissions by User',
-    description: 'List object permissions assigned to a specific model, filterable by user.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_by_user_list",
+    title: "List Permissions by User",
+    description:
+      "List object permissions assigned to a specific model, filterable by user.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      model: z.string().describe('Model identifier (e.g. "authentik_core.user")'),
-      object_pk: z.string().optional().describe('Object primary key to filter permissions for'),
-      search: z.string().optional().describe('Search across fields'),
-      ordering: z.string().optional().describe('Field to order by'),
-      page: z.number().optional().describe('Page number'),
-      page_size: z.number().optional().describe('Number of results per page'),
+      model: z
+        .string()
+        .describe('Model identifier (e.g. "authentik_core.user")'),
+      object_pk: z
+        .string()
+        .optional()
+        .describe("Object primary key to filter permissions for"),
+      search: z.string().optional().describe("Search across fields"),
+      ordering: z.string().optional().describe("Field to order by"),
+      page: z.number().optional().describe("Page number"),
+      page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacPermissionsAssignedByUsersList({
@@ -275,17 +356,29 @@ export function registerRbacTools(
 
   // 11. Assign permissions to a user
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_by_user_assign',
-    title: 'Assign Permissions to User',
-    description: 'Assign permission(s) to a user.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_by_user_assign",
+    title: "Assign Permissions to User",
+    description: "Assign permission(s) to a user.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "rbac",
     inputSchema: {
-      id: z.number().describe('User ID'),
-      permissions: z.array(z.string()).describe('Array of permission codenames to assign'),
-      model: z.string().optional().describe('Model identifier for scoped permissions'),
-      object_pk: z.string().optional().describe('Object primary key for object-level permissions'),
+      id: z.number().describe("User ID"),
+      permissions: z
+        .array(z.string())
+        .describe("Array of permission codenames to assign"),
+      model: z
+        .string()
+        .optional()
+        .describe("Model identifier for scoped permissions"),
+      object_pk: z
+        .string()
+        .optional()
+        .describe("Object primary key for object-level permissions"),
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacPermissionsAssignedByUsersAssign({
@@ -302,17 +395,29 @@ export function registerRbacTools(
 
   // 12. Unassign permissions from a user
   registerTool(server, config, {
-    name: 'authentik_rbac_permissions_by_user_unassign',
-    title: 'Unassign Permissions from User',
-    description: 'Unassign permission(s) from a user.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false },
-    category: 'rbac',
+    name: "authentik_rbac_permissions_by_user_unassign",
+    title: "Unassign Permissions from User",
+    description: "Unassign permission(s) from a user.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "rbac",
     inputSchema: {
-      id: z.number().describe('User ID'),
-      permissions: z.array(z.string()).describe('Array of permission codenames to unassign'),
-      model: z.string().optional().describe('Model identifier for scoped permissions'),
-      object_pk: z.string().optional().describe('Object primary key for object-level permissions'),
+      id: z.number().describe("User ID"),
+      permissions: z
+        .array(z.string())
+        .describe("Array of permission codenames to unassign"),
+      model: z
+        .string()
+        .optional()
+        .describe("Model identifier for scoped permissions"),
+      object_pk: z
+        .string()
+        .optional()
+        .describe("Object primary key for object-level permissions"),
     },
     handler: async (args) => {
       await client.rbacApi.rbacPermissionsAssignedByUsersUnassignPartialUpdate({

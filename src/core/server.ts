@@ -5,20 +5,20 @@
  * which selects stdio or HTTP transport based on config.
  */
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { randomUUID } from "node:crypto";
 import {
   createServer as createHttpServer,
   type IncomingMessage,
   type ServerResponse,
-} from 'node:http';
-import { randomUUID } from 'node:crypto';
-import type { AppConfig } from '../types/index.js';
-import { logger } from './logger.js';
-import pkg from '../../package.json' with { type: 'json' };
+} from "node:http";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import pkg from "../../package.json" with { type: "json" };
+import type { AppConfig } from "../types/index.js";
+import { logger } from "./logger.js";
 
-const SERVER_NAME = 'mcp-authentik';
+const SERVER_NAME = "mcp-authentik";
 
 export function createServer(): McpServer {
   return new McpServer(
@@ -31,7 +31,7 @@ export async function startServer(
   server: McpServer,
   config: AppConfig,
 ): Promise<void> {
-  if (config.transport === 'http') {
+  if (config.transport === "http") {
     await startHttpServer(server, config);
   } else {
     const transport = new StdioServerTransport();
@@ -44,22 +44,22 @@ const MAX_BODY_BYTES = 4 * 1024 * 1024; // 4 MB
 
 async function parseJsonBody(req: IncomingMessage): Promise<unknown> {
   return new Promise((resolve, reject) => {
-    let data = '';
-    req.on('data', (chunk: Buffer) => {
+    let data = "";
+    req.on("data", (chunk: Buffer) => {
       data += chunk.toString();
       if (data.length > MAX_BODY_BYTES) {
         req.destroy();
-        reject(new Error('Request body too large'));
+        reject(new Error("Request body too large"));
       }
     });
-    req.on('end', () => {
+    req.on("end", () => {
       try {
         resolve(JSON.parse(data));
       } catch (err) {
         reject(err);
       }
     });
-    req.on('error', reject);
+    req.on("error", reject);
   });
 }
 
@@ -77,13 +77,13 @@ async function startHttpServer(
 
   const httpServer = createHttpServer(
     async (req: IncomingMessage, res: ServerResponse) => {
-      const url = req.url ?? '';
+      const url = req.url ?? "";
 
-      if (url === '/health' && req.method === 'GET') {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+      if (url === "/health" && req.method === "GET") {
+        res.writeHead(200, { "Content-Type": "application/json" });
         res.end(
           JSON.stringify({
-            status: 'ok',
+            status: "ok",
             server: SERVER_NAME,
             version: pkg.version,
           }),
@@ -91,29 +91,31 @@ async function startHttpServer(
         return;
       }
 
-      if (url === '/') {
+      if (url === "/") {
         try {
-          if (req.method === 'POST') {
+          if (req.method === "POST") {
             const body = await parseJsonBody(req);
             await transport.handleRequest(req, res, body);
           } else {
             await transport.handleRequest(req, res);
           }
         } catch (err) {
-          logger.error('MCP request handling error:', err);
+          logger.error("MCP request handling error:", err);
           if (!res.headersSent) {
             const status = err instanceof SyntaxError ? 400 : 500;
             const message =
-              err instanceof SyntaxError ? 'Invalid JSON' : 'Internal server error';
-            res.writeHead(status, { 'Content-Type': 'application/json' });
+              err instanceof SyntaxError
+                ? "Invalid JSON"
+                : "Internal server error";
+            res.writeHead(status, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ error: message }));
           }
         }
         return;
       }
 
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Not found' }));
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
     },
   );
 
@@ -124,7 +126,7 @@ async function startHttpServer(
       );
       resolve();
     });
-    httpServer.once('error', reject);
+    httpServer.once("error", reject);
   });
 
   const shutdown = async (signal: string): Promise<void> => {
@@ -134,6 +136,6 @@ async function startHttpServer(
     process.exit(0);
   };
 
-  process.once('SIGTERM', () => void shutdown('SIGTERM'));
-  process.once('SIGINT', () => void shutdown('SIGINT'));
+  process.once("SIGTERM", () => void shutdown("SIGTERM"));
+  process.once("SIGINT", () => void shutdown("SIGINT"));
 }

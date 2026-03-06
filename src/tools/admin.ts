@@ -1,8 +1,8 @@
-import { z } from 'zod';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { AuthentikClient } from '../core/client.js';
-import type { AppConfig } from '../types/index.js';
-import { registerTool } from '../core/tools.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+import type { AuthentikClient } from "../core/client.js";
+import { registerTool } from "../core/tools.js";
+import type { AppConfig } from "../types/index.js";
 
 export function registerAdminTools(
   server: McpServer,
@@ -11,13 +11,17 @@ export function registerAdminTools(
 ): void {
   // 1. Get system info
   registerTool(server, config, {
-    name: 'authentik_admin_system_info',
-    title: 'Get System Info',
+    name: "authentik_admin_system_info",
+    title: "Get System Info",
     description:
-      'Get system information including HTTP host, runtime environment, server time, and embedded outpost status.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'admin',
+      "Get system information including HTTP host, runtime environment, server time, and embedded outpost status.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "admin",
     handler: async () => {
       const result = await client.adminApi.adminSystemRetrieve();
       return JSON.stringify(result, null, 2);
@@ -26,13 +30,17 @@ export function registerAdminTools(
 
   // 2. Get version
   registerTool(server, config, {
-    name: 'authentik_admin_version',
-    title: 'Get Version',
+    name: "authentik_admin_version",
+    title: "Get Version",
     description:
-      'Get Authentik version information including current version and build hash.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'admin',
+      "Get Authentik version information including current version and build hash.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "admin",
     handler: async () => {
       const result = await client.adminApi.adminVersionRetrieve();
       return JSON.stringify(result, null, 2);
@@ -41,12 +49,16 @@ export function registerAdminTools(
 
   // 3. Get settings
   registerTool(server, config, {
-    name: 'authentik_admin_settings_get',
-    title: 'Get Admin Settings',
-    description: 'Get current system settings.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'admin',
+    name: "authentik_admin_settings_get",
+    title: "Get Admin Settings",
+    description: "Get current system settings.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "admin",
     handler: async () => {
       const result = await client.adminApi.adminSettingsRetrieve();
       return JSON.stringify(result, null, 2);
@@ -55,36 +67,82 @@ export function registerAdminTools(
 
   // 4. Update settings (partial)
   registerTool(server, config, {
-    name: 'authentik_admin_settings_update',
-    title: 'Update Admin Settings',
-    description: 'Update system settings (partial update).',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true },
-    category: 'admin',
+    name: "authentik_admin_settings_update",
+    title: "Update Admin Settings",
+    description: "Update system settings (partial update).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+    },
+    category: "admin",
     inputSchema: {
-      avatars: z.string().optional().describe('Configure how authentik should show avatars for users'),
-      default_user_change_name: z.boolean().optional().describe('Enable the ability for users to change their name'),
-      default_user_change_email: z.boolean().optional().describe('Enable the ability for users to change their email address'),
-      default_user_change_username: z.boolean().optional().describe('Enable the ability for users to change their username'),
-      event_retention: z.string().optional().describe('Events will be deleted after this duration (format: weeks=3;days=2;hours=3,seconds=2)'),
-      footer_links: z.any().optional().describe('Footer links configuration (JSON)'),
-      gdpr_compliance: z.boolean().optional().describe('When enabled, all events caused by a user will be deleted upon the user deletion'),
-      impersonation: z.boolean().optional().describe('Globally enable/disable impersonation'),
-      default_token_duration: z.string().optional().describe('Default token duration'),
-      default_token_length: z.number().optional().describe('Default token length'),
+      avatars: z
+        .string()
+        .optional()
+        .describe("Configure how authentik should show avatars for users"),
+      default_user_change_name: z
+        .boolean()
+        .optional()
+        .describe("Enable the ability for users to change their name"),
+      default_user_change_email: z
+        .boolean()
+        .optional()
+        .describe("Enable the ability for users to change their email address"),
+      default_user_change_username: z
+        .boolean()
+        .optional()
+        .describe("Enable the ability for users to change their username"),
+      event_retention: z
+        .string()
+        .optional()
+        .describe(
+          "Events will be deleted after this duration (format: weeks=3;days=2;hours=3,seconds=2)",
+        ),
+      footer_links: z
+        .any()
+        .optional()
+        .describe("Footer links configuration (JSON)"),
+      gdpr_compliance: z
+        .boolean()
+        .optional()
+        .describe(
+          "When enabled, all events caused by a user will be deleted upon the user deletion",
+        ),
+      impersonation: z
+        .boolean()
+        .optional()
+        .describe("Globally enable/disable impersonation"),
+      default_token_duration: z
+        .string()
+        .optional()
+        .describe("Default token duration"),
+      default_token_length: z
+        .number()
+        .optional()
+        .describe("Default token length"),
     },
     handler: async (args) => {
       const result = await client.adminApi.adminSettingsPartialUpdate({
         patchedSettingsRequest: {
           avatars: args.avatars as string | undefined,
-          defaultUserChangeName: args.default_user_change_name as boolean | undefined,
-          defaultUserChangeEmail: args.default_user_change_email as boolean | undefined,
-          defaultUserChangeUsername: args.default_user_change_username as boolean | undefined,
+          defaultUserChangeName: args.default_user_change_name as
+            | boolean
+            | undefined,
+          defaultUserChangeEmail: args.default_user_change_email as
+            | boolean
+            | undefined,
+          defaultUserChangeUsername: args.default_user_change_username as
+            | boolean
+            | undefined,
           eventRetention: args.event_retention as string | undefined,
           footerLinks: args.footer_links,
           gdprCompliance: args.gdpr_compliance as boolean | undefined,
           impersonation: args.impersonation as boolean | undefined,
-          defaultTokenDuration: args.default_token_duration as string | undefined,
+          defaultTokenDuration: args.default_token_duration as
+            | string
+            | undefined,
           defaultTokenLength: args.default_token_length as number | undefined,
         },
       });
@@ -94,12 +152,17 @@ export function registerAdminTools(
 
   // 5. List installed apps
   registerTool(server, config, {
-    name: 'authentik_admin_apps',
-    title: 'List Installed Apps',
-    description: 'List installed Django applications in the Authentik instance.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'admin',
+    name: "authentik_admin_apps",
+    title: "List Installed Apps",
+    description:
+      "List installed Django applications in the Authentik instance.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "admin",
     handler: async () => {
       const result = await client.adminApi.adminAppsList();
       return JSON.stringify(result, null, 2);
@@ -108,12 +171,16 @@ export function registerAdminTools(
 
   // 6. List models
   registerTool(server, config, {
-    name: 'authentik_admin_models',
-    title: 'List Models',
-    description: 'List all data models available in the Authentik instance.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'admin',
+    name: "authentik_admin_models",
+    title: "List Models",
+    description: "List all data models available in the Authentik instance.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "admin",
     handler: async () => {
       const result = await client.adminApi.adminModelsList();
       return JSON.stringify(result, null, 2);
@@ -122,17 +189,27 @@ export function registerAdminTools(
 
   // 7. Version history
   registerTool(server, config, {
-    name: 'authentik_admin_version_history',
-    title: 'List Version History',
-    description: 'List Authentik version history entries.',
-    accessTier: 'read-only',
-    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true },
-    category: 'admin',
+    name: "authentik_admin_version_history",
+    title: "List Version History",
+    description: "List Authentik version history entries.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "admin",
     inputSchema: {
-      ordering: z.string().optional().describe('Field to order by (prefix with - for descending)'),
-      search: z.string().optional().describe('Search across version history fields'),
-      build: z.string().optional().describe('Filter by build hash'),
-      version: z.string().optional().describe('Filter by version string'),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+      search: z
+        .string()
+        .optional()
+        .describe("Search across version history fields"),
+      build: z.string().optional().describe("Filter by build hash"),
+      version: z.string().optional().describe("Filter by version string"),
     },
     handler: async (args) => {
       const result = await client.adminApi.adminVersionHistoryList({
@@ -147,13 +224,17 @@ export function registerAdminTools(
 
   // 8. Trigger system tasks
   registerTool(server, config, {
-    name: 'authentik_admin_system_task_trigger',
-    title: 'Trigger System Tasks',
+    name: "authentik_admin_system_task_trigger",
+    title: "Trigger System Tasks",
     description:
-      'Trigger all system tasks (e.g., cleanup, cache clear). Returns updated system info.',
-    accessTier: 'full',
-    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
-    category: 'admin',
+      "Trigger all system tasks (e.g., cleanup, cache clear). Returns updated system info.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "admin",
     handler: async () => {
       const result = await client.adminApi.adminSystemCreate();
       return JSON.stringify(result, null, 2);

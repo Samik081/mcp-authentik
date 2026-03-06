@@ -1,9 +1,9 @@
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import type { ToolAnnotations } from '@modelcontextprotocol/sdk/types.js';
-import type { ZodRawShape } from 'zod';
-import { AccessTier, AppConfig } from '../types/index.js';
-import { sanitizeError } from './errors.js';
-import { logger } from './logger.js';
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { ToolAnnotations } from "@modelcontextprotocol/sdk/types.js";
+import type { ZodRawShape } from "zod";
+import type { AccessTier, AppConfig } from "../types/index.js";
+import { sanitizeError } from "./errors.js";
+import { logger } from "./logger.js";
 
 export interface ToolRegistrationOptions {
   name: string;
@@ -36,10 +36,8 @@ export function registerTool(
 ): boolean {
   seenToolNames.add(options.name);
 
-  const isBlacklisted =
-    config.toolBlacklist !== null && config.toolBlacklist.includes(options.name);
-  const isWhitelisted =
-    config.toolWhitelist !== null && config.toolWhitelist.includes(options.name);
+  const isBlacklisted = config.toolBlacklist?.includes(options.name);
+  const isWhitelisted = config.toolWhitelist?.includes(options.name);
 
   // Blacklist always wins
   if (isBlacklisted) {
@@ -56,19 +54,22 @@ export function registerTool(
   // Whitelist bypasses tier and category filters
   if (!isWhitelisted) {
     // Tier gate: read-only config prevents full-tier tools
-    if (config.accessTier === 'read-only' && options.accessTier === 'full') {
+    if (config.accessTier === "read-only" && options.accessTier === "full") {
       return false;
     }
 
     // Category filter: skip silently if category not in allowed list
-    if (config.categories !== null && !config.categories.includes(options.category)) {
+    if (
+      config.categories !== null &&
+      !config.categories.includes(options.category)
+    ) {
       return false;
     }
   }
 
   // Build annotations
   const annotations: ToolAnnotations = {
-    readOnlyHint: options.accessTier === 'read-only',
+    readOnlyHint: options.accessTier === "read-only",
     destructiveHint: false,
     ...options.annotations,
   };
@@ -90,19 +91,28 @@ export function registerTool(
   }
 
   // Register with error-wrapping handler
-  server.registerTool(options.name, toolConfig, async (args: Record<string, unknown>) => {
-    try {
-      const result = await options.handler(args);
-      return {
-        content: [{ type: 'text' as const, text: result }],
-      };
-    } catch (error: unknown) {
-      return {
-        content: [{ type: 'text' as const, text: 'Error: ' + await sanitizeError(error, config) }],
-        isError: true,
-      };
-    }
-  });
+  server.registerTool(
+    options.name,
+    toolConfig,
+    async (args: Record<string, unknown>) => {
+      try {
+        const result = await options.handler(args);
+        return {
+          content: [{ type: "text" as const, text: result }],
+        };
+      } catch (error: unknown) {
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: `Error: ${await sanitizeError(error, config)}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
 
   return true;
 }
