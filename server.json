@@ -1,8 +1,9 @@
 {
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.samik081/mcp-authentik",
   "version": "0.4.1",
   "title": "Authentik MCP Server",
-  "description": "MCP server for Authentik identity management",
+  "description": "Manage Authentik through AI assistants",
   "license": "MIT",
   "repository": {
     "type": "git",
