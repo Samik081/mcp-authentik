@@ -36,8 +36,6 @@
     {
       "registryType": "oci",
       "identifier": "ghcr.io/samik081/mcp-authentik:0.4.5",
-      "version": "0.4.5",
-      "runtimeHint": "docker",
       "transport": {
         "type": "stdio"
       },
