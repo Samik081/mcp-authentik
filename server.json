@@ -6,45 +6,49 @@
   "description": "Manage Authentik through AI assistants",
   "license": "MIT",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/Samik081/mcp-authentik.git"
+    "url": "https://github.com/Samik081/mcp-authentik",
+    "source": "github"
   },
   "packages": [
     {
       "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@samik081/mcp-authentik",
       "version": "0.4.3",
       "runtimeHint": "node",
-      "environment_variables": [
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
         {
           "name": "AUTHENTIK_URL",
           "description": "URL of the Authentik instance (e.g. https://auth.example.com)",
-          "required": true
+          "isRequired": true
         },
         {
           "name": "AUTHENTIK_TOKEN",
           "description": "Authentik API token",
-          "required": true,
-          "secret": true
+          "isRequired": true,
+          "isSecret": true
         }
       ]
     },
     {
       "registryType": "oci",
+      "registryBaseUrl": "https://ghcr.io",
       "identifier": "ghcr.io/samik081/mcp-authentik:0.4.3",
       "version": "0.4.3",
       "runtimeHint": "docker",
-      "environment_variables": [
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
         {
           "name": "AUTHENTIK_URL",
           "description": "URL of the Authentik instance (e.g. https://auth.example.com)",
-          "required": true
+          "isRequired": true
         },
         {
           "name": "AUTHENTIK_TOKEN",
           "description": "Authentik API token",
-          "required": true,
-          "secret": true
+          "isRequired": true,
+          "isSecret": true
         }
       ]
     }
