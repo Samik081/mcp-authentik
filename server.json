@@ -1,6 +1,6 @@
 {
   "name": "io.github.samik081/mcp-authentik",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "title": "Authentik MCP Server",
   "description": "MCP server for Authentik identity management",
   "license": "MIT",
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "@samik081/mcp-authentik",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "runtimeHint": "node",
       "environment_variables": [
         {
@@ -30,8 +30,8 @@
     },
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/samik081/mcp-authentik:0.4.0",
-      "version": "0.4.0",
+      "identifier": "ghcr.io/samik081/mcp-authentik:0.4.1",
+      "version": "0.4.1",
       "runtimeHint": "docker",
       "environment_variables": [
         {
