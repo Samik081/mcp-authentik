@@ -319,7 +319,7 @@ export function registerApplicationTools(
           'Provider model identifier (e.g. "authentik_providers_oauth2.oauth2provider")',
         ),
       provider: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .describe(
           'Provider configuration object. IMPORTANT: Use camelCase field names (e.g. authorizationFlow, invalidationFlow, propertyMappings, clientType). Must include a providerModel discriminator field matching provider_model value. For OAuth2, redirectUris must be an array of {matchingMode: "strict", url: "..."} objects.',
         ),
@@ -420,7 +420,7 @@ export function registerApplicationTools(
       name: z.string().describe("Entitlement name (required)"),
       app: z.string().describe("Application slug or UUID (required)"),
       attributes: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Custom attributes"),
     },
@@ -454,7 +454,7 @@ export function registerApplicationTools(
       name: z.string().optional().describe("New entitlement name"),
       app: z.string().optional().describe("New application slug or UUID"),
       attributes: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("New custom attributes"),
     },

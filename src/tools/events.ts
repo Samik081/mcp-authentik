@@ -93,7 +93,7 @@ export function registerEventTools(
         .string()
         .describe("Application identifier that generated the event"),
       context: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Additional event context data"),
       client_ip: z.string().optional().describe("Client IP address"),

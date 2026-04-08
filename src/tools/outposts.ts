@@ -96,7 +96,7 @@ export function registerOutpostTools(
         .optional()
         .describe("Service connection UUID (leave empty for unmanaged)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Outpost configuration object"),
       managed: z.string().optional().describe("Managed identifier string"),
@@ -145,7 +145,7 @@ export function registerOutpostTools(
         .optional()
         .describe("New service connection UUID"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("New outpost configuration object"),
       managed: z.string().optional().describe("New managed identifier string"),
@@ -418,7 +418,7 @@ export function registerOutpostTools(
         .optional()
         .describe("Use local Kubernetes integration"),
       kubeconfig: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Kubeconfig object (uses currently selected context)"),
       verify_ssl: z
@@ -463,7 +463,7 @@ export function registerOutpostTools(
         .optional()
         .describe("Use local Kubernetes integration"),
       kubeconfig: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("New kubeconfig object"),
       verify_ssl: z.boolean().optional().describe("Verify SSL certificates"),

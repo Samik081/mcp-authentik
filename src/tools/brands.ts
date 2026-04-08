@@ -139,7 +139,7 @@ export function registerBrandTools(
         .optional()
         .describe("Web certificate UUID for the authentik core webserver"),
       attributes: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Custom attributes key-value pairs"),
     },
@@ -219,7 +219,7 @@ export function registerBrandTools(
       default_application: z.string().optional().describe("Application slug"),
       web_certificate: z.string().optional().describe("Web certificate UUID"),
       attributes: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Custom attributes key-value pairs"),
     },
