@@ -1,7 +1,7 @@
 {
   "name": "@samik081/mcp-authentik",
   "mcpName": "io.github.Samik081/mcp-authentik",
-  "version": "0.4.8",
+  "version": "0.5.0",
   "description": "Manage Authentik through AI assistants",
   "type": "module",
   "main": "./dist/index.js",
