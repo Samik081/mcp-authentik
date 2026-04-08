@@ -303,7 +303,7 @@ export function registerStageTools(
       stage_type: stageTypeEnum.describe("Stage type to create"),
       name: z.string().describe("Stage name (required)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe(
           "Type-specific configuration fields (camelCase keys matching the SDK request type)",
@@ -339,7 +339,7 @@ export function registerStageTools(
       stage_type: stageTypeEnum.describe("Stage type"),
       stage_uuid: z.string().describe("Stage UUID (required)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe(
           "Type-specific fields to update (camelCase keys matching the SDK patched request type)",
@@ -468,7 +468,7 @@ export function registerStageTools(
       name: z.string().describe("Invitation name (required)"),
       expires: z.string().optional().describe("Expiry date (ISO 8601 format)"),
       fixed_data: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Fixed data to pass to the flow context"),
       single_use: z
@@ -514,7 +514,10 @@ export function registerStageTools(
         .string()
         .optional()
         .describe("New expiry date (ISO 8601 format)"),
-      fixed_data: z.record(z.unknown()).optional().describe("New fixed data"),
+      fixed_data: z
+        .record(z.string(), z.unknown())
+        .optional()
+        .describe("New fixed data"),
       single_use: z
         .boolean()
         .optional()

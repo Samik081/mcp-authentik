@@ -254,7 +254,7 @@ export function registerProviderTools(
         .string()
         .describe("Authorization flow slug (required)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe(
           "Type-specific configuration fields (camelCase keys matching the SDK request type)",
@@ -294,7 +294,7 @@ export function registerProviderTools(
       provider_type: providerTypeEnum.describe("Provider type"),
       id: z.number().describe("Provider ID (required)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe(
           "Type-specific fields to update (camelCase keys matching the SDK patched request type)",

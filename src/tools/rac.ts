@@ -91,7 +91,7 @@ export function registerRacTools(
         .enum(["static", "prompt"])
         .describe("Authentication mode (required)"),
       settings: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Additional endpoint settings"),
       property_mappings: z
@@ -147,7 +147,7 @@ export function registerRacTools(
         .optional()
         .describe("New authentication mode"),
       settings: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("New endpoint settings"),
       property_mappings: z

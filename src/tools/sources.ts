@@ -254,7 +254,7 @@ export function registerSourceTools(
     inputSchema: {
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .describe(
           'Source configuration object (fields depend on source_type). Must include "name" and "slug".',
         ),
@@ -296,7 +296,7 @@ export function registerSourceTools(
       source_type: z.string().describe(`Source type: ${VALID_SOURCE_TYPES}`),
       slug: z.string().describe("Source slug (required, used as identifier)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .describe("Fields to update (partial update)."),
     },
     handler: async (args) => {

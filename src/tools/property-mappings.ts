@@ -194,7 +194,7 @@ export function registerPropertyMappingTools(
       pm_uuid: z.string().describe("Property mapping UUID to test"),
       user: z.number().optional().describe("User ID to use as test context"),
       context: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Additional context for the test"),
       format_result: z
@@ -318,7 +318,7 @@ export function registerPropertyMappingTools(
     inputSchema: {
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .describe(
           'Mapping configuration object (fields depend on mapping_type). Must include "name" and "expression".',
         ),
@@ -360,7 +360,7 @@ export function registerPropertyMappingTools(
       mapping_type: z.string().describe(`Mapping type: ${VALID_PMAP_TYPES}`),
       pm_uuid: z.string().describe("Property mapping UUID"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .describe("Fields to update (partial update)."),
     },
     handler: async (args) => {

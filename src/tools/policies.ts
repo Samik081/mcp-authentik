@@ -182,7 +182,7 @@ export function registerPolicyTools(
         .number()
         .describe("User ID to test the policy against (required)"),
       context: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Additional context for the policy test"),
     },
@@ -313,7 +313,7 @@ export function registerPolicyTools(
       policy_type: policyTypeEnum.describe("Policy type to create"),
       name: z.string().describe("Policy name (required)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe(
           "Type-specific configuration fields (camelCase keys matching the SDK request type)",
@@ -349,7 +349,7 @@ export function registerPolicyTools(
       policy_type: policyTypeEnum.describe("Policy type"),
       policy_uuid: z.string().describe("Policy UUID (required)"),
       config: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe(
           "Type-specific fields to update (camelCase keys matching the SDK patched request type)",

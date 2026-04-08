@@ -107,7 +107,7 @@ export function registerGroupTools(
         .optional()
         .describe("Array of user IDs to add as members"),
       attributes: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Custom attributes key-value pairs"),
     },
@@ -148,7 +148,7 @@ export function registerGroupTools(
         .describe("Whether members are superusers"),
       users: z.array(z.number()).optional().describe("Array of user IDs"),
       attributes: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Custom attributes key-value pairs"),
     },

@@ -84,7 +84,7 @@ export function registerManagedTools(
       name: z.string().describe("Blueprint name (required)"),
       path: z.string().optional().describe("Path to the blueprint file"),
       context: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("Context variables for the blueprint"),
       enabled: z
@@ -128,7 +128,7 @@ export function registerManagedTools(
       name: z.string().optional().describe("New blueprint name"),
       path: z.string().optional().describe("New blueprint file path"),
       context: z
-        .record(z.unknown())
+        .record(z.string(), z.unknown())
         .optional()
         .describe("New context variables"),
       enabled: z
