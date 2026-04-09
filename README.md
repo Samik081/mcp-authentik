@@ -17,6 +17,10 @@ MCP server for [Authentik](https://goauthentik.io/) identity management. Manage 
 - **Remote MCP** via HTTP transport (`MCP_TRANSPORT=http`) using the Streamable HTTP protocol
 - **TypeScript/ESM** with full type safety
 
+## API Compatibility
+
+Built for Authentik **2025.6.3**.
+
 ## Quick Start
 
 Run the server directly with npx:
