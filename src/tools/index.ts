@@ -21,6 +21,7 @@ import { registerPropertyMappingTools } from "./property-mappings.js";
 import { registerProviderTools } from "./providers.js";
 import { registerRacTools } from "./rac.js";
 import { registerRbacTools } from "./rbac.js";
+import { registerReportTools } from "./reports.js";
 import { registerRootTools } from "./root.js";
 // Phase 3 Wave 1 (Plan 02)
 import { registerSourceTools } from "./sources.js";
@@ -65,6 +66,7 @@ export function registerAllTools(
   registerRacTools(server, client, config);
   registerSsfTools(server, client, config);
   registerTenantTools(server, client, config);
+  registerReportTools(server, client, config);
 
   validateToolLists(config);
 }
