@@ -24,7 +24,6 @@ export function registerRbacTools(
     },
     category: "rbac",
     inputSchema: {
-      group_name: z.string().optional().describe("Filter by group name"),
       search: z.string().optional().describe("Search across role fields"),
       ordering: z
         .string()
@@ -35,7 +34,6 @@ export function registerRbacTools(
     },
     handler: async (args) => {
       const result = await client.rbacApi.rbacRolesList({
-        groupName: args.group_name as string | undefined,
         search: args.search as string | undefined,
         ordering: args.ordering as string | undefined,
         page: args.page as number | undefined,
@@ -170,7 +168,6 @@ export function registerRbacTools(
         .optional()
         .describe("Filter by content type app label"),
       role: z.string().optional().describe("Filter by role UUID"),
-      user: z.number().optional().describe("Filter by user ID"),
       search: z.string().optional().describe("Search across permission fields"),
       ordering: z.string().optional().describe("Field to order by"),
       page: z.number().optional().describe("Page number"),
@@ -182,7 +179,6 @@ export function registerRbacTools(
         contentTypeModel: args.content_type_model as string | undefined,
         contentTypeAppLabel: args.content_type_app_label as string | undefined,
         role: args.role as string | undefined,
-        user: args.user as number | undefined,
         search: args.search as string | undefined,
         ordering: args.ordering as string | undefined,
         page: args.page as number | undefined,
@@ -313,52 +309,14 @@ export function registerRbacTools(
     },
   });
 
-  // ── Permissions by user ────────────────────────────────────────────
+  // ── Role membership ────────────────────────────────────────────────
 
-  // 10. List permissions assigned to a user
+  // Add user to role
   registerTool(server, config, {
-    name: "authentik_rbac_permissions_by_user_list",
-    title: "List Permissions by User",
+    name: "authentik_rbac_roles_add_user",
+    title: "Add User to Role",
     description:
-      "List object permissions assigned to a specific model, filterable by user.",
-    accessTier: "read-only",
-    annotations: {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-    },
-    category: "rbac",
-    inputSchema: {
-      model: z
-        .string()
-        .describe('Model identifier (e.g. "authentik_core.user")'),
-      object_pk: z
-        .string()
-        .optional()
-        .describe("Object primary key to filter permissions for"),
-      search: z.string().optional().describe("Search across fields"),
-      ordering: z.string().optional().describe("Field to order by"),
-      page: z.number().optional().describe("Page number"),
-      page_size: z.number().optional().describe("Number of results per page"),
-    },
-    handler: async (args) => {
-      const result = await client.rbacApi.rbacPermissionsAssignedByUsersList({
-        model: args.model as any,
-        objectPk: args.object_pk as string | undefined,
-        search: args.search as string | undefined,
-        ordering: args.ordering as string | undefined,
-        page: args.page as number | undefined,
-        pageSize: args.page_size as number | undefined,
-      });
-      return JSON.stringify(result, null, 2);
-    },
-  });
-
-  // 11. Assign permissions to a user
-  registerTool(server, config, {
-    name: "authentik_rbac_permissions_by_user_assign",
-    title: "Assign Permissions to User",
-    description: "Assign permission(s) to a user.",
+      "Add a user to a role by role UUID and user ID. Permissions are granted via roles.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -367,37 +325,25 @@ export function registerRbacTools(
     },
     category: "rbac",
     inputSchema: {
-      id: z.number().describe("User ID"),
-      permissions: z
-        .array(z.string())
-        .describe("Array of permission codenames to assign"),
-      model: z
-        .string()
-        .optional()
-        .describe("Model identifier for scoped permissions"),
-      object_pk: z
-        .string()
-        .optional()
-        .describe("Object primary key for object-level permissions"),
+      role_uuid: z.string().describe("Role UUID"),
+      user_id: z.number().describe("User ID to add to the role"),
     },
     handler: async (args) => {
-      const result = await client.rbacApi.rbacPermissionsAssignedByUsersAssign({
-        id: args.id as number,
-        permissionAssignRequest: {
-          permissions: args.permissions as string[],
-          model: args.model as any,
-          objectPk: args.object_pk as string | undefined,
+      await client.rbacApi.rbacRolesAddUserCreate({
+        uuid: args.role_uuid as string,
+        userAccountSerializerForRoleRequest: {
+          pk: args.user_id as number,
         },
       });
-      return JSON.stringify(result, null, 2);
+      return `User ${args.user_id} added to role ${args.role_uuid} successfully.`;
     },
   });
 
-  // 12. Unassign permissions from a user
+  // Remove user from role
   registerTool(server, config, {
-    name: "authentik_rbac_permissions_by_user_unassign",
-    title: "Unassign Permissions from User",
-    description: "Unassign permission(s) from a user.",
+    name: "authentik_rbac_roles_remove_user",
+    title: "Remove User from Role",
+    description: "Remove a user from a role by role UUID and user ID.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -406,29 +352,17 @@ export function registerRbacTools(
     },
     category: "rbac",
     inputSchema: {
-      id: z.number().describe("User ID"),
-      permissions: z
-        .array(z.string())
-        .describe("Array of permission codenames to unassign"),
-      model: z
-        .string()
-        .optional()
-        .describe("Model identifier for scoped permissions"),
-      object_pk: z
-        .string()
-        .optional()
-        .describe("Object primary key for object-level permissions"),
+      role_uuid: z.string().describe("Role UUID"),
+      user_id: z.number().describe("User ID to remove from the role"),
     },
     handler: async (args) => {
-      await client.rbacApi.rbacPermissionsAssignedByUsersUnassignPartialUpdate({
-        id: args.id as number,
-        patchedPermissionAssignRequest: {
-          permissions: args.permissions as string[],
-          model: args.model as any,
-          objectPk: args.object_pk as string | undefined,
+      await client.rbacApi.rbacRolesRemoveUserCreate({
+        uuid: args.role_uuid as string,
+        userAccountSerializerForRoleRequest: {
+          pk: args.user_id as number,
         },
       });
-      return `Permissions unassigned from user ${args.id} successfully.`;
+      return `User ${args.user_id} removed from role ${args.role_uuid} successfully.`;
     },
   });
 }
