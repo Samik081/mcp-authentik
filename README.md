@@ -9,7 +9,7 @@ MCP server for [Authentik](https://goauthentik.io/) identity management. Manage 
 
 ## Features
 
-- **245 tools** across **20 categories** covering the complete Authentik API
+- **294 tools** across **22 categories** covering the complete Authentik API
 - **Read-only mode** via `AUTHENTIK_ACCESS_TIER=read-only` for safe monitoring
 - **Category filtering** via `AUTHENTIK_CATEGORIES` to expose only the tools you need
 - **Type-safe SDK client** via `@goauthentik/api`
@@ -19,7 +19,7 @@ MCP server for [Authentik](https://goauthentik.io/) identity management. Manage 
 
 ## API Compatibility
 
-Built for Authentik **2025.6.3**.
+Built for Authentik **2026.5**.
 
 ## Quick Start
 
@@ -130,11 +130,11 @@ Control which tools are available using the `AUTHENTIK_ACCESS_TIER` environment 
 
 | Tier | Tools | Description |
 |------|-------|-------------|
-| `full` (default) | 245 | Read and write -- full control |
-| `read-only` | 121 | Read only -- safe for monitoring, no state changes |
+| `full` (default) | 294 | Read and write -- full control |
+| `read-only` | 144 | Read only -- safe for monitoring, no state changes |
 
-- **full**: All 245 tools. Includes creating, updating, and deleting users, groups, applications, flows, providers, and all other resources.
-- **read-only**: 121 tools. Listing and viewing resources only. No state changes.
+- **full**: All 294 tools. Includes creating, updating, and deleting users, groups, applications, flows, providers, and all other resources.
+- **read-only**: 144 tools. Listing and viewing resources only. No state changes.
 
 Tools that are not available in your tier are not registered with the MCP server. They will not appear in your AI tool's tool list, keeping the context clean.
 
@@ -156,11 +156,11 @@ Tools that are not available in your tier are not registered with the MCP server
 
 ### Available Categories
 
-`admin`, `authenticators`, `core`, `crypto`, `enterprise`, `events`, `flows`, `managed`, `oauth2`, `outposts`, `policies`, `property-mappings`, `providers`, `rac`, `rbac`, `root`, `sources`, `ssf`, `stages`, `tenants`
+`admin`, `authenticators`, `core`, `crypto`, `endpoints`, `enterprise`, `events`, `flows`, `managed`, `oauth2`, `outposts`, `policies`, `property-mappings`, `providers`, `rac`, `rbac`, `reports`, `root`, `sources`, `ssf`, `stages`, `tenants`
 
 ## Tools
 
-mcp-authentik provides 245 tools organized by category. Each tool's Access column shows the minimum tier required: `read-only` (available in both tiers) or `full` (requires `full` tier). The Hints column shows tool behavior: `read-only` (no state changes), `destructive` (modifies existing state), `idempotent` (same result if called twice).
+mcp-authentik provides 294 tools organized by category. Each tool's Access column shows the minimum tier required: `read-only` (available in both tiers) or `full` (requires `full` tier). The Hints column shows tool behavior: `read-only` (no state changes), `destructive` (modifies existing state), `idempotent` (same result if called twice).
 
 <details>
 <summary>Admin (8 tools)</summary>
@@ -192,7 +192,7 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 </details>
 
 <details>
-<summary>Core (44 tools)</summary>
+<summary>Core (45 tools)</summary>
 
 **Users**
 
@@ -209,6 +209,7 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 | `authentik_users_generate_recovery_link` | Generate a temporary recovery link for a user to regain account access | full | — |
 | `authentik_users_send_recovery_email` | Send a recovery email to a user using a specified email stage | full | — |
 | `authentik_users_list_paths` | List all user paths configured in the system | read-only | read-only, idempotent |
+| `authentik_users_account_lockdown` | Lock down a user account, deactivating it and terminating its active sessions | full | destructive |
 
 **Groups**
 
@@ -230,7 +231,7 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 | `authentik_apps_get` | Get a single application by its slug | read-only | read-only, idempotent |
 | `authentik_apps_create` | Create a new application with name, slug, and optional provider, group, and metadata | full | — |
 | `authentik_apps_update` | Update an existing application (partial update) | full | destructive, idempotent |
-| `authentik_apps_set_icon_url` | Set an application icon from a URL, or clear it | full | destructive, idempotent |
+| `authentik_apps_set_icon_url` | Set an application's icon to an external URL (sets the meta_icon field) | full | destructive, idempotent |
 | `authentik_apps_delete` | Delete an application by its slug | full | destructive |
 | `authentik_apps_check_access` | Check whether a specific user has access to an application | read-only | read-only, idempotent |
 | `authentik_apps_update_transactional` | Create or update an application and its provider in a single atomic transaction | full | destructive, idempotent |
@@ -275,9 +276,102 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 | `authentik_crypto_create` | Create a new certificate keypair from PEM-encoded certificate and optional private key data | full | — |
 | `authentik_crypto_update` | Update an existing certificate keypair (partial update) | full | destructive, idempotent |
 | `authentik_crypto_delete` | Delete a certificate keypair by its UUID | full | destructive |
-| `authentik_crypto_generate` | Generate a new self-signed certificate keypair | full | — |
+| `authentik_crypto_generate` | Generate a new self-signed certificate keypair (RSA, ECDSA, ED25519, or ED448) | full | — |
 | `authentik_crypto_view_certificate` | View the PEM-encoded certificate data for a keypair | read-only | read-only, idempotent |
 | `authentik_crypto_view_private_key` | View the PEM-encoded private key data for a keypair (sensitive) | full | read-only, idempotent |
+
+</details>
+
+<details>
+<summary>Endpoints (41 tools)</summary>
+
+Enterprise device and endpoint management: managed devices, device access groups, device-to-policy bindings, and connectors for agents, enrollment, Fleet, Google Chrome, and Apple ISE-PSSO.
+
+**Devices**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_devices_list` | List managed endpoint devices with optional filtering by name or identifier, search, and ordering | read-only | read-only, idempotent |
+| `authentik_endpoints_devices_get` | Retrieve a single endpoint device by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_devices_summary` | Retrieve aggregate summary statistics about managed endpoint devices | read-only | read-only, idempotent |
+| `authentik_endpoints_devices_update` | Update an endpoint device (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_devices_delete` | Delete an endpoint device by its UUID (irreversible) | full | destructive |
+
+**Device Access Groups**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_device_access_groups_list` | List device access groups with optional filtering by name, search, and ordering | read-only | read-only, idempotent |
+| `authentik_endpoints_device_access_groups_get` | Retrieve a single device access group by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_device_access_groups_create` | Create a new device access group (bundles devices for policy targeting) | full | — |
+| `authentik_endpoints_device_access_groups_update` | Update a device access group (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_device_access_groups_delete` | Delete a device access group by its UUID (irreversible) | full | destructive |
+
+**Device Bindings**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_device_bindings_list` | List device-to-user policy bindings with optional filtering | read-only | read-only, idempotent |
+| `authentik_endpoints_device_bindings_get` | Retrieve a single device binding by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_device_bindings_create` | Create a new device binding linking a policy, group, or user to a target with an evaluation order | full | — |
+| `authentik_endpoints_device_bindings_update` | Update a device binding (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_device_bindings_delete` | Delete a device binding by its UUID (irreversible) | full | destructive |
+
+**Agent Connectors**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_agent_connectors_list` | List endpoint agent connectors with optional filtering | read-only | read-only, idempotent |
+| `authentik_endpoints_agent_connectors_get` | Retrieve a single agent connector by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_agent_connectors_create` | Create a new endpoint agent connector | full | — |
+| `authentik_endpoints_agent_connectors_update` | Update an agent connector (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_agent_connectors_delete` | Delete an agent connector by its UUID (irreversible) | full | destructive |
+
+**Enrollment Tokens**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_enrollment_tokens_list` | List agent enrollment tokens with optional filtering | read-only | read-only, idempotent |
+| `authentik_endpoints_enrollment_tokens_get` | Retrieve a single enrollment token by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_enrollment_tokens_create` | Create a new agent enrollment token bound to a connector (used to enroll devices) | full | — |
+| `authentik_endpoints_enrollment_tokens_update` | Update an enrollment token (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_enrollment_tokens_delete` | Delete an enrollment token by its UUID (irreversible) | full | destructive |
+
+**Fleet Connectors**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_fleet_connectors_list` | List Fleet device-management connectors with optional filtering | read-only | read-only, idempotent |
+| `authentik_endpoints_fleet_connectors_get` | Retrieve a single Fleet connector by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_fleet_connectors_create` | Create a new Fleet connector pointing at a Fleet device-management instance | full | — |
+| `authentik_endpoints_fleet_connectors_update` | Update a Fleet connector (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_fleet_connectors_delete` | Delete a Fleet connector by its UUID (irreversible) | full | destructive |
+
+**Google Chrome Connectors**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_google_chrome_connectors_list` | List Google Chrome device-management connectors with optional filtering | read-only | read-only, idempotent |
+| `authentik_endpoints_google_chrome_connectors_get` | Retrieve a single Google Chrome connector by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_google_chrome_connectors_create` | Create a new Google Chrome connector with service-account credentials | full | — |
+| `authentik_endpoints_google_chrome_connectors_update` | Update a Google Chrome connector (partial update) | full | destructive, idempotent |
+| `authentik_endpoints_google_chrome_connectors_delete` | Delete a Google Chrome connector by its UUID (irreversible) | full | destructive |
+
+**ISE-PSSO Agents**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_psso_ise_list` | List Apple Independent Secure Enclave (ISE-PSSO) agents with optional filtering | read-only | read-only, idempotent |
+| `authentik_endpoints_psso_ise_get` | Retrieve a single ISE-PSSO agent by its UUID | read-only | read-only, idempotent |
+| `authentik_endpoints_psso_ise_delete` | Delete an ISE-PSSO agent by its UUID (irreversible) | full | destructive |
+
+**Connectors (generic registry)**
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_endpoints_connectors_list` | List all endpoint connectors across types (generic registry view) | read-only | read-only, idempotent |
+| `authentik_endpoints_connectors_get` | Retrieve a single endpoint connector by its UUID from the generic registry | read-only | read-only, idempotent |
+| `authentik_endpoints_connectors_delete` | Delete an endpoint connector by its UUID from the generic registry (irreversible) | full | destructive |
 
 </details>
 
@@ -298,7 +392,7 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 </details>
 
 <details>
-<summary>Events (24 tools)</summary>
+<summary>Events (25 tools)</summary>
 
 **Events**
 
@@ -310,6 +404,7 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 | `authentik_events_actions_list` | List all available event action types | read-only | read-only, idempotent |
 | `authentik_events_top_per_user` | Get the top N events grouped by user count | read-only | read-only, idempotent |
 | `authentik_events_volume` | Get event volume data for specified filters and timeframe | read-only | read-only, idempotent |
+| `authentik_events_stats` | Get aggregated event statistics bucketed by the provided count steps, optionally filtered | read-only | read-only, idempotent |
 | `authentik_events_rules_list` | List notification rules with optional filters | read-only | read-only, idempotent |
 | `authentik_events_rules_get` | Get a single notification rule by its UUID | read-only | read-only, idempotent |
 | `authentik_events_rules_create` | Create a new notification rule | full | — |
@@ -330,9 +425,9 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
-| `authentik_tasks_list` | List system tasks with optional filters by name, status, or UID | read-only | read-only, idempotent |
-| `authentik_tasks_get` | Get details of a specific system task by UUID | read-only | read-only, idempotent |
-| `authentik_tasks_retry` | Retry a failed system task by UUID | full | — |
+| `authentik_tasks_list` | List background tasks with optional filters by actor name, queue, state, or search | read-only | read-only, idempotent |
+| `authentik_tasks_get` | Get details of a specific task by its message ID | read-only | read-only, idempotent |
+| `authentik_tasks_retry` | Retry a failed task by its message ID | full | — |
 
 </details>
 
@@ -348,7 +443,7 @@ mcp-authentik provides 245 tools organized by category. Each tool's Access colum
 | `authentik_flows_delete` | Delete a flow by its slug | full | destructive |
 | `authentik_flows_diagram` | Get a visual diagram of a flow showing its stages and bindings | read-only | read-only, idempotent |
 | `authentik_flows_export` | Export a flow as YAML | read-only | read-only, idempotent |
-| `authentik_flows_import` | Import a flow from YAML content | full | — |
+| `authentik_flows_import` | Import a flow/blueprint from YAML content (uses the managed blueprints import endpoint) | full | — |
 | `authentik_flows_cache_info` | Get information about cached flows | read-only | read-only, idempotent |
 | `authentik_flows_cache_clear` | Clear the flow cache | full | destructive, idempotent |
 | `authentik_flows_bindings_list` | List flow stage bindings with optional filters | read-only | read-only, idempotent |
@@ -464,9 +559,9 @@ Property mappings use a type+config pattern. Cross-type tools operate on any map
 </details>
 
 <details>
-<summary>Providers (11 tools)</summary>
+<summary>Providers (13 tools)</summary>
 
-Providers use a type+config pattern. Cross-type tools operate on any provider, while per-type tools accept a `provider_type` parameter. Available types: `oauth2`, `saml`, `ldap`, `proxy`, `radius`, `scim`, `rac`, `google_workspace`, `microsoft_entra`.
+Providers use a type+config pattern. Cross-type tools operate on any provider, while per-type tools accept a `provider_type` parameter. Available types: `oauth2`, `saml`, `ldap`, `proxy`, `radius`, `scim`, `rac`, `google_workspace`, `microsoft_entra`, `wsfed`.
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
@@ -481,6 +576,8 @@ Providers use a type+config pattern. Cross-type tools operate on any provider, w
 | `authentik_providers_by_type_delete` | Delete a provider of a specific type by its numeric ID | full | destructive |
 | `authentik_providers_oauth2_setup_urls` | Get OAuth2 provider setup URLs (authorize, token, userinfo, etc.) | read-only | read-only, idempotent |
 | `authentik_providers_saml_metadata` | Get SAML provider metadata XML | read-only | read-only, idempotent |
+| `authentik_providers_wsfed_metadata` | Get WS-Federation provider metadata XML | read-only | read-only, idempotent |
+| `authentik_providers_wsfed_preview_user` | Preview the property-mapping output a WS-Federation provider would generate for a user | read-only | read-only, idempotent |
 
 </details>
 
@@ -501,7 +598,9 @@ Providers use a type+config pattern. Cross-type tools operate on any provider, w
 </details>
 
 <details>
-<summary>RBAC (12 tools)</summary>
+<summary>RBAC (11 tools)</summary>
+
+RBAC permissions are role-only: assign permissions to roles, then grant a role to users via role membership.
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
@@ -514,9 +613,19 @@ Providers use a type+config pattern. Cross-type tools operate on any provider, w
 | `authentik_rbac_permissions_by_role_list` | List object permissions assigned to a specific model, filterable by role | read-only | read-only, idempotent |
 | `authentik_rbac_permissions_by_role_assign` | Assign permission(s) to a role | full | idempotent |
 | `authentik_rbac_permissions_by_role_unassign` | Unassign permission(s) from a role | full | destructive |
-| `authentik_rbac_permissions_by_user_list` | List object permissions assigned to a specific model, filterable by user | read-only | read-only, idempotent |
-| `authentik_rbac_permissions_by_user_assign` | Assign permission(s) to a user | full | idempotent |
-| `authentik_rbac_permissions_by_user_unassign` | Unassign permission(s) from a user | full | destructive |
+| `authentik_rbac_roles_add_user` | Add a user to a role by role UUID and user ID (permissions are granted via roles) | full | idempotent |
+| `authentik_rbac_roles_remove_user` | Remove a user from a role by role UUID and user ID | full | destructive |
+
+</details>
+
+<details>
+<summary>Reports (3 tools)</summary>
+
+| Tool | Description | Access | Hints |
+|------|-------------|--------|-------|
+| `authentik_reports_export_list` | List data exports with optional search and ordering | read-only | read-only, idempotent |
+| `authentik_reports_export_get` | Retrieve a single data export by its ID, including content type, query, file URL, and completion status | read-only | read-only, idempotent |
+| `authentik_reports_export_delete` | Delete a data export by its ID (irreversible) | full | destructive |
 
 </details>
 
@@ -530,9 +639,9 @@ Providers use a type+config pattern. Cross-type tools operate on any provider, w
 </details>
 
 <details>
-<summary>Sources (10 tools)</summary>
+<summary>Sources (11 tools)</summary>
 
-Sources use a type+config pattern. Cross-type tools operate on any source, while per-type tools accept a `source_type` parameter. Available types: `oauth`, `saml`, `ldap`, `plex`, `kerberos`, `scim`.
+Sources use a type+config pattern. Cross-type tools operate on any source, while per-type tools accept a `source_type` parameter. Available types: `oauth`, `saml`, `ldap`, `plex`, `kerberos`, `scim`, `telegram`.
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
@@ -546,23 +655,25 @@ Sources use a type+config pattern. Cross-type tools operate on any source, while
 | `authentik_sources_by_type_update` | Update an existing source by type and slug | full | destructive, idempotent |
 | `authentik_sources_by_type_delete` | Delete a source by type and slug | full | destructive |
 | `authentik_sources_user_connections_list` | List user-source connections across all source types | read-only | read-only, idempotent |
+| `authentik_sources_telegram_connect_user` | Connect a user to a Telegram source using Telegram authentication data (login widget payload) | full | — |
 
 </details>
 
 <details>
-<summary>SSF (2 tools)</summary>
+<summary>SSF (3 tools)</summary>
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
 | `authentik_ssf_streams_list` | List Shared Signals Framework (SSF) event streams with optional filters | read-only | read-only, idempotent |
 | `authentik_ssf_streams_get` | Get a single SSF event stream by its UUID | read-only | read-only, idempotent |
+| `authentik_ssf_streams_delete` | Delete a Shared Signals Framework (SSF) event stream by its UUID (irreversible) | full | destructive |
 
 </details>
 
 <details>
 <summary>Stages (19 tools)</summary>
 
-Stages use a type+config pattern. Cross-type tools operate on any stage, while per-type tools accept a `stage_type` parameter. Available types: `authenticator_duo`, `authenticator_email`, `authenticator_endpoint_gdtc`, `authenticator_sms`, `authenticator_static`, `authenticator_totp`, `authenticator_validate`, `authenticator_webauthn`, `captcha`, `consent`, `deny`, `dummy`, `email`, `identification`, `invitation`, `mtls`, `password`, `prompt`, `redirect`, `source`, `user_delete`, `user_login`, `user_logout`, `user_write`.
+Stages use a type+config pattern. Cross-type tools operate on any stage, while per-type tools accept a `stage_type` parameter. Available types: `account_lockdown`, `authenticator_duo`, `authenticator_email`, `authenticator_endpoint_gdtc`, `authenticator_sms`, `authenticator_static`, `authenticator_totp`, `authenticator_validate`, `authenticator_webauthn`, `captcha`, `consent`, `deny`, `dummy`, `email`, `endpoint`, `identification`, `invitation`, `mtls`, `password`, `prompt`, `redirect`, `source`, `user_delete`, `user_login`, `user_logout`, `user_write`.
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
@@ -608,16 +719,8 @@ Stages use a type+config pattern. Cross-type tools operate on any stage, while p
 
 ## Known Limitations
 
-The following enterprise endpoint features are not available in the `@goauthentik/api` SDK:
-
-- **ENDP-01:** Agent connectors CRUD
-- **ENDP-02:** Enrollment tokens CRUD
-- **ENDP-03:** Enrollment key viewing
-- **ENDP-06:** Device access groups CRUD
-- **ENDP-07:** Fleet connectors CRUD
-- **ENDP-08:** Connector types list
-
-These enterprise endpoint features require SDK support that is not yet available.
+- **Application icons are URL-only.** `authentik_apps_set_icon_url` sets the `meta_icon` field to an external URL. Uploading a binary icon file or clearing an existing icon is not supported through this MCP server.
+- **Endpoint enrollment keys are not retrievable.** Enrollment tokens can be created and managed, but the raw enrollment key value cannot be viewed back through the `@goauthentik/api` SDK.
 
 ## Verify It Works
 
@@ -632,6 +735,7 @@ If the connection is working, the assistant will call `authentik_admin_version` 
 - **"List all users in the admin group"** -- calls `authentik_users_list` and `authentik_groups_list` to find and display admin group members.
 - **"What applications are configured?"** -- calls `authentik_apps_list` to show all applications with their providers and groups.
 - **"Create a new user for john.doe@example.com"** -- calls `authentik_users_create` to set up the new user account.
+- **"Show me a summary of all managed endpoint devices"** -- calls `authentik_endpoints_devices_summary` to report aggregate device statistics.
 
 ## Troubleshooting
 
