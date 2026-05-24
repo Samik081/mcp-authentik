@@ -9,7 +9,7 @@ MCP server for [Authentik](https://goauthentik.io/) identity management. Manage 
 
 ## Features
 
-- **294 tools** across **22 categories** covering the complete Authentik API
+- **297 tools** across **22 categories** covering the complete Authentik API
 - **Read-only mode** via `AUTHENTIK_ACCESS_TIER=read-only` for safe monitoring
 - **Category filtering** via `AUTHENTIK_CATEGORIES` to expose only the tools you need
 - **Type-safe SDK client** via `@goauthentik/api`
@@ -130,10 +130,10 @@ Control which tools are available using the `AUTHENTIK_ACCESS_TIER` environment 
 
 | Tier | Tools | Description |
 |------|-------|-------------|
-| `full` (default) | 294 | Read and write -- full control |
+| `full` (default) | 297 | Read and write -- full control |
 | `read-only` | 144 | Read only -- safe for monitoring, no state changes |
 
-- **full**: All 294 tools. Includes creating, updating, and deleting users, groups, applications, flows, providers, and all other resources.
+- **full**: All 297 tools. Includes creating, updating, and deleting users, groups, applications, flows, providers, and all other resources.
 - **read-only**: 144 tools. Listing and viewing resources only. No state changes.
 
 Tools that are not available in your tier are not registered with the MCP server. They will not appear in your AI tool's tool list, keeping the context clean.
@@ -160,7 +160,7 @@ Tools that are not available in your tier are not registered with the MCP server
 
 ## Tools
 
-mcp-authentik provides 294 tools organized by category. Each tool's Access column shows the minimum tier required: `read-only` (available in both tiers) or `full` (requires `full` tier). The Hints column shows tool behavior: `read-only` (no state changes), `destructive` (modifies existing state), `idempotent` (same result if called twice).
+mcp-authentik provides 297 tools organized by category. Each tool's Access column shows the minimum tier required: `read-only` (available in both tiers) or `full` (requires `full` tier). The Hints column shows tool behavior: `read-only` (no state changes), `destructive` (modifies existing state), `idempotent` (same result if called twice).
 
 <details>
 <summary>Admin (8 tools)</summary>
@@ -210,6 +210,7 @@ mcp-authentik provides 294 tools organized by category. Each tool's Access colum
 | `authentik_users_send_recovery_email` | Send a recovery email to a user using a specified email stage | full | — |
 | `authentik_users_list_paths` | List all user paths configured in the system | read-only | read-only, idempotent |
 | `authentik_users_account_lockdown` | Lock down a user account, deactivating it and terminating its active sessions | full | destructive |
+| `authentik_users_export` | Trigger an export of users with optional filters, producing a downloadable export artifact | full | — |
 
 **Groups**
 
@@ -217,7 +218,7 @@ mcp-authentik provides 294 tools organized by category. Each tool's Access colum
 |------|-------------|--------|-------|
 | `authentik_groups_list` | List groups with optional filters for name, superuser status, members, and search | read-only | read-only, idempotent |
 | `authentik_groups_get` | Get a single group by its UUID | read-only | read-only, idempotent |
-| `authentik_groups_create` | Create a new group with optional parent, superuser status, users, and custom attributes | full | — |
+| `authentik_groups_create` | Create a new group with optional parent group UUIDs, superuser status, users, and custom attributes | full | — |
 | `authentik_groups_update` | Update an existing group (partial update) | full | destructive, idempotent |
 | `authentik_groups_delete` | Delete a group by its UUID | full | destructive |
 | `authentik_groups_add_user` | Add a user to a group by group UUID and user ID | full | idempotent |
@@ -420,6 +421,7 @@ Enterprise device and endpoint management: managed devices, device access groups
 | `authentik_events_notifications_update` | Update a notification, typically to mark it as seen or unseen | full | destructive, idempotent |
 | `authentik_events_notifications_delete` | Delete a notification by its UUID | full | destructive |
 | `authentik_events_notifications_mark_all_seen` | Mark all notifications as seen for the current user | full | destructive, idempotent |
+| `authentik_events_export` | Trigger an export of events with optional filters, producing a downloadable export artifact | full | — |
 
 **System Tasks**
 
@@ -691,6 +693,7 @@ Stages use a type+config pattern. Cross-type tools operate on any stage, while p
 | `authentik_invitations_create` | Create a new invitation | full | — |
 | `authentik_invitations_update` | Update an existing invitation | full | destructive, idempotent |
 | `authentik_invitations_delete` | Delete an invitation by its UUID | full | destructive |
+| `authentik_invitations_send_email` | Send an invitation email to one or more recipients for an existing invitation | full | — |
 | `authentik_prompts_list` | List prompt field definitions with optional filters | read-only | read-only, idempotent |
 | `authentik_prompts_get` | Get a single prompt field definition by its UUID | read-only | read-only, idempotent |
 | `authentik_prompts_create` | Create a new prompt field definition | full | — |
