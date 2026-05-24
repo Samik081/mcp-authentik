@@ -331,7 +331,9 @@ export function registerUserTools(
     handler: async (args) => {
       await client.coreApi.coreUsersRecoveryEmailCreate({
         id: args.id as number,
-        emailStage: args.email_stage as string,
+        userRecoveryEmailRequest: {
+          emailStage: args.email_stage as string,
+        },
       });
       return `Recovery email sent successfully to user ${args.id}.`;
     },
