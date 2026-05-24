@@ -66,6 +66,7 @@ export function registerAllTools(
   registerRacTools(server, client, config);
   registerSsfTools(server, client, config);
   registerTenantTools(server, client, config);
+  // New categories (authentik SDK 2026.5)
   registerReportTools(server, client, config);
 
   validateToolLists(config);
