@@ -138,3 +138,284 @@ describe("handler: authentik_users_delete (full tier)", () => {
     await cleanup();
   });
 });
+
+// Shared harness for the 2026.5 new/changed tool handlers below.
+function describeHandler(
+  name: string,
+  body: (ctx: {
+    getMockClient: () => AuthentikClient;
+    getClient: () => Client;
+  }) => void,
+) {
+  describe(name, () => {
+    let cleanup: () => Promise<void>;
+    let mcpClient: Client;
+    let mockClient: AuthentikClient;
+
+    beforeEach(async () => {
+      mockClient = makeMockClient();
+      const server = createServer();
+      registerAllTools(server, mockClient, makeConfig());
+      const conn = await connectTestClient(server);
+      mcpClient = conn.client;
+      cleanup = conn.cleanup;
+    });
+
+    afterEach(async () => {
+      await cleanup();
+    });
+
+    body({
+      getMockClient: () => mockClient,
+      getClient: () => mcpClient,
+    });
+  });
+}
+
+describeHandler(
+  "handler: authentik_tasks_retry (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls tasksApi.tasksTasksRetryCreate with mapped messageId", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_tasks_retry",
+        arguments: { message_id: "msg-123" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().tasksApi.tasksTasksRetryCreate,
+      ).toHaveBeenCalledWith({ messageId: "msg-123" });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_tasks_list (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls tasksApi.tasksTasksList with mapped filters", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_tasks_list",
+        arguments: { actor_name: "worker", page_size: 50 },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(getMockClient().tasksApi.tasksTasksList).toHaveBeenCalledWith(
+        expect.objectContaining({ actorName: "worker", pageSize: 50 }),
+      );
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_rbac_roles_add_user (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls rbacApi.rbacRolesAddUserCreate with mapped uuid + user pk", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_rbac_roles_add_user",
+        arguments: { role_uuid: "role-uuid-1", user_id: 7 },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().rbacApi.rbacRolesAddUserCreate,
+      ).toHaveBeenCalledWith({
+        uuid: "role-uuid-1",
+        userAccountSerializerForRoleRequest: { pk: 7 },
+      });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_rbac_roles_remove_user (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls rbacApi.rbacRolesRemoveUserCreate with mapped uuid + user pk", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_rbac_roles_remove_user",
+        arguments: { role_uuid: "role-uuid-2", user_id: 9 },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().rbacApi.rbacRolesRemoveUserCreate,
+      ).toHaveBeenCalledWith({
+        uuid: "role-uuid-2",
+        userAccountSerializerForRoleRequest: { pk: 9 },
+      });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_apps_set_icon_url (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls coreApi.coreApplicationsPartialUpdate with metaIcon", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_apps_set_icon_url",
+        arguments: { slug: "my-app", icon_url: "https://cdn.test/icon.png" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().coreApi.coreApplicationsPartialUpdate,
+      ).toHaveBeenCalledWith({
+        slug: "my-app",
+        patchedApplicationRequest: { metaIcon: "https://cdn.test/icon.png" },
+      });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_groups_create (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("maps parents array into the groupRequest body", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_groups_create",
+        arguments: { name: "child", parents: ["parent-uuid-a"] },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(getMockClient().coreApi.coreGroupsCreate).toHaveBeenCalledWith({
+        groupRequest: expect.objectContaining({
+          name: "child",
+          parents: ["parent-uuid-a"],
+        }),
+      });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_flows_import (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls managedApi.managedBlueprintsImportCreate with a file", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_flows_import",
+        arguments: { yaml_content: "version: 1" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().managedApi.managedBlueprintsImportCreate,
+      ).toHaveBeenCalledTimes(1);
+      const call = (
+        getMockClient().managedApi.managedBlueprintsImportCreate as ReturnType<
+          typeof vi.fn
+        >
+      ).mock.calls[0][0];
+      expect(call.file).toBeInstanceOf(Blob);
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_reports_export_get (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls reportsApi.reportsExportsRetrieve with id", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_reports_export_get",
+        arguments: { id: "export-1" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().reportsApi.reportsExportsRetrieve,
+      ).toHaveBeenCalledWith({ id: "export-1" });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_endpoints_devices_list (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls endpointsApi.endpointsDevicesList", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_endpoints_devices_list",
+        arguments: { name: "laptop" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().endpointsApi.endpointsDevicesList,
+      ).toHaveBeenCalledWith(expect.objectContaining({ name: "laptop" }));
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_endpoints_devices_update (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls endpointsApi.endpointsDevicesPartialUpdate with mapped deviceUuid", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_endpoints_devices_update",
+        arguments: { device_uuid: "dev-uuid-1", name: "renamed" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().endpointsApi.endpointsDevicesPartialUpdate,
+      ).toHaveBeenCalledWith({
+        deviceUuid: "dev-uuid-1",
+        patchedEndpointDeviceRequest: expect.objectContaining({
+          name: "renamed",
+        }),
+      });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_events_stats (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls eventsApi.eventsEventsStatsRetrieve with mapped countSteps", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_events_stats",
+        arguments: { count_steps: ["1h", "1d"] },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().eventsApi.eventsEventsStatsRetrieve,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({ countSteps: ["1h", "1d"] }),
+      );
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_users_account_lockdown (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls coreApi.coreUsersAccountLockdownCreate with mapped user id", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_users_account_lockdown",
+        arguments: { id: 13 },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().coreApi.coreUsersAccountLockdownCreate,
+      ).toHaveBeenCalledWith({
+        userAccountLockdownRequest: { user: 13 },
+      });
+    });
+  },
+);
+
+describeHandler(
+  "handler: authentik_ssf_streams_delete (2026.5)",
+  ({ getMockClient, getClient }) => {
+    it("calls ssfApi.ssfStreamsDestroy with mapped uuid", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_ssf_streams_delete",
+        arguments: { uuid: "stream-uuid-1" },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(getMockClient().ssfApi.ssfStreamsDestroy).toHaveBeenCalledWith({
+        uuid: "stream-uuid-1",
+      });
+    });
+  },
+);
