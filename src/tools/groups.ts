@@ -97,10 +97,7 @@ export function registerGroupTools(
     category: "core",
     inputSchema: {
       name: z.string().describe("Group name (required)"),
-      parents: z
-        .array(z.string())
-        .optional()
-        .describe("Parent group UUIDs"),
+      parents: z.array(z.string()).optional().describe("Parent group UUIDs"),
       is_superuser: z
         .boolean()
         .optional()

@@ -1,3 +1,4 @@
+import type { AlgEnum } from "@goauthentik/api";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
@@ -194,6 +195,10 @@ export function registerCryptoTools(
       validity_days: z
         .number()
         .describe("Number of days the certificate is valid (required)"),
+      alg: z
+        .enum(["rsa", "ecdsa", "ed25519", "ed448"])
+        .optional()
+        .describe("Private key algorithm (defaults to rsa)"),
     },
     handler: async (args) => {
       const result =
@@ -202,6 +207,7 @@ export function registerCryptoTools(
             commonName: args.common_name as string,
             subjectAltName: args.subject_alt_name as string | undefined,
             validityDays: args.validity_days as number,
+            alg: args.alg as AlgEnum | undefined,
           },
         });
       return JSON.stringify(result, null, 2);

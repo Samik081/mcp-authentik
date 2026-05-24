@@ -113,6 +113,10 @@ export function registerApplicationTools(
         .optional()
         .describe("Application description"),
       meta_publisher: z.string().optional().describe("Application publisher"),
+      meta_hide: z
+        .boolean()
+        .optional()
+        .describe("Hide the application from the user library"),
       policy_engine_mode: z
         .enum(["all", "any"])
         .optional()
@@ -134,6 +138,7 @@ export function registerApplicationTools(
           metaLaunchUrl: args.meta_launch_url as string | undefined,
           metaDescription: args.meta_description as string | undefined,
           metaPublisher: args.meta_publisher as string | undefined,
+          metaHide: args.meta_hide as boolean | undefined,
           policyEngineMode: args.policy_engine_mode as
             | "all"
             | "any"
@@ -168,6 +173,10 @@ export function registerApplicationTools(
       meta_launch_url: z.string().optional().describe("New launch URL"),
       meta_description: z.string().optional().describe("New description"),
       meta_publisher: z.string().optional().describe("New publisher"),
+      meta_hide: z
+        .boolean()
+        .optional()
+        .describe("Hide the application from the user library"),
       policy_engine_mode: z
         .enum(["all", "any"])
         .optional()
@@ -187,6 +196,7 @@ export function registerApplicationTools(
           metaLaunchUrl: args.meta_launch_url as string | undefined,
           metaDescription: args.meta_description as string | undefined,
           metaPublisher: args.meta_publisher as string | undefined,
+          metaHide: args.meta_hide as boolean | undefined,
           policyEngineMode: args.policy_engine_mode as
             | "all"
             | "any"

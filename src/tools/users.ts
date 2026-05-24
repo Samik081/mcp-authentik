@@ -361,4 +361,30 @@ export function registerUserTools(
       return JSON.stringify(result, null, 2);
     },
   });
+
+  // Account lockdown
+  registerTool(server, config, {
+    name: "authentik_users_account_lockdown",
+    title: "Lock Down User Account",
+    description:
+      "Lock down a user account, deactivating it and terminating its active sessions.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "core",
+    inputSchema: {
+      id: z.number().describe("User ID to lock down"),
+    },
+    handler: async (args) => {
+      const result = await client.coreApi.coreUsersAccountLockdownCreate({
+        userAccountLockdownRequest: {
+          user: args.id as number,
+        },
+      });
+      return `User ${args.id} account locked down. ${JSON.stringify(result)}`;
+    },
+  });
 }

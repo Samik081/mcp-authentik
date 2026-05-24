@@ -7,6 +7,7 @@ import type { AppConfig } from "../types/index.js";
 // ── Per-type stage lookup maps ──────────────────────────────────────────
 
 const STAGE_TYPES = [
+  "account_lockdown",
   "authenticator_duo",
   "authenticator_email",
   "authenticator_endpoint_gdtc",
@@ -20,6 +21,7 @@ const STAGE_TYPES = [
   "deny",
   "dummy",
   "email",
+  "endpoint",
   "identification",
   "invitation",
   "mtls",
@@ -37,6 +39,7 @@ type StageType = (typeof STAGE_TYPES)[number];
 
 /** Maps stage_type → SDK method prefix (e.g., stagesAuthenticatorDuoList) */
 const STAGE_TYPE_SDK_PREFIX: Record<StageType, string> = {
+  account_lockdown: "AccountLockdown",
   authenticator_duo: "AuthenticatorDuo",
   authenticator_email: "AuthenticatorEmail",
   authenticator_endpoint_gdtc: "AuthenticatorEndpointGdtc",
@@ -50,6 +53,7 @@ const STAGE_TYPE_SDK_PREFIX: Record<StageType, string> = {
   deny: "Deny",
   dummy: "Dummy",
   email: "Email",
+  endpoint: "Endpoints",
   identification: "Identification",
   invitation: "InvitationStages",
   mtls: "Mtls",
@@ -65,6 +69,7 @@ const STAGE_TYPE_SDK_PREFIX: Record<StageType, string> = {
 
 /** Maps stage_type → request body key for create (e.g., { authenticatorDuoStageRequest: ... }) */
 const STAGE_TYPE_REQUEST_KEY: Record<StageType, string> = {
+  account_lockdown: "accountLockdownStageRequest",
   authenticator_duo: "authenticatorDuoStageRequest",
   authenticator_email: "authenticatorEmailStageRequest",
   authenticator_endpoint_gdtc: "authenticatorEndpointGDTCStageRequest",
@@ -78,6 +83,7 @@ const STAGE_TYPE_REQUEST_KEY: Record<StageType, string> = {
   deny: "denyStageRequest",
   dummy: "dummyStageRequest",
   email: "emailStageRequest",
+  endpoint: "endpointStageRequest",
   identification: "identificationStageRequest",
   invitation: "invitationStageRequest",
   mtls: "mutualTLSStageRequest",
@@ -93,6 +99,7 @@ const STAGE_TYPE_REQUEST_KEY: Record<StageType, string> = {
 
 /** Maps stage_type → patched request body key for update */
 const STAGE_TYPE_PATCHED_KEY: Record<StageType, string> = {
+  account_lockdown: "patchedAccountLockdownStageRequest",
   authenticator_duo: "patchedAuthenticatorDuoStageRequest",
   authenticator_email: "patchedAuthenticatorEmailStageRequest",
   authenticator_endpoint_gdtc: "patchedAuthenticatorEndpointGDTCStageRequest",
@@ -106,6 +113,7 @@ const STAGE_TYPE_PATCHED_KEY: Record<StageType, string> = {
   deny: "patchedDenyStageRequest",
   dummy: "patchedDummyStageRequest",
   email: "patchedEmailStageRequest",
+  endpoint: "patchedEndpointStageRequest",
   identification: "patchedIdentificationStageRequest",
   invitation: "patchedInvitationStageRequest",
   mtls: "patchedMutualTLSStageRequest",

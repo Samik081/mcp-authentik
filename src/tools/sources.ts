@@ -15,6 +15,7 @@ const SOURCE_TYPE_SDK_PREFIX: Record<string, string> = {
   plex: "Plex",
   kerberos: "Kerberos",
   scim: "Scim",
+  telegram: "Telegram",
 };
 
 /**
@@ -28,6 +29,7 @@ const SOURCE_TYPE_REQUEST_KEY: Record<string, string> = {
   plex: "plexSourceRequest",
   kerberos: "kerberosSourceRequest",
   scim: "sCIMSourceRequest",
+  telegram: "telegramSourceRequest",
 };
 
 /**
@@ -40,6 +42,7 @@ const SOURCE_TYPE_PATCHED_KEY: Record<string, string> = {
   plex: "patchedPlexSourceRequest",
   kerberos: "patchedKerberosSourceRequest",
   scim: "patchedSCIMSourceRequest",
+  telegram: "patchedTelegramSourceRequest",
 };
 
 const VALID_SOURCE_TYPES = Object.keys(SOURCE_TYPE_SDK_PREFIX).join(", ");
@@ -387,6 +390,48 @@ export function registerSourceTools(
         ordering: args.ordering as string | undefined,
         page: args.page as number | undefined,
         pageSize: args.page_size as number | undefined,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  // 11. Connect a user to a Telegram source (type-specific action)
+  registerTool(server, config, {
+    name: "authentik_sources_telegram_connect_user",
+    title: "Connect User to Telegram Source",
+    description:
+      "Connect a user to a Telegram source using Telegram authentication data (login widget payload).",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "sources",
+    inputSchema: {
+      slug: z.string().describe("Telegram source slug"),
+      id: z.number().describe("Telegram user ID"),
+      auth_date: z
+        .number()
+        .describe("Telegram auth date (unix timestamp from the login widget)"),
+      hash: z.string().describe("Telegram auth hash from the login widget"),
+      first_name: z.string().optional().describe("Telegram first name"),
+      last_name: z.string().optional().describe("Telegram last name"),
+      username: z.string().optional().describe("Telegram username"),
+      photo_url: z.string().optional().describe("Telegram photo URL"),
+    },
+    handler: async (args) => {
+      const result = await client.sourcesApi.sourcesTelegramConnectUserCreate({
+        slug: args.slug as string,
+        telegramAuthRequest: {
+          id: args.id as number,
+          authDate: args.auth_date as number,
+          hash: args.hash as string,
+          firstName: args.first_name as string | undefined,
+          lastName: args.last_name as string | undefined,
+          username: args.username as string | undefined,
+          photoUrl: args.photo_url as string | undefined,
+        },
       });
       return JSON.stringify(result, null, 2);
     },
