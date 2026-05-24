@@ -99,7 +99,7 @@ export function registerEndpointTools(
     name: "authentik_endpoints_devices_update",
     title: "Update Endpoint Device",
     description:
-      "Update an endpoint device by its UUID. Replaces the device configuration.",
+      "Update an endpoint device. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -109,7 +109,7 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       device_uuid: z.string().describe("Device UUID to update"),
-      name: z.string().describe("Device name"),
+      name: z.string().optional().describe("Device name"),
       access_group: z
         .string()
         .nullable()
@@ -123,10 +123,10 @@ export function registerEndpointTools(
         .describe("Expiry timestamp (ISO 8601)"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsDevicesUpdate({
+      await client.endpointsApi.endpointsDevicesPartialUpdate({
         deviceUuid: args.device_uuid as string,
-        endpointDeviceRequest: {
-          name: args.name as string,
+        patchedEndpointDeviceRequest: {
+          name: args.name as string | undefined,
           accessGroup: args.access_group as string | null | undefined,
           expiring: args.expiring as boolean | undefined,
           expires:
@@ -265,7 +265,8 @@ export function registerEndpointTools(
   registerTool(server, config, {
     name: "authentik_endpoints_device_access_groups_update",
     title: "Update Device Access Group",
-    description: "Update a device access group by its UUID.",
+    description:
+      "Update a device access group. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -275,17 +276,17 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       pbm_uuid: z.string().describe("Device access group UUID to update"),
-      name: z.string().describe("Access group name"),
+      name: z.string().optional().describe("Access group name"),
       attributes: z
         .record(z.string(), z.unknown())
         .optional()
         .describe("Custom attributes object"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsDeviceAccessGroupsUpdate({
+      await client.endpointsApi.endpointsDeviceAccessGroupsPartialUpdate({
         pbmUuid: args.pbm_uuid as string,
-        deviceAccessGroupRequest: {
-          name: args.name as string,
+        patchedDeviceAccessGroupRequest: {
+          name: args.name as string | undefined,
           attributes: args.attributes as Record<string, unknown> | undefined,
         },
       });
@@ -440,7 +441,8 @@ export function registerEndpointTools(
   registerTool(server, config, {
     name: "authentik_endpoints_device_bindings_update",
     title: "Update Device Binding",
-    description: "Update a device binding by its UUID.",
+    description:
+      "Update a device binding. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -450,8 +452,11 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       policy_binding_uuid: z.string().describe("Policy binding UUID to update"),
-      target: z.string().describe("Target UUID the binding applies to"),
-      order: z.number().describe("Evaluation order of the binding"),
+      target: z
+        .string()
+        .optional()
+        .describe("Target UUID the binding applies to"),
+      order: z.number().optional().describe("Evaluation order of the binding"),
       policy: z.string().nullable().optional().describe("Policy UUID to bind"),
       group: z.string().nullable().optional().describe("Group UUID to bind"),
       user: z.number().nullable().optional().describe("User ID to bind"),
@@ -469,11 +474,11 @@ export function registerEndpointTools(
         .describe("Timeout after which policy execution is terminated"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsDeviceBindingsUpdate({
+      await client.endpointsApi.endpointsDeviceBindingsPartialUpdate({
         policyBindingUuid: args.policy_binding_uuid as string,
-        deviceUserBindingRequest: {
-          target: args.target as string,
-          order: args.order as number,
+        patchedDeviceUserBindingRequest: {
+          target: args.target as string | undefined,
+          order: args.order as number | undefined,
           policy: args.policy as string | null | undefined,
           group: args.group as string | null | undefined,
           user: args.user as number | null | undefined,
@@ -631,7 +636,8 @@ export function registerEndpointTools(
   registerTool(server, config, {
     name: "authentik_endpoints_agent_connectors_update",
     title: "Update Agent Connector",
-    description: "Update an agent connector by its UUID.",
+    description:
+      "Update an agent connector. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -641,7 +647,7 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       connector_uuid: z.string().describe("Connector UUID to update"),
-      name: z.string().describe("Connector name"),
+      name: z.string().optional().describe("Connector name"),
       enabled: z
         .boolean()
         .optional()
@@ -661,10 +667,10 @@ export function registerEndpointTools(
         .describe("Refresh interval duration"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsAgentsConnectorsUpdate({
+      await client.endpointsApi.endpointsAgentsConnectorsPartialUpdate({
         connectorUuid: args.connector_uuid as string,
-        agentConnectorRequest: {
-          name: args.name as string,
+        patchedAgentConnectorRequest: {
+          name: args.name as string | undefined,
           enabled: args.enabled as boolean | undefined,
           authorizationFlow: args.authorization_flow as
             | string
@@ -819,7 +825,8 @@ export function registerEndpointTools(
   registerTool(server, config, {
     name: "authentik_endpoints_enrollment_tokens_update",
     title: "Update Enrollment Token",
-    description: "Update an enrollment token by its UUID.",
+    description:
+      "Update an enrollment token. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -829,8 +836,11 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       token_uuid: z.string().describe("Enrollment token UUID to update"),
-      name: z.string().describe("Enrollment token name"),
-      connector: z.string().describe("Connector UUID this token enrolls into"),
+      name: z.string().optional().describe("Enrollment token name"),
+      connector: z
+        .string()
+        .optional()
+        .describe("Connector UUID this token enrolls into"),
       device_group: z
         .string()
         .nullable()
@@ -844,11 +854,11 @@ export function registerEndpointTools(
         .describe("Expiry timestamp (ISO 8601)"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsAgentsEnrollmentTokensUpdate({
+      await client.endpointsApi.endpointsAgentsEnrollmentTokensPartialUpdate({
         tokenUuid: args.token_uuid as string,
-        enrollmentTokenRequest: {
-          name: args.name as string,
-          connector: args.connector as string,
+        patchedEnrollmentTokenRequest: {
+          name: args.name as string | undefined,
+          connector: args.connector as string | undefined,
           deviceGroup: args.device_group as string | null | undefined,
           expiring: args.expiring as boolean | undefined,
           expires:
@@ -1089,7 +1099,8 @@ export function registerEndpointTools(
   registerTool(server, config, {
     name: "authentik_endpoints_fleet_connectors_update",
     title: "Update Fleet Connector",
-    description: "Update a Fleet connector by its UUID.",
+    description:
+      "Update a Fleet connector. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -1099,9 +1110,9 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       connector_uuid: z.string().describe("Connector UUID to update"),
-      name: z.string().describe("Connector name"),
-      url: z.string().describe("Fleet instance URL"),
-      token: z.string().describe("Fleet API token"),
+      name: z.string().optional().describe("Connector name"),
+      url: z.string().optional().describe("Fleet instance URL"),
+      token: z.string().optional().describe("Fleet API token"),
       enabled: z
         .boolean()
         .optional()
@@ -1116,12 +1127,12 @@ export function registerEndpointTools(
         .describe("Map Fleet teams to device access groups"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsFleetConnectorsUpdate({
+      await client.endpointsApi.endpointsFleetConnectorsPartialUpdate({
         connectorUuid: args.connector_uuid as string,
-        fleetConnectorRequest: {
-          name: args.name as string,
-          url: args.url as string,
-          token: args.token as string,
+        patchedFleetConnectorRequest: {
+          name: args.name as string | undefined,
+          url: args.url as string | undefined,
+          token: args.token as string | undefined,
           enabled: args.enabled as boolean | undefined,
           mapUsers: args.map_users as boolean | undefined,
           mapTeamsAccessGroup: args.map_teams_access_group as
@@ -1264,7 +1275,8 @@ export function registerEndpointTools(
   registerTool(server, config, {
     name: "authentik_endpoints_google_chrome_connectors_update",
     title: "Update Google Chrome Connector",
-    description: "Update a Google Chrome connector by its UUID.",
+    description:
+      "Update a Google Chrome connector. Only provided fields are modified (partial update).",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -1274,9 +1286,10 @@ export function registerEndpointTools(
     category: "endpoints",
     inputSchema: {
       connector_uuid: z.string().describe("Connector UUID to update"),
-      name: z.string().describe("Connector name"),
+      name: z.string().optional().describe("Connector name"),
       credentials: z
         .record(z.string(), z.unknown())
+        .optional()
         .describe("Google service-account credentials object"),
       enabled: z
         .boolean()
@@ -1284,11 +1297,11 @@ export function registerEndpointTools(
         .describe("Whether the connector is enabled"),
     },
     handler: async (args) => {
-      await client.endpointsApi.endpointsGoogleChromeConnectorsUpdate({
+      await client.endpointsApi.endpointsGoogleChromeConnectorsPartialUpdate({
         connectorUuid: args.connector_uuid as string,
-        googleChromeConnectorRequest: {
-          name: args.name as string,
-          credentials: args.credentials as Record<string, unknown>,
+        patchedGoogleChromeConnectorRequest: {
+          name: args.name as string | undefined,
+          credentials: args.credentials as Record<string, unknown> | undefined,
           enabled: args.enabled as boolean | undefined,
         },
       });
