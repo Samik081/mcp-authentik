@@ -16,6 +16,7 @@ const PROVIDER_TYPES = [
   "rac",
   "google_workspace",
   "microsoft_entra",
+  "wsfed",
 ] as const;
 
 type ProviderType = (typeof PROVIDER_TYPES)[number];
@@ -31,6 +32,7 @@ const PROVIDER_TYPE_SDK_PREFIX: Record<ProviderType, string> = {
   rac: "Rac",
   google_workspace: "GoogleWorkspace",
   microsoft_entra: "MicrosoftEntra",
+  wsfed: "Wsfed",
 };
 
 /** Maps provider_type -> request body key for create */
@@ -44,6 +46,7 @@ const PROVIDER_TYPE_REQUEST_KEY: Record<ProviderType, string> = {
   rac: "rACProviderRequest",
   google_workspace: "googleWorkspaceProviderRequest",
   microsoft_entra: "microsoftEntraProviderRequest",
+  wsfed: "wSFederationProviderRequest",
 };
 
 /** Maps provider_type -> patched request body key for update */
@@ -57,6 +60,7 @@ const PROVIDER_TYPE_PATCHED_KEY: Record<ProviderType, string> = {
   rac: "patchedRACProviderRequest",
   google_workspace: "patchedGoogleWorkspaceProviderRequest",
   microsoft_entra: "patchedMicrosoftEntraProviderRequest",
+  wsfed: "patchedWSFederationProviderRequest",
 };
 
 const providerTypeEnum = z.enum(PROVIDER_TYPES);
@@ -257,7 +261,7 @@ export function registerProviderTools(
         .record(z.string(), z.unknown())
         .optional()
         .describe(
-          "Type-specific configuration fields (camelCase keys matching the SDK request type)",
+          "Type-specific configuration fields (camelCase keys matching the SDK request type). For oauth2 providers, pass grantTypes (array) here.",
         ),
     },
     handler: async (args) => {
@@ -401,330 +405,7 @@ export function registerProviderTools(
     },
   });
 
-  // ── WS-Federation provider operations (Enterprise) ──────────────────
-
-  // 12. List WS-Fed providers
-  registerTool(server, config, {
-    name: "authentik_providers_wsfed_list",
-    title: "List WS-Fed Providers",
-    description: "List WS-Federation providers with optional filters.",
-    accessTier: "read-only",
-    annotations: {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-    },
-    category: "providers",
-    inputSchema: {
-      name: z.string().optional().describe("Filter by provider name"),
-      search: z.string().optional().describe("Search across provider fields"),
-      ordering: z.string().optional().describe("Field to order by"),
-      page: z.number().optional().describe("Page number"),
-      page_size: z.number().optional().describe("Number of results per page"),
-    },
-    handler: async (args) => {
-      const result = await client.providersApi.providersWsfedList({
-        name: args.name as string | undefined,
-        search: args.search as string | undefined,
-        ordering: args.ordering as string | undefined,
-        page: args.page as number | undefined,
-        pageSize: args.page_size as number | undefined,
-      });
-      return JSON.stringify(result, null, 2);
-    },
-  });
-
-  // 13. Get WS-Fed provider
-  registerTool(server, config, {
-    name: "authentik_providers_wsfed_get",
-    title: "Get WS-Fed Provider",
-    description: "Get a single WS-Federation provider by its numeric ID.",
-    accessTier: "read-only",
-    annotations: {
-      readOnlyHint: true,
-      destructiveHint: false,
-      idempotentHint: true,
-    },
-    category: "providers",
-    inputSchema: {
-      id: z.number().describe("WS-Federation provider ID"),
-    },
-    handler: async (args) => {
-      const result = await client.providersApi.providersWsfedRetrieve({
-        id: args.id as number,
-      });
-      return JSON.stringify(result, null, 2);
-    },
-  });
-
-  // 14. Create WS-Fed provider
-  registerTool(server, config, {
-    name: "authentik_providers_wsfed_create",
-    title: "Create WS-Fed Provider",
-    description: "Create a new WS-Federation provider (Enterprise).",
-    accessTier: "full",
-    annotations: {
-      readOnlyHint: false,
-      destructiveHint: false,
-      idempotentHint: false,
-    },
-    category: "providers",
-    inputSchema: {
-      name: z.string().describe("Provider name (required)"),
-      authorization_flow: z
-        .string()
-        .describe("Authorization flow UUID, used when authorizing (required)"),
-      invalidation_flow: z
-        .string()
-        .describe("Invalidation flow UUID, used ending the session (required)"),
-      reply_url: z.string().describe("Reply URL (wreply) (required)"),
-      wtrealm: z.string().describe("Realm identifier (wtrealm) (required)"),
-      authentication_flow: z
-        .string()
-        .optional()
-        .describe("Authentication flow UUID for un-authenticated users"),
-      property_mappings: z
-        .array(z.string())
-        .optional()
-        .describe("Property mapping UUIDs"),
-      signing_kp: z
-        .string()
-        .optional()
-        .describe("Keypair UUID used to sign outgoing responses"),
-      encryption_kp: z
-        .string()
-        .optional()
-        .describe("Keypair UUID used to encrypt assertions"),
-      sign_assertion: z
-        .boolean()
-        .optional()
-        .describe("Whether to sign the assertion"),
-      sign_logout_request: z
-        .boolean()
-        .optional()
-        .describe("Whether to sign logout requests"),
-      assertion_valid_not_before: z
-        .string()
-        .optional()
-        .describe(
-          "Assertion valid not before current time + this value (Format: hours=-1;minutes=-2;seconds=-3)",
-        ),
-      assertion_valid_not_on_or_after: z
-        .string()
-        .optional()
-        .describe(
-          "Assertion not valid on or after current time + this value (Format: hours=1;minutes=2;seconds=3)",
-        ),
-      session_valid_not_on_or_after: z
-        .string()
-        .optional()
-        .describe(
-          "Session not valid on or after current time + this value (Format: hours=1;minutes=2;seconds=3)",
-        ),
-      digest_algorithm: z
-        .enum([
-          "http://www.w3.org/2000/09/xmldsig#sha1",
-          "http://www.w3.org/2001/04/xmlenc#sha256",
-          "http://www.w3.org/2001/04/xmldsig-more#sha384",
-          "http://www.w3.org/2001/04/xmlenc#sha512",
-        ])
-        .optional()
-        .describe("Digest algorithm"),
-      signature_algorithm: z
-        .enum([
-          "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
-          "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
-          "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384",
-          "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha1",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512",
-          "http://www.w3.org/2000/09/xmldsig#dsa-sha1",
-        ])
-        .optional()
-        .describe("Signature algorithm"),
-    },
-    handler: async (args) => {
-      const result = await client.providersApi.providersWsfedCreate({
-        wSFederationProviderRequest: {
-          name: args.name as string,
-          authorizationFlow: args.authorization_flow as string,
-          invalidationFlow: args.invalidation_flow as string,
-          replyUrl: args.reply_url as string,
-          wtrealm: args.wtrealm as string,
-          authenticationFlow: args.authentication_flow as string | undefined,
-          propertyMappings: args.property_mappings as string[] | undefined,
-          signingKp: args.signing_kp as string | undefined,
-          encryptionKp: args.encryption_kp as string | undefined,
-          signAssertion: args.sign_assertion as boolean | undefined,
-          signLogoutRequest: args.sign_logout_request as boolean | undefined,
-          assertionValidNotBefore: args.assertion_valid_not_before as
-            | string
-            | undefined,
-          assertionValidNotOnOrAfter: args.assertion_valid_not_on_or_after as
-            | string
-            | undefined,
-          sessionValidNotOnOrAfter: args.session_valid_not_on_or_after as
-            | string
-            | undefined,
-          digestAlgorithm: args.digest_algorithm as any,
-          signatureAlgorithm: args.signature_algorithm as any,
-        },
-      });
-      return JSON.stringify(result, null, 2);
-    },
-  });
-
-  // 15. Update WS-Fed provider
-  registerTool(server, config, {
-    name: "authentik_providers_wsfed_update",
-    title: "Update WS-Fed Provider",
-    description:
-      "Update an existing WS-Federation provider. Only provided fields are modified (partial update).",
-    accessTier: "full",
-    annotations: {
-      readOnlyHint: false,
-      destructiveHint: true,
-      idempotentHint: true,
-    },
-    category: "providers",
-    inputSchema: {
-      id: z.number().describe("WS-Federation provider ID (required)"),
-      name: z.string().optional().describe("Provider name"),
-      authorization_flow: z
-        .string()
-        .optional()
-        .describe("Authorization flow UUID, used when authorizing"),
-      invalidation_flow: z
-        .string()
-        .optional()
-        .describe("Invalidation flow UUID, used ending the session"),
-      reply_url: z.string().optional().describe("Reply URL (wreply)"),
-      wtrealm: z.string().optional().describe("Realm identifier (wtrealm)"),
-      authentication_flow: z
-        .string()
-        .optional()
-        .describe("Authentication flow UUID for un-authenticated users"),
-      property_mappings: z
-        .array(z.string())
-        .optional()
-        .describe("Property mapping UUIDs"),
-      signing_kp: z
-        .string()
-        .optional()
-        .describe("Keypair UUID used to sign outgoing responses"),
-      encryption_kp: z
-        .string()
-        .optional()
-        .describe("Keypair UUID used to encrypt assertions"),
-      sign_assertion: z
-        .boolean()
-        .optional()
-        .describe("Whether to sign the assertion"),
-      sign_logout_request: z
-        .boolean()
-        .optional()
-        .describe("Whether to sign logout requests"),
-      assertion_valid_not_before: z
-        .string()
-        .optional()
-        .describe(
-          "Assertion valid not before current time + this value (Format: hours=-1;minutes=-2;seconds=-3)",
-        ),
-      assertion_valid_not_on_or_after: z
-        .string()
-        .optional()
-        .describe(
-          "Assertion not valid on or after current time + this value (Format: hours=1;minutes=2;seconds=3)",
-        ),
-      session_valid_not_on_or_after: z
-        .string()
-        .optional()
-        .describe(
-          "Session not valid on or after current time + this value (Format: hours=1;minutes=2;seconds=3)",
-        ),
-      digest_algorithm: z
-        .enum([
-          "http://www.w3.org/2000/09/xmldsig#sha1",
-          "http://www.w3.org/2001/04/xmlenc#sha256",
-          "http://www.w3.org/2001/04/xmldsig-more#sha384",
-          "http://www.w3.org/2001/04/xmlenc#sha512",
-        ])
-        .optional()
-        .describe("Digest algorithm"),
-      signature_algorithm: z
-        .enum([
-          "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
-          "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256",
-          "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384",
-          "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha1",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384",
-          "http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512",
-          "http://www.w3.org/2000/09/xmldsig#dsa-sha1",
-        ])
-        .optional()
-        .describe("Signature algorithm"),
-    },
-    handler: async (args) => {
-      const result = await client.providersApi.providersWsfedPartialUpdate({
-        id: args.id as number,
-        patchedWSFederationProviderRequest: {
-          name: args.name as string | undefined,
-          authorizationFlow: args.authorization_flow as string | undefined,
-          invalidationFlow: args.invalidation_flow as string | undefined,
-          replyUrl: args.reply_url as string | undefined,
-          wtrealm: args.wtrealm as string | undefined,
-          authenticationFlow: args.authentication_flow as string | undefined,
-          propertyMappings: args.property_mappings as string[] | undefined,
-          signingKp: args.signing_kp as string | undefined,
-          encryptionKp: args.encryption_kp as string | undefined,
-          signAssertion: args.sign_assertion as boolean | undefined,
-          signLogoutRequest: args.sign_logout_request as boolean | undefined,
-          assertionValidNotBefore: args.assertion_valid_not_before as
-            | string
-            | undefined,
-          assertionValidNotOnOrAfter: args.assertion_valid_not_on_or_after as
-            | string
-            | undefined,
-          sessionValidNotOnOrAfter: args.session_valid_not_on_or_after as
-            | string
-            | undefined,
-          digestAlgorithm: args.digest_algorithm as any,
-          signatureAlgorithm: args.signature_algorithm as any,
-        },
-      });
-      return JSON.stringify(result, null, 2);
-    },
-  });
-
-  // 16. Delete WS-Fed provider
-  registerTool(server, config, {
-    name: "authentik_providers_wsfed_delete",
-    title: "Delete WS-Fed Provider",
-    description:
-      "Delete a WS-Federation provider by its numeric ID. This action is irreversible.",
-    accessTier: "full",
-    annotations: {
-      readOnlyHint: false,
-      destructiveHint: true,
-      idempotentHint: false,
-    },
-    category: "providers",
-    inputSchema: {
-      id: z.number().describe("WS-Federation provider ID to delete"),
-    },
-    handler: async (args) => {
-      await client.providersApi.providersWsfedDestroy({
-        id: args.id as number,
-      });
-      return `WS-Federation provider ${args.id} deleted successfully.`;
-    },
-  });
-
-  // 17. WS-Fed metadata
+  // 12. WS-Fed metadata
   registerTool(server, config, {
     name: "authentik_providers_wsfed_metadata",
     title: "Get WS-Fed Metadata",
@@ -757,7 +438,7 @@ export function registerProviderTools(
     },
   });
 
-  // 18. WS-Fed preview user
+  // 13. WS-Fed preview user
   registerTool(server, config, {
     name: "authentik_providers_wsfed_preview_user",
     title: "Preview WS-Fed User Data",
