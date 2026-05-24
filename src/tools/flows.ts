@@ -129,6 +129,18 @@ export function registerFlowTools(
         .enum(["message_continue", "message", "continue"])
         .optional()
         .describe("Action when access is denied"),
+      authentication: z
+        .enum([
+          "none",
+          "require_authenticated",
+          "require_unauthenticated",
+          "require_superuser",
+          "require_redirect",
+          "require_outpost",
+          "require_token",
+        ])
+        .optional()
+        .describe("Required level of authentication to access the flow"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesCreate({
@@ -141,6 +153,7 @@ export function registerFlowTools(
           compatibilityMode: args.compatibility_mode as boolean | undefined,
           layout: args.layout as any,
           deniedAction: args.denied_action as any,
+          authentication: args.authentication as any,
         },
       });
       return JSON.stringify(result, null, 2);
@@ -198,6 +211,18 @@ export function registerFlowTools(
         .enum(["message_continue", "message", "continue"])
         .optional()
         .describe("Action when access is denied"),
+      authentication: z
+        .enum([
+          "none",
+          "require_authenticated",
+          "require_unauthenticated",
+          "require_superuser",
+          "require_redirect",
+          "require_outpost",
+          "require_token",
+        ])
+        .optional()
+        .describe("Required level of authentication to access the flow"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesPartialUpdate({
@@ -210,6 +235,7 @@ export function registerFlowTools(
           compatibilityMode: args.compatibility_mode as boolean | undefined,
           layout: args.layout as any,
           deniedAction: args.denied_action as any,
+          authentication: args.authentication as any,
         },
       });
       return JSON.stringify(result, null, 2);

@@ -10,7 +10,7 @@ describe("tool registration", () => {
     registerAllTools(server, makeMockClient(), makeConfig());
     const { client, cleanup } = await connectTestClient(server);
     const { tools } = await client.listTools();
-    expect(tools).toHaveLength(294);
+    expect(tools).toHaveLength(297);
     await cleanup();
   });
 

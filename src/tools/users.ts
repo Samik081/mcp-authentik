@@ -387,4 +387,41 @@ export function registerUserTools(
       return `User ${args.id} account locked down. ${JSON.stringify(result)}`;
     },
   });
+
+  // Export users
+  registerTool(server, config, {
+    name: "authentik_users_export",
+    title: "Export Users",
+    description:
+      "Trigger an export of users, producing a downloadable export artifact. Optional filters narrow which users are included.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "core",
+    inputSchema: {
+      name: z.string().optional().describe("Filter by exact user name"),
+      username: z.string().optional().describe("Filter by exact username"),
+      email: z.string().optional().describe("Filter by email address"),
+      search: z.string().optional().describe("Search across user fields"),
+      is_active: z.boolean().optional().describe("Filter by active status"),
+      is_superuser: z
+        .boolean()
+        .optional()
+        .describe("Filter by superuser status"),
+    },
+    handler: async (args) => {
+      const result = await client.coreApi.coreUsersExportCreate({
+        name: args.name as string | undefined,
+        username: args.username as string | undefined,
+        email: args.email as string | undefined,
+        search: args.search as string | undefined,
+        isActive: args.is_active as boolean | undefined,
+        isSuperuser: args.is_superuser as boolean | undefined,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
 }

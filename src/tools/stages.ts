@@ -574,6 +574,48 @@ export function registerStageTools(
     },
   });
 
+  // Send invitation email
+  registerTool(server, config, {
+    name: "authentik_invitations_send_email",
+    title: "Send Invitation Email",
+    description:
+      "Send an invitation email to one or more recipients for an existing invitation.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "stages",
+    inputSchema: {
+      invite_uuid: z.string().describe("Invitation UUID"),
+      email_addresses: z
+        .array(z.string())
+        .describe("Recipient email addresses"),
+      cc_addresses: z
+        .array(z.string())
+        .optional()
+        .describe("CC email addresses"),
+      bcc_addresses: z
+        .array(z.string())
+        .optional()
+        .describe("BCC email addresses"),
+      template: z.string().optional().describe("Email template to use"),
+    },
+    handler: async (args) => {
+      await client.stagesApi.stagesInvitationInvitationsSendEmailCreate({
+        inviteUuid: args.invite_uuid as string,
+        invitationSendEmailRequest: {
+          emailAddresses: args.email_addresses as string[],
+          ccAddresses: args.cc_addresses as string[] | undefined,
+          bccAddresses: args.bcc_addresses as string[] | undefined,
+          template: args.template as string | undefined,
+        },
+      });
+      return `Invitation email for ${args.invite_uuid} sent successfully.`;
+    },
+  });
+
   // ── Prompts CRUD ────────────────────────────────────────────────────
 
   // 15. List prompts

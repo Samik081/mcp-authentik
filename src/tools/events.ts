@@ -750,4 +750,41 @@ export function registerEventTools(
       return JSON.stringify(result, null, 2);
     },
   });
+
+  // Export events
+  registerTool(server, config, {
+    name: "authentik_events_export",
+    title: "Export Events",
+    description:
+      "Trigger an export of events, producing a downloadable export artifact. Optional filters narrow which events are included.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "events",
+    inputSchema: {
+      action: z.string().optional().describe("Filter by event action"),
+      username: z.string().optional().describe("Filter by username"),
+      client_ip: z.string().optional().describe("Filter by client IP"),
+      brand_name: z.string().optional().describe("Filter by brand name"),
+      search: z.string().optional().describe("Search across event fields"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+    },
+    handler: async (args) => {
+      const result = await client.eventsApi.eventsEventsExportCreate({
+        action: args.action as string | undefined,
+        username: args.username as string | undefined,
+        clientIp: args.client_ip as string | undefined,
+        brandName: args.brand_name as string | undefined,
+        search: args.search as string | undefined,
+        ordering: args.ordering as string | undefined,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
 }
