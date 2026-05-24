@@ -10,7 +10,7 @@ describe("tool registration", () => {
     registerAllTools(server, makeMockClient(), makeConfig());
     const { client, cleanup } = await connectTestClient(server);
     const { tools } = await client.listTools();
-    expect(tools).toHaveLength(245);
+    expect(tools).toHaveLength(294);
     await cleanup();
   });
 
@@ -23,7 +23,7 @@ describe("tool registration", () => {
     );
     const { client, cleanup } = await connectTestClient(server);
     const { tools } = await client.listTools();
-    expect(tools).toHaveLength(121);
+    expect(tools).toHaveLength(144);
     for (const tool of tools) {
       expect(
         tool.annotations?.readOnlyHint,
@@ -47,6 +47,38 @@ describe("tool registration", () => {
       expect(tool.name).toMatch(
         /^authentik_(users|groups|tokens|apps|app_entitlements|brands)/,
       );
+    }
+    await cleanup();
+  });
+
+  it("filters to only reports category tools", async () => {
+    const server = createServer();
+    registerAllTools(
+      server,
+      makeMockClient(),
+      makeConfig({ categories: ["reports"] }),
+    );
+    const { client, cleanup } = await connectTestClient(server);
+    const { tools } = await client.listTools();
+    expect(tools).toHaveLength(3);
+    for (const tool of tools) {
+      expect(tool.name).toMatch(/^authentik_reports_/);
+    }
+    await cleanup();
+  });
+
+  it("filters to only endpoints category tools", async () => {
+    const server = createServer();
+    registerAllTools(
+      server,
+      makeMockClient(),
+      makeConfig({ categories: ["endpoints"] }),
+    );
+    const { client, cleanup } = await connectTestClient(server);
+    const { tools } = await client.listTools();
+    expect(tools.length).toBeGreaterThan(0);
+    for (const tool of tools) {
+      expect(tool.name).toMatch(/^authentik_endpoints_/);
     }
     await cleanup();
   });
