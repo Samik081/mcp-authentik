@@ -8,6 +8,7 @@ import { registerAuthenticatorTools } from "./authenticators.js";
 import { registerBrandTools } from "./brands.js";
 // Phase 3 Wave 2 (Plan 03)
 import { registerCryptoTools } from "./crypto.js";
+import { registerEndpointTools } from "./endpoints.js";
 import { registerEnterpriseTools } from "./enterprise.js";
 import { registerEventTools } from "./events.js";
 // Phase 3 Wave 1
@@ -68,6 +69,7 @@ export function registerAllTools(
   registerTenantTools(server, client, config);
   // New categories (authentik SDK 2026.5)
   registerReportTools(server, client, config);
+  registerEndpointTools(server, client, config);
 
   validateToolLists(config);
 }
