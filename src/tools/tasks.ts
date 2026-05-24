@@ -1,4 +1,4 @@
-import type { EventsSystemTasksListStatusEnum } from "@goauthentik/api";
+import type { TaskStatusEnum } from "@goauthentik/api";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
@@ -10,12 +10,12 @@ export function registerTaskTools(
   client: AuthentikClient,
   config: AppConfig,
 ): void {
-  // 1. List system tasks
+  // 1. List tasks
   registerTool(server, config, {
     name: "authentik_tasks_list",
-    title: "List System Tasks",
+    title: "List Tasks",
     description:
-      "List system tasks with optional filters by name, status, or UID.",
+      "List background tasks with optional filters by actor name, queue, state, or search.",
     accessTier: "read-only",
     annotations: {
       readOnlyHint: true,
@@ -24,12 +24,20 @@ export function registerTaskTools(
     },
     category: "events",
     inputSchema: {
-      name: z.string().optional().describe("Filter by task name"),
-      status: z
-        .enum(["unknown", "successful", "warning", "error"])
+      actor_name: z.string().optional().describe("Filter by actor (task) name"),
+      queue_name: z.string().optional().describe("Filter by queue name"),
+      state: z
+        .enum([
+          "queued",
+          "consumed",
+          "preprocess",
+          "running",
+          "postprocess",
+          "rejected",
+          "done",
+        ])
         .optional()
-        .describe("Filter by task status"),
-      uid: z.string().optional().describe("Filter by task UID"),
+        .describe("Filter by task state"),
       search: z.string().optional().describe("Search across task fields"),
       ordering: z
         .string()
@@ -39,10 +47,10 @@ export function registerTaskTools(
       page_size: z.number().optional().describe("Number of results per page"),
     },
     handler: async (args) => {
-      const result = await client.eventsApi.eventsSystemTasksList({
-        name: args.name as string | undefined,
-        status: args.status as EventsSystemTasksListStatusEnum | undefined,
-        uid: args.uid as string | undefined,
+      const result = await client.tasksApi.tasksTasksList({
+        actorName: args.actor_name as string | undefined,
+        queueName: args.queue_name as string | undefined,
+        state: args.state as TaskStatusEnum | undefined,
         search: args.search as string | undefined,
         ordering: args.ordering as string | undefined,
         page: args.page as number | undefined,
@@ -52,11 +60,11 @@ export function registerTaskTools(
     },
   });
 
-  // 2. Get system task
+  // 2. Get task
   registerTool(server, config, {
     name: "authentik_tasks_get",
-    title: "Get System Task",
-    description: "Get details of a specific system task by UUID.",
+    title: "Get Task",
+    description: "Get details of a specific task by its message ID.",
     accessTier: "read-only",
     annotations: {
       readOnlyHint: true,
@@ -65,21 +73,21 @@ export function registerTaskTools(
     },
     category: "events",
     inputSchema: {
-      uuid: z.string().describe("System task UUID"),
+      message_id: z.string().describe("Task message ID"),
     },
     handler: async (args) => {
-      const result = await client.eventsApi.eventsSystemTasksRetrieve({
-        uuid: args.uuid as string,
+      const result = await client.tasksApi.tasksTasksRetrieve({
+        messageId: args.message_id as string,
       });
       return JSON.stringify(result, null, 2);
     },
   });
 
-  // 3. Retry system task
+  // 3. Retry task
   registerTool(server, config, {
     name: "authentik_tasks_retry",
-    title: "Retry System Task",
-    description: "Retry a failed system task by UUID.",
+    title: "Retry Task",
+    description: "Retry a failed task by its message ID.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -88,13 +96,13 @@ export function registerTaskTools(
     },
     category: "events",
     inputSchema: {
-      uuid: z.string().describe("System task UUID to retry"),
+      message_id: z.string().describe("Task message ID to retry"),
     },
     handler: async (args) => {
-      await client.eventsApi.eventsSystemTasksRunCreate({
-        uuid: args.uuid as string,
+      await client.tasksApi.tasksTasksRetryCreate({
+        messageId: args.message_id as string,
       });
-      return `Task ${args.uuid} retry triggered successfully.`;
+      return `Task ${args.message_id} retry triggered successfully.`;
     },
   });
 }
