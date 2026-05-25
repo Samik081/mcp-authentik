@@ -1,12 +1,14 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
 // ── Per-type stage lookup maps ──────────────────────────────────────────
 
 const STAGE_TYPES = [
+  "account_lockdown",
   "authenticator_duo",
   "authenticator_email",
   "authenticator_endpoint_gdtc",
@@ -20,6 +22,7 @@ const STAGE_TYPES = [
   "deny",
   "dummy",
   "email",
+  "endpoint",
   "identification",
   "invitation",
   "mtls",
@@ -37,6 +40,7 @@ type StageType = (typeof STAGE_TYPES)[number];
 
 /** Maps stage_type → SDK method prefix (e.g., stagesAuthenticatorDuoList) */
 const STAGE_TYPE_SDK_PREFIX: Record<StageType, string> = {
+  account_lockdown: "AccountLockdown",
   authenticator_duo: "AuthenticatorDuo",
   authenticator_email: "AuthenticatorEmail",
   authenticator_endpoint_gdtc: "AuthenticatorEndpointGdtc",
@@ -50,6 +54,7 @@ const STAGE_TYPE_SDK_PREFIX: Record<StageType, string> = {
   deny: "Deny",
   dummy: "Dummy",
   email: "Email",
+  endpoint: "Endpoints",
   identification: "Identification",
   invitation: "InvitationStages",
   mtls: "Mtls",
@@ -65,6 +70,7 @@ const STAGE_TYPE_SDK_PREFIX: Record<StageType, string> = {
 
 /** Maps stage_type → request body key for create (e.g., { authenticatorDuoStageRequest: ... }) */
 const STAGE_TYPE_REQUEST_KEY: Record<StageType, string> = {
+  account_lockdown: "accountLockdownStageRequest",
   authenticator_duo: "authenticatorDuoStageRequest",
   authenticator_email: "authenticatorEmailStageRequest",
   authenticator_endpoint_gdtc: "authenticatorEndpointGDTCStageRequest",
@@ -78,6 +84,7 @@ const STAGE_TYPE_REQUEST_KEY: Record<StageType, string> = {
   deny: "denyStageRequest",
   dummy: "dummyStageRequest",
   email: "emailStageRequest",
+  endpoint: "endpointStageRequest",
   identification: "identificationStageRequest",
   invitation: "invitationStageRequest",
   mtls: "mutualTLSStageRequest",
@@ -93,6 +100,7 @@ const STAGE_TYPE_REQUEST_KEY: Record<StageType, string> = {
 
 /** Maps stage_type → patched request body key for update */
 const STAGE_TYPE_PATCHED_KEY: Record<StageType, string> = {
+  account_lockdown: "patchedAccountLockdownStageRequest",
   authenticator_duo: "patchedAuthenticatorDuoStageRequest",
   authenticator_email: "patchedAuthenticatorEmailStageRequest",
   authenticator_endpoint_gdtc: "patchedAuthenticatorEndpointGDTCStageRequest",
@@ -106,6 +114,7 @@ const STAGE_TYPE_PATCHED_KEY: Record<StageType, string> = {
   deny: "patchedDenyStageRequest",
   dummy: "patchedDummyStageRequest",
   email: "patchedEmailStageRequest",
+  endpoint: "patchedEndpointStageRequest",
   identification: "patchedIdentificationStageRequest",
   invitation: "patchedInvitationStageRequest",
   mtls: "patchedMutualTLSStageRequest",
@@ -484,7 +493,7 @@ export function registerStageTools(
       const result = await client.stagesApi.stagesInvitationInvitationsCreate({
         invitationRequest: {
           name: args.name as string,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
           fixedData: args.fixed_data as Record<string, unknown> | undefined,
           singleUse: args.single_use as boolean | undefined,
           flow: args.flow as string | undefined,
@@ -531,7 +540,7 @@ export function registerStageTools(
           patchedInvitationRequest: {
             name: args.name as string | undefined,
             expires: args.expires
-              ? new Date(args.expires as string)
+              ? parseDate(args.expires as string)
               : undefined,
             fixedData: args.fixed_data as Record<string, unknown> | undefined,
             singleUse: args.single_use as boolean | undefined,
@@ -563,6 +572,48 @@ export function registerStageTools(
         inviteUuid: args.invite_uuid as string,
       });
       return `Invitation ${args.invite_uuid} deleted successfully.`;
+    },
+  });
+
+  // Send invitation email
+  registerTool(server, config, {
+    name: "authentik_invitations_send_email",
+    title: "Send Invitation Email",
+    description:
+      "Send an invitation email to one or more recipients for an existing invitation.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "stages",
+    inputSchema: {
+      invite_uuid: z.string().describe("Invitation UUID"),
+      email_addresses: z
+        .array(z.string())
+        .describe("Recipient email addresses"),
+      cc_addresses: z
+        .array(z.string())
+        .optional()
+        .describe("CC email addresses"),
+      bcc_addresses: z
+        .array(z.string())
+        .optional()
+        .describe("BCC email addresses"),
+      template: z.string().optional().describe("Email template to use"),
+    },
+    handler: async (args) => {
+      await client.stagesApi.stagesInvitationInvitationsSendEmailCreate({
+        inviteUuid: args.invite_uuid as string,
+        invitationSendEmailRequest: {
+          emailAddresses: args.email_addresses as string[],
+          ccAddresses: args.cc_addresses as string[] | undefined,
+          bccAddresses: args.bcc_addresses as string[] | undefined,
+          template: args.template as string | undefined,
+        },
+      });
+      return `Invitation email for ${args.invite_uuid} sent successfully.`;
     },
   });
 

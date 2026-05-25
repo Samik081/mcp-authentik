@@ -129,6 +129,18 @@ export function registerFlowTools(
         .enum(["message_continue", "message", "continue"])
         .optional()
         .describe("Action when access is denied"),
+      authentication: z
+        .enum([
+          "none",
+          "require_authenticated",
+          "require_unauthenticated",
+          "require_superuser",
+          "require_redirect",
+          "require_outpost",
+          "require_token",
+        ])
+        .optional()
+        .describe("Required level of authentication to access the flow"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesCreate({
@@ -141,6 +153,7 @@ export function registerFlowTools(
           compatibilityMode: args.compatibility_mode as boolean | undefined,
           layout: args.layout as any,
           deniedAction: args.denied_action as any,
+          authentication: args.authentication as any,
         },
       });
       return JSON.stringify(result, null, 2);
@@ -198,6 +211,18 @@ export function registerFlowTools(
         .enum(["message_continue", "message", "continue"])
         .optional()
         .describe("Action when access is denied"),
+      authentication: z
+        .enum([
+          "none",
+          "require_authenticated",
+          "require_unauthenticated",
+          "require_superuser",
+          "require_redirect",
+          "require_outpost",
+          "require_token",
+        ])
+        .optional()
+        .describe("Required level of authentication to access the flow"),
     },
     handler: async (args) => {
       const result = await client.flowsApi.flowsInstancesPartialUpdate({
@@ -210,6 +235,7 @@ export function registerFlowTools(
           compatibilityMode: args.compatibility_mode as boolean | undefined,
           layout: args.layout as any,
           deniedAction: args.denied_action as any,
+          authentication: args.authentication as any,
         },
       });
       return JSON.stringify(result, null, 2);
@@ -289,29 +315,30 @@ export function registerFlowTools(
     },
   });
 
-  // 8. Import flow
+  // 8. Import blueprint
   registerTool(server, config, {
     name: "authentik_flows_import",
-    title: "Import Flow",
-    description: "Import a flow from YAML content.",
+    title: "Import Blueprint",
+    description:
+      "Import a flow/blueprint from YAML content via the managed blueprints import endpoint (replaces the removed flow import). Note: this merges/upserts into existing objects — it does NOT wipe existing flows first. The previous clear/wipe-before-import option is no longer available in the authentik API.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
-      destructiveHint: false,
+      destructiveHint: true,
       idempotentHint: false,
     },
     category: "flows",
     inputSchema: {
-      content: z.string().describe("YAML flow definition content"),
-      clear: z
-        .boolean()
-        .optional()
-        .describe("Clear existing flow objects before import"),
+      yaml_content: z
+        .string()
+        .describe("Blueprint/flow definition as YAML text"),
     },
     handler: async (args) => {
-      const result = await client.flowsApi.flowsInstancesImportCreate({
-        file: new Blob([args.content as string]),
-        clear: args.clear as boolean | undefined,
+      const blob = new Blob([args.yaml_content as string], {
+        type: "application/x-yaml",
+      });
+      const result = await client.managedApi.managedBlueprintsImportCreate({
+        file: blob,
       });
       return JSON.stringify(result, null, 2);
     },

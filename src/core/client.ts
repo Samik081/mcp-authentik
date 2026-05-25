@@ -4,6 +4,7 @@ import {
   Configuration,
   CoreApi,
   CryptoApi,
+  EndpointsApi,
   EnterpriseApi,
   EventsApi,
   FlowsApi,
@@ -15,11 +16,13 @@ import {
   ProvidersApi,
   RacApi,
   RbacApi,
+  ReportsApi,
   RootApi,
   SchemaApi,
   SourcesApi,
   SsfApi,
   StagesApi,
+  TasksApi,
   TenantsApi,
 } from "@goauthentik/api";
 
@@ -33,7 +36,7 @@ export class AuthentikClient {
     });
   }
 
-  // Lazy API getters for all 21 API classes
+  // Lazy API getters for all 24 API classes
 
   private _adminApi?: AdminApi;
   get adminApi(): AdminApi {
@@ -57,6 +60,12 @@ export class AuthentikClient {
   get cryptoApi(): CryptoApi {
     this._cryptoApi ??= new CryptoApi(this.config);
     return this._cryptoApi;
+  }
+
+  private _endpointsApi?: EndpointsApi;
+  get endpointsApi(): EndpointsApi {
+    this._endpointsApi ??= new EndpointsApi(this.config);
+    return this._endpointsApi;
   }
 
   private _enterpriseApi?: EnterpriseApi;
@@ -125,6 +134,12 @@ export class AuthentikClient {
     return this._rbacApi;
   }
 
+  private _reportsApi?: ReportsApi;
+  get reportsApi(): ReportsApi {
+    this._reportsApi ??= new ReportsApi(this.config);
+    return this._reportsApi;
+  }
+
   private _rootApi?: RootApi;
   get rootApi(): RootApi {
     this._rootApi ??= new RootApi(this.config);
@@ -153,6 +168,12 @@ export class AuthentikClient {
   get stagesApi(): StagesApi {
     this._stagesApi ??= new StagesApi(this.config);
     return this._stagesApi;
+  }
+
+  private _tasksApi?: TasksApi;
+  get tasksApi(): TasksApi {
+    this._tasksApi ??= new TasksApi(this.config);
+    return this._tasksApi;
   }
 
   private _tenantsApi?: TenantsApi;

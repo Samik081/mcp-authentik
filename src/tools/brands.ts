@@ -128,6 +128,10 @@ export function registerBrandTools(
         .string()
         .optional()
         .describe("Flow UUID for device code authentication"),
+      flow_lockdown: z
+        .string()
+        .optional()
+        .describe("Flow UUID for account lockdown"),
       default_application: z
         .string()
         .optional()
@@ -157,6 +161,7 @@ export function registerBrandTools(
           flowUnenrollment: args.flow_unenrollment as string | undefined,
           flowUserSettings: args.flow_user_settings as string | undefined,
           flowDeviceCode: args.flow_device_code as string | undefined,
+          flowLockdown: args.flow_lockdown as string | undefined,
           defaultApplication: args.default_application as string | undefined,
           webCertificate: args.web_certificate as string | undefined,
           attributes: args.attributes as Record<string, unknown> | undefined,
@@ -216,6 +221,10 @@ export function registerBrandTools(
         .string()
         .optional()
         .describe("Flow UUID for device code authentication"),
+      flow_lockdown: z
+        .string()
+        .optional()
+        .describe("Flow UUID for account lockdown"),
       default_application: z.string().optional().describe("Application slug"),
       web_certificate: z.string().optional().describe("Web certificate UUID"),
       attributes: z
@@ -238,6 +247,7 @@ export function registerBrandTools(
           flowUnenrollment: args.flow_unenrollment as string | undefined,
           flowUserSettings: args.flow_user_settings as string | undefined,
           flowDeviceCode: args.flow_device_code as string | undefined,
+          flowLockdown: args.flow_lockdown as string | undefined,
           defaultApplication: args.default_application as string | undefined,
           webCertificate: args.web_certificate as string | undefined,
           attributes: args.attributes as Record<string, unknown> | undefined,

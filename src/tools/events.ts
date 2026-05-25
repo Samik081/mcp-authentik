@@ -1,6 +1,8 @@
+import type { EventActions } from "@goauthentik/api";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
@@ -109,7 +111,7 @@ export function registerEventTools(
           app: args.app as string,
           context: args.context as Record<string, unknown> | undefined,
           clientIp: args.client_ip as string | undefined,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
         },
       });
       return JSON.stringify(result, null, 2);
@@ -684,6 +686,106 @@ export function registerEventTools(
     handler: async () => {
       await client.eventsApi.eventsNotificationsMarkAllSeenCreate();
       return "All notifications marked as seen.";
+    },
+  });
+
+  // 22. Event stats
+  registerTool(server, config, {
+    name: "authentik_events_stats",
+    title: "Get Event Stats",
+    description:
+      "Get aggregated event statistics bucketed by the provided count steps, optionally filtered.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "events",
+    inputSchema: {
+      count_steps: z
+        .array(z.string())
+        .describe("Time-step buckets to aggregate counts over (required)"),
+      action: z.string().optional().describe("Filter by a single event action"),
+      actions: z
+        .array(z.string())
+        .optional()
+        .describe("Filter by one or more event actions"),
+      brand_name: z.string().optional().describe("Filter by brand name"),
+      client_ip: z.string().optional().describe("Filter by client IP address"),
+      context_authorized_app: z
+        .string()
+        .optional()
+        .describe("Filter by authorized application context"),
+      context_model_app: z
+        .string()
+        .optional()
+        .describe("Filter by model app context"),
+      context_model_name: z
+        .string()
+        .optional()
+        .describe("Filter by model name context"),
+      context_model_pk: z
+        .string()
+        .optional()
+        .describe("Filter by model primary key context"),
+      ordering: z.string().optional().describe("Field to order by"),
+      search: z.string().optional().describe("Search across event fields"),
+      username: z.string().optional().describe("Filter by username"),
+    },
+    handler: async (args) => {
+      const result = await client.eventsApi.eventsEventsStatsRetrieve({
+        countSteps: args.count_steps as string[],
+        action: args.action as string | undefined,
+        actions: args.actions as EventActions[] | undefined,
+        brandName: args.brand_name as string | undefined,
+        clientIp: args.client_ip as string | undefined,
+        contextAuthorizedApp: args.context_authorized_app as string | undefined,
+        contextModelApp: args.context_model_app as string | undefined,
+        contextModelName: args.context_model_name as string | undefined,
+        contextModelPk: args.context_model_pk as string | undefined,
+        ordering: args.ordering as string | undefined,
+        search: args.search as string | undefined,
+        username: args.username as string | undefined,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  // Export events
+  registerTool(server, config, {
+    name: "authentik_events_export",
+    title: "Export Events",
+    description:
+      "Trigger an export of events, producing a downloadable export artifact. Optional filters narrow which events are included.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "events",
+    inputSchema: {
+      action: z.string().optional().describe("Filter by event action"),
+      username: z.string().optional().describe("Filter by username"),
+      client_ip: z.string().optional().describe("Filter by client IP"),
+      brand_name: z.string().optional().describe("Filter by brand name"),
+      search: z.string().optional().describe("Search across event fields"),
+      ordering: z
+        .string()
+        .optional()
+        .describe("Field to order by (prefix with - for descending)"),
+    },
+    handler: async (args) => {
+      const result = await client.eventsApi.eventsEventsExportCreate({
+        action: args.action as string | undefined,
+        username: args.username as string | undefined,
+        clientIp: args.client_ip as string | undefined,
+        brandName: args.brand_name as string | undefined,
+        search: args.search as string | undefined,
+        ordering: args.ordering as string | undefined,
+      });
+      return JSON.stringify(result, null, 2);
     },
   });
 }

@@ -97,7 +97,7 @@ export function registerGroupTools(
     category: "core",
     inputSchema: {
       name: z.string().describe("Group name (required)"),
-      parent: z.string().optional().describe("Parent group UUID"),
+      parents: z.array(z.string()).optional().describe("Parent group UUIDs"),
       is_superuser: z
         .boolean()
         .optional()
@@ -115,7 +115,7 @@ export function registerGroupTools(
       const result = await client.coreApi.coreGroupsCreate({
         groupRequest: {
           name: args.name as string,
-          parent: args.parent as string | undefined,
+          parents: args.parents as string[] | undefined,
           isSuperuser: args.is_superuser as boolean | undefined,
           users: args.users as number[] | undefined,
           attributes: args.attributes as Record<string, unknown> | undefined,
@@ -141,7 +141,10 @@ export function registerGroupTools(
     inputSchema: {
       group_uuid: z.string().describe("Group UUID (required)"),
       name: z.string().optional().describe("New group name"),
-      parent: z.string().optional().describe("New parent group UUID"),
+      parents: z
+        .array(z.string())
+        .optional()
+        .describe("New parent group UUIDs"),
       is_superuser: z
         .boolean()
         .optional()
@@ -157,7 +160,7 @@ export function registerGroupTools(
         groupUuid: args.group_uuid as string,
         patchedGroupRequest: {
           name: args.name as string | undefined,
-          parent: args.parent as string | undefined,
+          parents: args.parents as string[] | undefined,
           isSuperuser: args.is_superuser as boolean | undefined,
           users: args.users as number[] | undefined,
           attributes: args.attributes as Record<string, unknown> | undefined,

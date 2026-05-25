@@ -67,4 +67,28 @@ export function registerSsfTools(
       return JSON.stringify(result, null, 2);
     },
   });
+
+  // 3. Delete SSF event stream
+  registerTool(server, config, {
+    name: "authentik_ssf_streams_delete",
+    title: "Delete SSF Stream",
+    description:
+      "Delete a Shared Signals Framework (SSF) event stream by its UUID. This action is irreversible.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "ssf",
+    inputSchema: {
+      uuid: z.string().describe("SSF stream UUID to delete"),
+    },
+    handler: async (args) => {
+      await client.ssfApi.ssfStreamsDestroy({
+        uuid: args.uuid as string,
+      });
+      return `SSF stream ${args.uuid} deleted successfully.`;
+    },
+  });
 }

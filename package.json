@@ -48,7 +48,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@goauthentik/api": "2025.6.3-1751754396",
+    "@goauthentik/api": "2026.5.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "zod": "^4.4.3"
   },

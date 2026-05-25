@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
@@ -276,7 +277,7 @@ export function registerUserTools(
           name: args.name as string,
           createGroup: args.create_group as boolean | undefined,
           expiring: args.expiring as boolean | undefined,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
         },
       });
       return JSON.stringify(result, null, 2);
@@ -331,7 +332,9 @@ export function registerUserTools(
     handler: async (args) => {
       await client.coreApi.coreUsersRecoveryEmailCreate({
         id: args.id as number,
-        emailStage: args.email_stage as string,
+        userRecoveryEmailRequest: {
+          emailStage: args.email_stage as string,
+        },
       });
       return `Recovery email sent successfully to user ${args.id}.`;
     },
@@ -355,6 +358,69 @@ export function registerUserTools(
     handler: async (args) => {
       const result = await client.coreApi.coreUsersPathsRetrieve({
         search: args.search as string | undefined,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  // Account lockdown
+  registerTool(server, config, {
+    name: "authentik_users_account_lockdown",
+    title: "Lock Down User Account",
+    description:
+      "Lock down a user account, deactivating it and terminating its active sessions.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: false,
+    },
+    category: "core",
+    inputSchema: {
+      id: z.number().describe("User ID to lock down"),
+    },
+    handler: async (args) => {
+      const result = await client.coreApi.coreUsersAccountLockdownCreate({
+        userAccountLockdownRequest: {
+          user: args.id as number,
+        },
+      });
+      return `User ${args.id} account locked down. ${JSON.stringify(result)}`;
+    },
+  });
+
+  // Export users
+  registerTool(server, config, {
+    name: "authentik_users_export",
+    title: "Export Users",
+    description:
+      "Trigger an export of users, producing a downloadable export artifact. Optional filters narrow which users are included.",
+    accessTier: "full",
+    annotations: {
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: false,
+    },
+    category: "core",
+    inputSchema: {
+      name: z.string().optional().describe("Filter by exact user name"),
+      username: z.string().optional().describe("Filter by exact username"),
+      email: z.string().optional().describe("Filter by email address"),
+      search: z.string().optional().describe("Search across user fields"),
+      is_active: z.boolean().optional().describe("Filter by active status"),
+      is_superuser: z
+        .boolean()
+        .optional()
+        .describe("Filter by superuser status"),
+    },
+    handler: async (args) => {
+      const result = await client.coreApi.coreUsersExportCreate({
+        name: args.name as string | undefined,
+        username: args.username as string | undefined,
+        email: args.email as string | undefined,
+        search: args.search as string | undefined,
+        isActive: args.is_active as boolean | undefined,
+        isSuperuser: args.is_superuser as boolean | undefined,
       });
       return JSON.stringify(result, null, 2);
     },

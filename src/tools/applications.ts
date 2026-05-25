@@ -113,6 +113,10 @@ export function registerApplicationTools(
         .optional()
         .describe("Application description"),
       meta_publisher: z.string().optional().describe("Application publisher"),
+      meta_hide: z
+        .boolean()
+        .optional()
+        .describe("Hide the application from the user library"),
       policy_engine_mode: z
         .enum(["all", "any"])
         .optional()
@@ -134,6 +138,7 @@ export function registerApplicationTools(
           metaLaunchUrl: args.meta_launch_url as string | undefined,
           metaDescription: args.meta_description as string | undefined,
           metaPublisher: args.meta_publisher as string | undefined,
+          metaHide: args.meta_hide as boolean | undefined,
           policyEngineMode: args.policy_engine_mode as
             | "all"
             | "any"
@@ -168,6 +173,10 @@ export function registerApplicationTools(
       meta_launch_url: z.string().optional().describe("New launch URL"),
       meta_description: z.string().optional().describe("New description"),
       meta_publisher: z.string().optional().describe("New publisher"),
+      meta_hide: z
+        .boolean()
+        .optional()
+        .describe("Hide the application from the user library"),
       policy_engine_mode: z
         .enum(["all", "any"])
         .optional()
@@ -187,6 +196,7 @@ export function registerApplicationTools(
           metaLaunchUrl: args.meta_launch_url as string | undefined,
           metaDescription: args.meta_description as string | undefined,
           metaPublisher: args.meta_publisher as string | undefined,
+          metaHide: args.meta_hide as boolean | undefined,
           policyEngineMode: args.policy_engine_mode as
             | "all"
             | "any"
@@ -203,7 +213,7 @@ export function registerApplicationTools(
     name: "authentik_apps_set_icon_url",
     title: "Set Application Icon URL",
     description:
-      "Set an application icon from a URL. Provide a URL pointing to an image to use as the application icon, or set clear to true to remove the current icon.",
+      "Set an application's icon to an external URL (sets the meta_icon field), or clear the current icon. Provide either icon_url to set the icon, or clear: true to remove it.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -212,30 +222,34 @@ export function registerApplicationTools(
     },
     category: "core",
     inputSchema: {
-      slug: z.string().describe("Application slug (required)"),
-      url: z.string().optional().describe("URL pointing to the icon image"),
+      slug: z.string().describe("Application slug"),
+      icon_url: z
+        .string()
+        .optional()
+        .describe("URL of the icon to set (omit when clear is true)"),
       clear: z
         .boolean()
         .optional()
         .describe("Set to true to clear/remove the current icon"),
     },
     handler: async (args) => {
-      const slug = args.slug as string;
-      if (args.clear) {
-        await client.coreApi.coreApplicationsSetIconCreate({
-          slug,
-          clear: true,
-        });
-        return `Icon cleared for application "${slug}".`;
+      const clear = args.clear as boolean | undefined;
+      const iconUrl = args.icon_url as string | undefined;
+      if (clear && iconUrl) {
+        throw new Error(
+          'Provide either "icon_url" or "clear: true", not both.',
+        );
       }
-      if (!args.url) {
-        throw new Error('Either "url" or "clear: true" must be provided.');
+      if (!clear && !iconUrl) {
+        throw new Error('Either "icon_url" or "clear: true" must be provided.');
       }
-      await client.coreApi.coreApplicationsSetIconUrlCreate({
-        slug,
-        filePathRequest: { url: args.url as string },
+      const result = await client.coreApi.coreApplicationsPartialUpdate({
+        slug: args.slug as string,
+        patchedApplicationRequest: {
+          metaIcon: clear ? "" : (iconUrl as string),
+        },
       });
-      return `Icon set for application "${slug}" from URL: ${args.url}`;
+      return JSON.stringify(result, null, 2);
     },
   });
 

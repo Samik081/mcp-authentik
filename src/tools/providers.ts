@@ -16,6 +16,7 @@ const PROVIDER_TYPES = [
   "rac",
   "google_workspace",
   "microsoft_entra",
+  "wsfed",
 ] as const;
 
 type ProviderType = (typeof PROVIDER_TYPES)[number];
@@ -31,6 +32,7 @@ const PROVIDER_TYPE_SDK_PREFIX: Record<ProviderType, string> = {
   rac: "Rac",
   google_workspace: "GoogleWorkspace",
   microsoft_entra: "MicrosoftEntra",
+  wsfed: "Wsfed",
 };
 
 /** Maps provider_type -> request body key for create */
@@ -44,6 +46,7 @@ const PROVIDER_TYPE_REQUEST_KEY: Record<ProviderType, string> = {
   rac: "rACProviderRequest",
   google_workspace: "googleWorkspaceProviderRequest",
   microsoft_entra: "microsoftEntraProviderRequest",
+  wsfed: "wSFederationProviderRequest",
 };
 
 /** Maps provider_type -> patched request body key for update */
@@ -57,6 +60,7 @@ const PROVIDER_TYPE_PATCHED_KEY: Record<ProviderType, string> = {
   rac: "patchedRACProviderRequest",
   google_workspace: "patchedGoogleWorkspaceProviderRequest",
   microsoft_entra: "patchedMicrosoftEntraProviderRequest",
+  wsfed: "patchedWSFederationProviderRequest",
 };
 
 const providerTypeEnum = z.enum(PROVIDER_TYPES);
@@ -257,7 +261,7 @@ export function registerProviderTools(
         .record(z.string(), z.unknown())
         .optional()
         .describe(
-          "Type-specific configuration fields (camelCase keys matching the SDK request type)",
+          "Type-specific configuration fields (camelCase keys matching the SDK request type). For oauth2 providers, pass grantTypes (array) here.",
         ),
     },
     handler: async (args) => {
@@ -397,6 +401,69 @@ export function registerProviderTools(
         download: args.download as boolean | undefined,
         forceBinding: args.force_binding as any,
       });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  // 12. WS-Fed metadata
+  registerTool(server, config, {
+    name: "authentik_providers_wsfed_metadata",
+    title: "Get WS-Fed Metadata",
+    description: "Get WS-Federation provider metadata XML.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "providers",
+    inputSchema: {
+      id: z.number().describe("WS-Federation provider ID"),
+      download: z.boolean().optional().describe("Whether to force download"),
+      force_binding: z
+        .enum([
+          "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+          "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+        ])
+        .optional()
+        .describe("Force a specific SAML binding"),
+    },
+    handler: async (args) => {
+      const result = await client.providersApi.providersWsfedMetadataRetrieve({
+        id: args.id as number,
+        download: args.download as boolean | undefined,
+        forceBinding: args.force_binding as any,
+      });
+      return JSON.stringify(result, null, 2);
+    },
+  });
+
+  // 13. WS-Fed preview user
+  registerTool(server, config, {
+    name: "authentik_providers_wsfed_preview_user",
+    title: "Preview WS-Fed User Data",
+    description:
+      "Preview the property-mapping output a WS-Federation provider would generate for a user.",
+    accessTier: "read-only",
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+    },
+    category: "providers",
+    inputSchema: {
+      id: z.number().describe("WS-Federation provider ID"),
+      for_user: z
+        .number()
+        .optional()
+        .describe("User ID to preview the mapping output for"),
+    },
+    handler: async (args) => {
+      const result =
+        await client.providersApi.providersWsfedPreviewUserRetrieve({
+          id: args.id as number,
+          forUser: args.for_user as number | undefined,
+        });
       return JSON.stringify(result, null, 2);
     },
   });
