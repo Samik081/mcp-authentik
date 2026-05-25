@@ -320,7 +320,7 @@ export function registerFlowTools(
     name: "authentik_flows_import",
     title: "Import Blueprint",
     description:
-      "Import a flow/blueprint from YAML content (uses the managed blueprints import endpoint; replaces the removed flow import).",
+      "Import a flow/blueprint from YAML content via the managed blueprints import endpoint (replaces the removed flow import). Note: this merges/upserts into existing objects — it does NOT wipe existing flows first. The previous clear/wipe-before-import option is no longer available in the authentik API.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,

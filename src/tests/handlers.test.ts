@@ -203,6 +203,18 @@ describeHandler(
         expect.objectContaining({ actorName: "worker", pageSize: 50 }),
       );
     });
+
+    it("passes aggregatedStatus through when aggregated_status is given", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_tasks_list",
+        arguments: { aggregated_status: ["error", "warning"] },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(getMockClient().tasksApi.tasksTasksList).toHaveBeenCalledWith(
+        expect.objectContaining({ aggregatedStatus: ["error", "warning"] }),
+      );
+    });
   },
 );
 
@@ -261,6 +273,21 @@ describeHandler(
       ).toHaveBeenCalledWith({
         slug: "my-app",
         patchedApplicationRequest: { metaIcon: "https://cdn.test/icon.png" },
+      });
+    });
+
+    it("clears the icon (metaIcon = '') when clear is true", async () => {
+      const result = await getClient().callTool({
+        name: "authentik_apps_set_icon_url",
+        arguments: { slug: "my-app", clear: true },
+      });
+
+      expect(result.isError).toBeFalsy();
+      expect(
+        getMockClient().coreApi.coreApplicationsPartialUpdate,
+      ).toHaveBeenCalledWith({
+        slug: "my-app",
+        patchedApplicationRequest: { metaIcon: "" },
       });
     });
   },

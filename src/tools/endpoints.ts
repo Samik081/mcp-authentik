@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
@@ -131,7 +132,7 @@ export function registerEndpointTools(
           expiring: args.expiring as boolean | undefined,
           expires:
             args.expires != null
-              ? new Date(args.expires as string)
+              ? parseDate(args.expires as string)
               : (args.expires as null | undefined),
         },
       });
@@ -809,7 +810,7 @@ export function registerEndpointTools(
             expiring: args.expiring as boolean | undefined,
             expires:
               args.expires != null
-                ? new Date(args.expires as string)
+                ? parseDate(args.expires as string)
                 : (args.expires as null | undefined),
           },
         });
@@ -863,7 +864,7 @@ export function registerEndpointTools(
           expiring: args.expiring as boolean | undefined,
           expires:
             args.expires != null
-              ? new Date(args.expires as string)
+              ? parseDate(args.expires as string)
               : (args.expires as null | undefined),
         },
       });

@@ -2,6 +2,7 @@ import type { EventActions } from "@goauthentik/api";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
@@ -110,7 +111,7 @@ export function registerEventTools(
           app: args.app as string,
           context: args.context as Record<string, unknown> | undefined,
           clientIp: args.client_ip as string | undefined,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
         },
       });
       return JSON.stringify(result, null, 2);

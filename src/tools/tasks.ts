@@ -1,4 +1,7 @@
-import type { TaskStatusEnum } from "@goauthentik/api";
+import type {
+  TaskAggregatedStatusEnum,
+  TaskStatusEnum,
+} from "@goauthentik/api";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
@@ -38,6 +41,25 @@ export function registerTaskTools(
         ])
         .optional()
         .describe("Filter by task state"),
+      aggregated_status: z
+        .array(
+          z.enum([
+            "queued",
+            "consumed",
+            "preprocess",
+            "running",
+            "postprocess",
+            "rejected",
+            "done",
+            "info",
+            "warning",
+            "error",
+          ]),
+        )
+        .optional()
+        .describe(
+          "Filter by aggregated outcome status (e.g. error, warning, info). Use to find failed/errored tasks.",
+        ),
       search: z.string().optional().describe("Search across task fields"),
       ordering: z
         .string()
@@ -51,6 +73,9 @@ export function registerTaskTools(
         actorName: args.actor_name as string | undefined,
         queueName: args.queue_name as string | undefined,
         state: args.state as TaskStatusEnum | undefined,
+        aggregatedStatus: args.aggregated_status as
+          | TaskAggregatedStatusEnum[]
+          | undefined,
         search: args.search as string | undefined,
         ordering: args.ordering as string | undefined,
         page: args.page as number | undefined,

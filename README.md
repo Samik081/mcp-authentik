@@ -232,7 +232,7 @@ mcp-authentik provides 297 tools organized by category. Each tool's Access colum
 | `authentik_apps_get` | Get a single application by its slug | read-only | read-only, idempotent |
 | `authentik_apps_create` | Create a new application with name, slug, and optional provider, group, and metadata | full | — |
 | `authentik_apps_update` | Update an existing application (partial update) | full | destructive, idempotent |
-| `authentik_apps_set_icon_url` | Set an application's icon to an external URL (sets the meta_icon field) | full | destructive, idempotent |
+| `authentik_apps_set_icon_url` | Set an application's icon to an external URL (sets the meta_icon field), or clear the current icon with `clear: true` | full | destructive, idempotent |
 | `authentik_apps_delete` | Delete an application by its slug | full | destructive |
 | `authentik_apps_check_access` | Check whether a specific user has access to an application | read-only | read-only, idempotent |
 | `authentik_apps_update_transactional` | Create or update an application and its provider in a single atomic transaction | full | destructive, idempotent |
@@ -427,7 +427,7 @@ Enterprise device and endpoint management: managed devices, device access groups
 
 | Tool | Description | Access | Hints |
 |------|-------------|--------|-------|
-| `authentik_tasks_list` | List background tasks with optional filters by actor name, queue, state, or search | read-only | read-only, idempotent |
+| `authentik_tasks_list` | List background tasks with optional filters by actor name, queue, state, aggregated outcome status (e.g. error/warning), or search | read-only | read-only, idempotent |
 | `authentik_tasks_get` | Get details of a specific task by its message ID | read-only | read-only, idempotent |
 | `authentik_tasks_retry` | Retry a failed task by its message ID | full | — |
 
@@ -445,7 +445,7 @@ Enterprise device and endpoint management: managed devices, device access groups
 | `authentik_flows_delete` | Delete a flow by its slug | full | destructive |
 | `authentik_flows_diagram` | Get a visual diagram of a flow showing its stages and bindings | read-only | read-only, idempotent |
 | `authentik_flows_export` | Export a flow as YAML | read-only | read-only, idempotent |
-| `authentik_flows_import` | Import a flow/blueprint from YAML content (uses the managed blueprints import endpoint) | full | — |
+| `authentik_flows_import` | Import a flow/blueprint from YAML content via the managed blueprints import endpoint (merges/upserts into existing objects — does not wipe existing flows first) | full | — |
 | `authentik_flows_cache_info` | Get information about cached flows | read-only | read-only, idempotent |
 | `authentik_flows_cache_clear` | Clear the flow cache | full | destructive, idempotent |
 | `authentik_flows_bindings_list` | List flow stage bindings with optional filters | read-only | read-only, idempotent |
@@ -722,7 +722,7 @@ Stages use a type+config pattern. Cross-type tools operate on any stage, while p
 
 ## Known Limitations
 
-- **Application icons are URL-only.** `authentik_apps_set_icon_url` sets the `meta_icon` field to an external URL. Uploading a binary icon file or clearing an existing icon is not supported through this MCP server.
+- **Application icons are URL-only.** `authentik_apps_set_icon_url` sets the `meta_icon` field to an external URL, or clears the current icon with `clear: true`. Uploading a binary icon file is not supported through this MCP server.
 - **Endpoint enrollment keys are not retrievable.** Enrollment tokens can be created and managed, but the raw enrollment key value cannot be viewed back through the `@goauthentik/api` SDK.
 
 ## Verify It Works

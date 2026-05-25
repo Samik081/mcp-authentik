@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
@@ -492,7 +493,7 @@ export function registerStageTools(
       const result = await client.stagesApi.stagesInvitationInvitationsCreate({
         invitationRequest: {
           name: args.name as string,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
           fixedData: args.fixed_data as Record<string, unknown> | undefined,
           singleUse: args.single_use as boolean | undefined,
           flow: args.flow as string | undefined,
@@ -539,7 +540,7 @@ export function registerStageTools(
           patchedInvitationRequest: {
             name: args.name as string | undefined,
             expires: args.expires
-              ? new Date(args.expires as string)
+              ? parseDate(args.expires as string)
               : undefined,
             fixedData: args.fixed_data as Record<string, unknown> | undefined,
             singleUse: args.single_use as boolean | undefined,

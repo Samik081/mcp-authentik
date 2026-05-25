@@ -213,7 +213,7 @@ export function registerApplicationTools(
     name: "authentik_apps_set_icon_url",
     title: "Set Application Icon URL",
     description:
-      "Set an application's icon to an external URL (sets the meta_icon field).",
+      "Set an application's icon to an external URL (sets the meta_icon field), or clear the current icon. Provide either icon_url to set the icon, or clear: true to remove it.",
     accessTier: "full",
     annotations: {
       readOnlyHint: false,
@@ -223,13 +223,30 @@ export function registerApplicationTools(
     category: "core",
     inputSchema: {
       slug: z.string().describe("Application slug"),
-      icon_url: z.string().describe("URL of the icon to set"),
+      icon_url: z
+        .string()
+        .optional()
+        .describe("URL of the icon to set (omit when clear is true)"),
+      clear: z
+        .boolean()
+        .optional()
+        .describe("Set to true to clear/remove the current icon"),
     },
     handler: async (args) => {
+      const clear = args.clear as boolean | undefined;
+      const iconUrl = args.icon_url as string | undefined;
+      if (clear && iconUrl) {
+        throw new Error(
+          'Provide either "icon_url" or "clear: true", not both.',
+        );
+      }
+      if (!clear && !iconUrl) {
+        throw new Error('Either "icon_url" or "clear: true" must be provided.');
+      }
       const result = await client.coreApi.coreApplicationsPartialUpdate({
         slug: args.slug as string,
         patchedApplicationRequest: {
-          metaIcon: args.icon_url as string,
+          metaIcon: clear ? "" : (iconUrl as string),
         },
       });
       return JSON.stringify(result, null, 2);

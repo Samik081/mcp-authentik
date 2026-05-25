@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { AuthentikClient } from "../core/client.js";
+import { parseDate } from "../core/dates.js";
 import { registerTool } from "../core/tools.js";
 import type { AppConfig } from "../types/index.js";
 
@@ -123,7 +124,7 @@ export function registerTokenTools(
             | undefined,
           description: args.description as string | undefined,
           expiring: args.expiring as boolean | undefined,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
           user: args.user as number | undefined,
         },
       });
@@ -161,7 +162,7 @@ export function registerTokenTools(
         patchedTokenRequest: {
           description: args.description as string | undefined,
           expiring: args.expiring as boolean | undefined,
-          expires: args.expires ? new Date(args.expires as string) : undefined,
+          expires: args.expires ? parseDate(args.expires as string) : undefined,
           user: args.user as number | undefined,
           intent: args.intent as
             | "api"
