@@ -41,7 +41,7 @@ async function main(): Promise<void> {
   } catch (error: unknown) {
     logger.error(
       "Failed to connect to Authentik:",
-      sanitizeError(error, config),
+      await sanitizeError(error, config),
     );
     process.exit(1);
   }
