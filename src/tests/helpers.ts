@@ -9,6 +9,7 @@ export function makeConfig(overrides: Partial<AppConfig> = {}): AppConfig {
   return {
     url: "https://authentik.test",
     token: "test-api-token",
+    remoteAuthorization: false,
     accessTier: "full",
     categories: null,
     toolBlacklist: null,

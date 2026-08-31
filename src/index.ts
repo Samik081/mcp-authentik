@@ -33,27 +33,42 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const client = new AuthentikClient(config.url, config.token);
-
-  try {
-    const version = await client.validateConnection();
-    logger.info(`Connected to Authentik ${version}`);
-  } catch (error: unknown) {
-    logger.error(
-      "Failed to connect to Authentik:",
-      await sanitizeError(error, config),
+  // With remote authorization the token arrives per request, so there may be
+  // no server-side client to validate at startup.
+  if (config.token) {
+    const client = new AuthentikClient(config.url, config.token);
+    try {
+      const version = await client.validateConnection();
+      logger.info(`Connected to Authentik ${version}`);
+    } catch (error: unknown) {
+      logger.error(
+        "Failed to connect to Authentik:",
+        await sanitizeError(error, config),
+      );
+      process.exit(1);
+    }
+  } else {
+    logger.info(
+      `Remote authorization: each caller supplies its own Authentik token (${config.url})`,
     );
-    process.exit(1);
   }
 
   logger.info(`Access tier: ${config.accessTier}`);
 
-  const serverFactory = () => {
+  const serverFactory = (requestToken?: string) => {
+    const token = config.remoteAuthorization
+      ? (requestToken ?? config.token)
+      : config.token;
+    if (!token) {
+      throw new Error("No Authentik token available for this session");
+    }
     const s = createServer();
-    registerAllTools(s, client, config);
+    registerAllTools(s, new AuthentikClient(config.url, token), config);
     return s;
   };
-  const server = serverFactory();
+  // HTTP builds a server per session inside startServer, so only stdio needs
+  // one up front — and only stdio is guaranteed to have a token here.
+  const server = config.transport === "http" ? createServer() : serverFactory();
   await startServer(server, config, serverFactory);
 }
 

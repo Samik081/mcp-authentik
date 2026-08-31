@@ -15,6 +15,7 @@ MCP server for [Authentik](https://goauthentik.io/) identity management. Manage 
 - **Type-safe SDK client** via `@goauthentik/api`
 - **Docker images** for `linux/amd64` and `linux/arm64` on [GHCR](https://ghcr.io/samik081/mcp-authentik)
 - **Remote MCP** via HTTP transport (`MCP_TRANSPORT=http`) using the Streamable HTTP protocol
+- **Multi-user deployments** via `AUTHENTIK_REMOTE_AUTHORIZATION=true`, where every caller authenticates with its own Authentik token
 - **TypeScript/ESM** with full type safety
 
 ## API Compatibility
@@ -143,7 +144,8 @@ Tools that are not available in your tier are not registered with the MCP server
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `AUTHENTIK_URL` | Yes | -- | Authentik instance URL (e.g., `https://auth.example.com`) |
-| `AUTHENTIK_TOKEN` | Yes | -- | API token with appropriate permissions |
+| `AUTHENTIK_TOKEN` | Yes* | -- | API token with appropriate permissions. *Optional when `AUTHENTIK_REMOTE_AUTHORIZATION=true` |
+| `AUTHENTIK_REMOTE_AUTHORIZATION` | No | `false` | HTTP only: take each caller's token from the `Authorization` header instead of the environment |
 | `AUTHENTIK_ACCESS_TIER` | No | `full` | `read-only` for read-only tools only, `full` for all tools |
 | `AUTHENTIK_CATEGORIES` | No | *(all)* | Comma-separated category allowlist (e.g., `core,admin,flows`) |
 | `AUTHENTIK_TOOL_BLACKLIST` | No | *(none)* | Comma-separated list of tool names to exclude (e.g., `authentik_users_delete`) |
@@ -153,6 +155,36 @@ Tools that are not available in your tier are not registered with the MCP server
 | `MCP_PORT` | No | `3000` | HTTP server port (only used when `MCP_TRANSPORT=http`) |
 | `MCP_HOST` | No | `0.0.0.0` | HTTP server bind address (only used when `MCP_TRANSPORT=http`) |
 | `MCP_EXCLUDE_TOOL_TITLES` | No | `false` | Set `true` to omit tool titles from registration (saves tokens) |
+
+### Remote Authorization (multi-user)
+
+By default one deployment carries one `AUTHENTIK_TOKEN`, so everyone reaching it
+acts as the same Authentik identity. Set `AUTHENTIK_REMOTE_AUTHORIZATION=true`
+(HTTP transport only) to instead read the token from each request:
+
+```
+Authorization: Bearer <authentik-api-token>
+```
+
+The token is bound to the MCP session created by `initialize`, so later requests
+on that session keep using it. A missing header is answered with `401` and a
+`WWW-Authenticate: Bearer` challenge; `AUTHENTIK_TOKEN` is then optional and
+only used as a fallback when a caller sends no header.
+
+This lets a single instance serve several people — a gateway that stores a token
+per user, or clients configured with their own — while Authentik applies each
+one's own permissions and records them individually in its audit log.
+
+```bash
+docker run -p 3000:3000 \
+  -e MCP_TRANSPORT=http \
+  -e AUTHENTIK_URL=https://auth.example.com \
+  -e AUTHENTIK_REMOTE_AUTHORIZATION=true \
+  ghcr.io/samik081/mcp-authentik
+```
+
+Because the token travels in a header, terminate TLS in front of the server and
+never expose it over plain HTTP.
 
 ### Available Categories
 
