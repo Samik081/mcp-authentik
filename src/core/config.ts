@@ -36,6 +36,17 @@ function parseCategories(value: string | undefined): string[] | null {
     .filter((s) => s.length > 0);
 }
 
+function parseBoolean(value: string, name: string): boolean {
+  const normalized = value.trim().toLowerCase();
+  if (normalized === "true" || normalized === "1") {
+    return true;
+  }
+  if (normalized === "false" || normalized === "0" || normalized === "") {
+    return false;
+  }
+  throw new Error(`Invalid ${name} value: "${value}". Must be true or false.`);
+}
+
 function parseToolList(value: string | undefined): string[] | null {
   if (value === undefined || value === "") {
     return null;
@@ -52,8 +63,29 @@ export function loadConfig(): AppConfig {
     throw new Error("Missing required environment variable: AUTHENTIK_URL");
   }
 
+  const transport =
+    process.env.MCP_TRANSPORT === "http"
+      ? ("http" as const)
+      : ("stdio" as const);
+
+  const remoteAuthorization = process.env.AUTHENTIK_REMOTE_AUTHORIZATION
+    ? parseBoolean(
+        process.env.AUTHENTIK_REMOTE_AUTHORIZATION,
+        "AUTHENTIK_REMOTE_AUTHORIZATION",
+      )
+    : false;
+
+  // Callers bring their own token, so the environment does not need one. It is
+  // still honoured when present: stdio has no request to read a header from.
+  if (remoteAuthorization && transport !== "http") {
+    throw new Error(
+      "AUTHENTIK_REMOTE_AUTHORIZATION requires MCP_TRANSPORT=http: " +
+        "stdio has no per-request headers to read the token from.",
+    );
+  }
+
   const token = process.env.AUTHENTIK_TOKEN;
-  if (!token) {
+  if (!token && !remoteAuthorization) {
     throw new Error("Missing required environment variable: AUTHENTIK_TOKEN");
   }
 
@@ -64,10 +96,6 @@ export function loadConfig(): AppConfig {
 
   const excludeToolTitles = process.env.MCP_EXCLUDE_TOOL_TITLES === "true";
 
-  const transport =
-    process.env.MCP_TRANSPORT === "http"
-      ? ("http" as const)
-      : ("stdio" as const);
   const rawPort = process.env.MCP_PORT ?? "3000";
   const httpPort = parseInt(rawPort, 10);
   if (Number.isNaN(httpPort) || httpPort < 1 || httpPort > 65535) {
@@ -80,6 +108,7 @@ export function loadConfig(): AppConfig {
   return {
     url: normalizeUrl(url),
     token,
+    remoteAuthorization,
     accessTier,
     categories,
     toolBlacklist,

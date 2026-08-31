@@ -36,7 +36,7 @@ export function createServer(): McpServer {
 export async function startServer(
   server: McpServer,
   config: AppConfig,
-  serverFactory?: () => McpServer,
+  serverFactory?: (token?: string) => McpServer,
 ): Promise<HttpServer | undefined> {
   if (config.transport === "http") {
     if (!serverFactory) {
@@ -73,9 +73,24 @@ async function parseJsonBody(req: IncomingMessage): Promise<unknown> {
   });
 }
 
+/**
+ * Pulls the caller's Authentik token out of a request. Both the standard
+ * bearer form and the bare header are accepted, mirroring how Authentik's own
+ * API takes `Authorization: Bearer <token>`.
+ */
+function extractRequestToken(req: IncomingMessage): string | undefined {
+  const header = req.headers.authorization;
+  if (!header) {
+    return undefined;
+  }
+  const match = /^Bearer\s+(.+)$/i.exec(header.trim());
+  const token = (match?.[1] ?? header).trim();
+  return token.length > 0 ? token : undefined;
+}
+
 async function startHttpServer(
   config: AppConfig,
-  serverFactory: () => McpServer,
+  serverFactory: (token?: string) => McpServer,
 ): Promise<HttpServer> {
   const { httpHost, httpPort } = config;
 
@@ -110,6 +125,29 @@ async function startHttpServer(
             if (existing) {
               await existing.handleRequest(req, res, body);
             } else if (!sessionId && isInitializeRequest(body)) {
+              // The token is bound to the session at initialize time: later
+              // requests carry the session id, and the server built here keeps
+              // using that caller's client.
+              const requestToken = extractRequestToken(req);
+              if (config.remoteAuthorization && !requestToken) {
+                res.writeHead(401, {
+                  "Content-Type": "application/json",
+                  "WWW-Authenticate": "Bearer",
+                });
+                res.end(
+                  JSON.stringify({
+                    jsonrpc: "2.0",
+                    error: {
+                      code: -32000,
+                      message:
+                        "Unauthorized: AUTHENTIK_REMOTE_AUTHORIZATION is enabled, " +
+                        "send your Authentik token as 'Authorization: Bearer <token>'",
+                    },
+                    id: null,
+                  }),
+                );
+                return;
+              }
               const transport = new StreamableHTTPServerTransport({
                 sessionIdGenerator: () => randomUUID(),
                 onsessioninitialized: (id: string) => {
@@ -126,7 +164,7 @@ async function startHttpServer(
                 }
               };
 
-              const server = serverFactory();
+              const server = serverFactory(requestToken);
               await server.connect(transport);
               await transport.handleRequest(req, res, body);
             } else {
