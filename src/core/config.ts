@@ -77,6 +77,20 @@ export function loadConfig(): AppConfig {
   }
   const httpHost = process.env.MCP_HOST ?? "0.0.0.0";
 
+  // Idle HTTP sessions are closed after this many seconds (0 disables).
+  const rawIdleTimeout = process.env.MCP_SESSION_IDLE_TIMEOUT ?? "1800";
+  const sessionIdleTimeoutSec = Number(rawIdleTimeout);
+  if (
+    !Number.isInteger(sessionIdleTimeoutSec) ||
+    sessionIdleTimeoutSec < 0 ||
+    rawIdleTimeout.trim() === ""
+  ) {
+    throw new Error(
+      `Invalid MCP_SESSION_IDLE_TIMEOUT: "${rawIdleTimeout}". Must be a non-negative integer (seconds, 0 disables).`,
+    );
+  }
+  const sessionIdleTimeoutMs = sessionIdleTimeoutSec * 1000;
+
   return {
     url: normalizeUrl(url),
     token,
@@ -88,5 +102,6 @@ export function loadConfig(): AppConfig {
     transport,
     httpPort,
     httpHost,
+    sessionIdleTimeoutMs,
   };
 }
