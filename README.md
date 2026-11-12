@@ -47,14 +47,17 @@ docker run --rm -i \
 To run as a remote MCP server with HTTP transport:
 
 ```bash
-docker run -d -p 3000:3000 \
+docker run -d -p 127.0.0.1:3000:3000 \
   -e MCP_TRANSPORT=http \
+  -e MCP_ALLOWED_HOSTS=localhost,127.0.0.1 \
   -e AUTHENTIK_URL=https://auth.example.com \
   -e AUTHENTIK_TOKEN=your-api-token \
   ghcr.io/samik081/mcp-authentik
 ```
 
 The MCP endpoint is available at `http://localhost:3000` and a health check at `http://localhost:3000/health`.
+
+> **Security:** the HTTP transport has no authentication -- anyone who can reach the port can call every enabled tool. Keep it on loopback or a trusted network, or put it behind an authenticating reverse proxy. Outside Docker the server binds to `127.0.0.1` by default and only accepts requests whose `Host`/`Origin` is a loopback name (DNS rebinding protection). The Docker image binds to `0.0.0.0`, where that check is off unless you set `MCP_ALLOWED_HOSTS` to the hostnames clients use to reach it.
 
 ## Configuration
 
@@ -151,7 +154,8 @@ Tools that are not available in your tier are not registered with the MCP server
 | `DEBUG` | No | `false` | Enable debug logging to stderr |
 | `MCP_TRANSPORT` | No | `stdio` | Transport mode: `stdio` (default) or `http` |
 | `MCP_PORT` | No | `3000` | HTTP server port (only used when `MCP_TRANSPORT=http`) |
-| `MCP_HOST` | No | `0.0.0.0` | HTTP server bind address (only used when `MCP_TRANSPORT=http`) |
+| `MCP_HOST` | No | `127.0.0.1` | HTTP server bind address (only used when `MCP_TRANSPORT=http`). The Docker image sets `0.0.0.0` |
+| `MCP_ALLOWED_HOSTS` | No | *(none)* | Comma-separated hostnames accepted in the `Host` and `Origin` headers of HTTP requests, e.g. `mcp.example.com,localhost` (ports ignored, IPv6 in brackets). Loopback names are always accepted when `MCP_HOST` is a loopback address. If `MCP_HOST` is not loopback and this is unset, the headers are not checked |
 | `MCP_SESSION_IDLE_TIMEOUT` | No | `1800` | Seconds of inactivity after which an HTTP session is closed and its memory released (sessions with a connected SSE stream are never closed). `0` disables. Only used when `MCP_TRANSPORT=http` |
 | `MCP_EXCLUDE_TOOL_TITLES` | No | `false` | Set `true` to omit tool titles from registration (saves tokens) |
 
@@ -760,6 +764,10 @@ If the connection is working, the assistant will call `authentik_admin_version` 
 - Use `AUTHENTIK_CATEGORIES` with the actual category values listed above (e.g., `core,admin,flows`), not source file names
 - Users, groups, applications, tokens, and brands are all under the `core` category, not separate categories
 - Use comma-separated values with no spaces (e.g., `core,admin,events`)
+
+### 403 Forbidden: Host header not allowed
+
+In HTTP mode the server rejects requests whose `Host` or `Origin` header is not an allowed hostname. If you reach it through a reverse proxy or under another name, add that hostname to `MCP_ALLOWED_HOSTS`. To accept connections from other machines without Docker, also set `MCP_HOST=0.0.0.0`.
 
 ## Development
 
